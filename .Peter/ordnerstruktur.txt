@@ -1,0 +1,1145 @@
+Auflistung der Ordnerpfade für Volume OS
+Volumeseriennummer : 14A2-2B74
+C:.
+|   .editorconfig
+|   .env
+|   .env.example
+|   .gitattributes
+|   .gitignore
+|   .prettierignore
+|   .prettierrc
+|   artisan
+|   components.json
+|   composer.json
+|   composer.lock
+|   eslint.config.js
+|   ordnerstruktur.txt
+|   package-lock.json
+|   package.json
+|   phpunit.xml
+|   tsconfig.json
+|   vite.config.ts
+|     
++---.vscode
+|       launch.json
+|       
++---app
+|   +---Http
+|   |   +---Controllers
+|   |   |   |   Controller.php
+|   |   |   |   
+|   |   |   +---Admin
+|   |   |   |       CompanyCrudController.php
+|   |   |   |       OfferCrudController.php
+|   |   |   |       RatingCrudController.php
+|   |   |   |       UserCrudController.php
+|   |   |   |       
+|   |   |   +---Api
+|   |   |   |   \---V1
+|   |   |   |           CompanyController.php
+|   |   |   |           OfferController.php
+|   |   |   |           RatingController.php
+|   |   |   |           UserController.php
+|   |   |   |           
+|   |   |   +---Auth
+|   |   |   |       AuthenticatedSessionController.php
+|   |   |   |       ConfirmablePasswordController.php
+|   |   |   |       EmailVerificationNotificationController.php
+|   |   |   |       EmailVerificationPromptController.php
+|   |   |   |       NewPasswordController.php
+|   |   |   |       PasswordResetLinkController.php
+|   |   |   |       RegisteredUserController.php
+|   |   |   |       VerifyEmailController.php
+|   |   |   |       
+|   |   |   \---Settings
+|   |   |           PasswordController.php
+|   |   |           ProfileController.php
+|   |   |           
+|   |   +---Middleware
+|   |   |       CheckIfAdmin.php
+|   |   |       HandleAppearance.php
+|   |   |       HandleInertiaRequests.php
+|   |   |       
+|   |   +---Requests
+|   |   |   |   CompanyRequest.php
+|   |   |   |   OfferRequest.php
+|   |   |   |   ProfileUpdateRequest.php
+|   |   |   |   RatingRequest.php
+|   |   |   |   UserRequest.php
+|   |   |   |   
+|   |   |   +---Auth
+|   |   |   |       LoginRequest.php
+|   |   |   |       
+|   |   |   \---Settings
+|   |   |           ProfileUpdateRequest.php
+|   |   |           
+|   |   \---Rules
+|   |           OfferUserMatchRule.php
+|   |           
+|   +---Models
+|   |       Company.php
+|   |       Offer.php
+|   |       Rating.php
+|   |       User.php
+|   |       
+|   \---Providers
+|           AppServiceProvider.php
+|           
++---bootstrap
+|   |   app.php
+|   |   providers.php
+|   |   
+|   \---cache
+|           .gitignore
+|           packages.php
+|           services.php
+|           
++---config
+|   |   app.php
+|   |   auth.php
+|   |   cache.php
+|   |   database.php
+|   |   filesystems.php
+|   |   gravatar.php
+|   |   inertia.php
+|   |   logging.php
+|   |   mail.php
+|   |   queue.php
+|   |   sanctum.php
+|   |   services.php
+|   |   session.php
+|   |   
+|   \---backpack
+|       |   base.php
+|       |   crud.php
+|       |   theme-tabler.php
+|       |   ui.php
+|       |   
+|       \---operations
+|               create.php
+|               form.php
+|               list.php
+|               reorder.php
+|               show.php
+|               update.php
+|               
++---database
+|   |   .gitignore
+|   |   database.sqlite
+|   |   
+|   +---factories
+|   |       CompanyFactory.php
+|   |       OfferFactory.php
+|   |       RatingFactory.php
+|   |       UserFactory.php
+|   |       
+|   +---migrations
+|   |       0001_01_01_000000_create_users_table.php
+|   |       0001_01_01_000001_create_cache_table.php
+|   |       0001_01_01_000002_create_jobs_table.php
+|   |       2025_06_02_200944_create_companies_table.php
+|   |       2025_06_02_200954_create_offers_table.php
+|   |       2025_06_02_201018_create_ratings_table.php
+|   |       2025_06_03_171438_rename_fields_in_offers_table.php
+|   |       2025_06_05_164310_create_personal_access_tokens_table.php
+|   |       
+|   \---seeders
+|           DatabaseSeeder.php
+|           
++---lang
+|   \---vendor
+|       \---backpack
+|           +---ar
+|           |       backup.php
+|           |       base.php
+|           |       crud.php
+|           |       langfilemanager.php
+|           |       logmanager.php
+|           |       pagemanager.php
+|           |       permissionmanager.php
+|           |       settings.php
+|           |       
+|           +---bg
+|           |       backup.php
+|           |       base.php
+|           |       crud.php
+|           |       langfilemanager.php
+|           |       logmanager.php
+|           |       pagemanager.php
+|           |       permissionmanager.php
+|           |       settings.php
+|           |       
+|           +---bn
+|           |       backup.php
+|           |       base.php
+|           |       crud.php
+|           |       logmanager.php
+|           |       pagemanager.php
+|           |       permissionmanager.php
+|           |       settings.php
+|           |       
+|           +---ca
+|           |       backup.php
+|           |       base.php
+|           |       crud.php
+|           |       langfilemanager.php
+|           |       logmanager.php
+|           |       pagemanager.php
+|           |       permissionmanager.php
+|           |       settings.php
+|           |       
+|           +---cs
+|           |       base.php
+|           |       crud.php
+|           |       langfilemanager.php
+|           |       
+|           +---da-DK
+|           |       backup.php
+|           |       base.php
+|           |       crud.php
+|           |       langfilemanager.php
+|           |       logmanager.php
+|           |       pagemanager.php
+|           |       permissionmanager.php
+|           |       settings.php
+|           |       
+|           +---da_DK
+|           |       backup.php
+|           |       base.php
+|           |       crud.php
+|           |       langfilemanager.php
+|           |       logmanager.php
+|           |       pagemanager.php
+|           |       permissionmanager.php
+|           |       settings.php
+|           |       
+|           +---de
+|           |       backup.php
+|           |       base.php
+|           |       crud.php
+|           |       langfilemanager.php
+|           |       logmanager.php
+|           |       pagemanager.php
+|           |       permissionmanager.php
+|           |       settings.php
+|           |       
+|           +---el
+|           |       backup.php
+|           |       base.php
+|           |       crud.php
+|           |       langfilemanager.php
+|           |       logmanager.php
+|           |       pagemanager.php
+|           |       permissionmanager.php
+|           |       settings.php
+|           |       
+|           +---en
+|           |       backup.php
+|           |       base.php
+|           |       crud.php
+|           |       langfilemanager.php
+|           |       logmanager.php
+|           |       pagemanager.php
+|           |       permissionmanager.php
+|           |       settings.php
+|           |       
+|           +---es
+|           |       backup.php
+|           |       base.php
+|           |       crud.php
+|           |       langfilemanager.php
+|           |       logmanager.php
+|           |       pagemanager.php
+|           |       permissionmanager.php
+|           |       settings.php
+|           |       
+|           +---fa
+|           |       backup.php
+|           |       base.php
+|           |       crud.php
+|           |       langfilemanager.php
+|           |       logmanager.php
+|           |       pagemanager.php
+|           |       permissionmanager.php
+|           |       settings.php
+|           |       
+|           +---fr
+|           |       backup.php
+|           |       base.php
+|           |       crud.php
+|           |       langfilemanager.php
+|           |       logmanager.php
+|           |       pagemanager.php
+|           |       permissionmanager.php
+|           |       settings.php
+|           |       
+|           +---fr-CA
+|           |       backup.php
+|           |       base.php
+|           |       crud.php
+|           |       langfilemanager.php
+|           |       logmanager.php
+|           |       pagemanager.php
+|           |       permissionmanager.php
+|           |       settings.php
+|           |       
+|           +---fr_CA
+|           |       backup.php
+|           |       base.php
+|           |       crud.php
+|           |       langfilemanager.php
+|           |       logmanager.php
+|           |       pagemanager.php
+|           |       permissionmanager.php
+|           |       settings.php
+|           |       
+|           +---gr
+|           |       backup.php
+|           |       langfilemanager.php
+|           |       logmanager.php
+|           |       pagemanager.php
+|           |       permissionmanager.php
+|           |       settings.php
+|           |       
+|           +---hu
+|           |       backup.php
+|           |       base.php
+|           |       crud.php
+|           |       langfilemanager.php
+|           |       logmanager.php
+|           |       pagemanager.php
+|           |       permissionmanager.php
+|           |       settings.php
+|           |       
+|           +---id
+|           |       backup.php
+|           |       base.php
+|           |       crud.php
+|           |       langfilemanager.php
+|           |       logmanager.php
+|           |       pagemanager.php
+|           |       permissionmanager.php
+|           |       settings.php
+|           |       
+|           +---it
+|           |       backup.php
+|           |       base.php
+|           |       crud.php
+|           |       langfilemanager.php
+|           |       logmanager.php
+|           |       pagemanager.php
+|           |       permissionmanager.php
+|           |       settings.php
+|           |       
+|           +---ja
+|           |       backup.php
+|           |       base.php
+|           |       crud.php
+|           |       langfilemanager.php
+|           |       logmanager.php
+|           |       pagemanager.php
+|           |       permissionmanager.php
+|           |       settings.php
+|           |       
+|           +---lo
+|           |       backup.php
+|           |       langfilemanager.php
+|           |       logmanager.php
+|           |       pagemanager.php
+|           |       permissionmanager.php
+|           |       settings.php
+|           |       
+|           +---lv
+|           |       backup.php
+|           |       base.php
+|           |       crud.php
+|           |       langfilemanager.php
+|           |       logmanager.php
+|           |       pagemanager.php
+|           |       permissionmanager.php
+|           |       settings.php
+|           |       
+|           +---my
+|           |       backup.php
+|           |       base.php
+|           |       crud.php
+|           |       langfilemanager.php
+|           |       logmanager.php
+|           |       pagemanager.php
+|           |       permissionmanager.php
+|           |       settings.php
+|           |       
+|           +---nl
+|           |       backup.php
+|           |       base.php
+|           |       crud.php
+|           |       langfilemanager.php
+|           |       logmanager.php
+|           |       pagemanager.php
+|           |       permissionmanager.php
+|           |       settings.php
+|           |       
+|           +---pt
+|           |       backup.php
+|           |       base.php
+|           |       crud.php
+|           |       langfilemanager.php
+|           |       logmanager.php
+|           |       pagemanager.php
+|           |       permissionmanager.php
+|           |       settings.php
+|           |       
+|           +---pt-BR
+|           |       backup.php
+|           |       base.php
+|           |       crud.php
+|           |       langfilemanager.php
+|           |       logmanager.php
+|           |       pagemanager.php
+|           |       permissionmanager.php
+|           |       settings.php
+|           |       
+|           +---pt_br
+|           |       backup.php
+|           |       base.php
+|           |       crud.php
+|           |       langfilemanager.php
+|           |       logmanager.php
+|           |       pagemanager.php
+|           |       permissionmanager.php
+|           |       settings.php
+|           |       
+|           +---ro
+|           |       backup.php
+|           |       base.php
+|           |       crud.php
+|           |       langfilemanager.php
+|           |       logmanager.php
+|           |       pagemanager.php
+|           |       permissionmanager.php
+|           |       settings.php
+|           |       
+|           +---ru
+|           |       backup.php
+|           |       base.php
+|           |       crud.php
+|           |       langfilemanager.php
+|           |       logmanager.php
+|           |       pagemanager.php
+|           |       permissionmanager.php
+|           |       settings.php
+|           |       
+|           +---sr
+|           |       backup.php
+|           |       base.php
+|           |       crud.php
+|           |       langfilemanager.php
+|           |       logmanager.php
+|           |       pagemanager.php
+|           |       permissionmanager.php
+|           |       settings.php
+|           |       
+|           +---th
+|           |       backup.php
+|           |       base.php
+|           |       crud.php
+|           |       langfilemanager.php
+|           |       logmanager.php
+|           |       pagemanager.php
+|           |       permissionmanager.php
+|           |       settings.php
+|           |       
+|           +---tr
+|           |       crud.php
+|           |       langfilemanager.php
+|           |       
+|           +---uk
+|           |       backup.php
+|           |       base.php
+|           |       crud.php
+|           |       langfilemanager.php
+|           |       logmanager.php
+|           |       pagemanager.php
+|           |       permissionmanager.php
+|           |       settings.php
+|           |       
+|           +---vi
+|           |       backup.php
+|           |       base.php
+|           |       crud.php
+|           |       langfilemanager.php
+|           |       logmanager.php
+|           |       pagemanager.php
+|           |       permissionmanager.php
+|           |       settings.php
+|           |       
+|           +---zh-cn
+|           |       backup.php
+|           |       base.php
+|           |       crud.php
+|           |       langfilemanager.php
+|           |       logmanager.php
+|           |       pagemanager.php
+|           |       permissionmanager.php
+|           |       settings.php
+|           |       
+|           \---zh-Hant
+|                   backup.php
+|                   base.php
+|                   crud.php
+|                   langfilemanager.php
+|                   logmanager.php
+|                   pagemanager.php
+|                   permissionmanager.php
+|                   settings.php
+|                   
++---public
+|   |   .htaccess
+|   |   apple-touch-icon.png
+|   |   favicon.ico
+|   |   favicon.svg
+|   |   index.php
+|   |   logo.svg
+|   |   robots.txt
+|   |   
+|   +---build
+|   |   |   manifest.json
+|   |   |   
+|   |   \---assets
+|   |           app-Cfayyaka.css
+|   |           app-GBhW32uO.js
+|   |           app-layout-6ShrtIQS.js
+|   |           app-logo-icon-9xTRfZp0.js
+|   |           appearance-Dm9kNfhM.js
+|   |           auth-layout-B2_Zakhw.js
+|   |           confirm-password-vSLrHwiM.js
+|   |           dashboard-LqQFj7pN.js
+|   |           forgot-password-9d7h6Z6-.js
+|   |           index-CLCtVWy1.js
+|   |           index-GTcKX9PY.js
+|   |           label-e2IDDMmD.js
+|   |           layout-CqAvDK6p.js
+|   |           login-CToPcrGE.js
+|   |           password-DBbORbVz.js
+|   |           profile-BucL7Bzu.js
+|   |           register-F9jLgdFe.js
+|   |           reset-password-CCma3HaP.js
+|   |           text-link-DlaXOgLp.js
+|   |           transition-DTDBk-r4.js
+|   |           verify-email-B_q0gMT_.js
+|   |           welcome-CRT1chEr.js
+|   |           
+|   \---storage
+|       |   .gitignore
+|       |   
+|       \---basset
+|           |   .basset
+|           |   
+|           \---vendor
+|               \---backpack
+|                   +---basset
+|                   |   \---tests
+|                   |       \---Helpers
+|                   |               basset-test.js
+|                   |               
+|                   +---crud
+|                   |   \---src
+|                   |       \---resources
+|                   |           \---assets
+|                   |               +---css
+|                   |               |       common.css
+|                   |               |       
+|                   |               +---img
+|                   |               |       spinner.svg
+|                   |               |       
+|                   |               \---js
+|                   |                       common.js
+|                   |                       
+|                   \---theme-tabler
+|                       \---resources
+|                           \---assets
+|                               +---css
+|                               |       color-adjustments.css
+|                               |       colors.css
+|                               |       style.css
+|                               |       
+|                               \---js
+|                                       tabler.js
+|                                       
++---resources
+|   +---css
+|   |       app.css
+|   |       
+|   +---js
+|   |   |   app.tsx
+|   |   |   ssr.tsx
+|   |   |   
+|   |   +---components
+|   |   |   |   app-content.tsx
+|   |   |   |   app-header.tsx
+|   |   |   |   app-logo-icon.tsx
+|   |   |   |   app-logo.tsx
+|   |   |   |   app-shell.tsx
+|   |   |   |   app-sidebar-header.tsx
+|   |   |   |   app-sidebar.tsx
+|   |   |   |   appearance-dropdown.tsx
+|   |   |   |   appearance-tabs.tsx
+|   |   |   |   breadcrumbs.tsx
+|   |   |   |   delete-user.tsx
+|   |   |   |   heading-small.tsx
+|   |   |   |   heading.tsx
+|   |   |   |   icon.tsx
+|   |   |   |   input-error.tsx
+|   |   |   |   nav-footer.tsx
+|   |   |   |   nav-main.tsx
+|   |   |   |   nav-user.tsx
+|   |   |   |   text-link.tsx
+|   |   |   |   user-info.tsx
+|   |   |   |   user-menu-content.tsx
+|   |   |   |   
+|   |   |   \---ui
+|   |   |           alert.tsx
+|   |   |           avatar.tsx
+|   |   |           badge.tsx
+|   |   |           breadcrumb.tsx
+|   |   |           button.tsx
+|   |   |           card.tsx
+|   |   |           checkbox.tsx
+|   |   |           collapsible.tsx
+|   |   |           dialog.tsx
+|   |   |           dropdown-menu.tsx
+|   |   |           icon.tsx
+|   |   |           input.tsx
+|   |   |           label.tsx
+|   |   |           navigation-menu.tsx
+|   |   |           placeholder-pattern.tsx
+|   |   |           select.tsx
+|   |   |           separator.tsx
+|   |   |           sheet.tsx
+|   |   |           sidebar.tsx
+|   |   |           skeleton.tsx
+|   |   |           toggle-group.tsx
+|   |   |           toggle.tsx
+|   |   |           tooltip.tsx
+|   |   |           
+|   |   +---hooks
+|   |   |       use-appearance.tsx
+|   |   |       use-initials.tsx
+|   |   |       use-mobile-navigation.ts
+|   |   |       use-mobile.tsx
+|   |   |       
+|   |   +---layouts
+|   |   |   |   app-layout.tsx
+|   |   |   |   auth-layout.tsx
+|   |   |   |   
+|   |   |   +---app
+|   |   |   |       app-header-layout.tsx
+|   |   |   |       app-sidebar-layout.tsx
+|   |   |   |       
+|   |   |   +---auth
+|   |   |   |       auth-card-layout.tsx
+|   |   |   |       auth-simple-layout.tsx
+|   |   |   |       auth-split-layout.tsx
+|   |   |   |       
+|   |   |   \---settings
+|   |   |           layout.tsx
+|   |   |           
+|   |   +---lib
+|   |   |       utils.ts
+|   |   |       
+|   |   +---pages
+|   |   |   |   dashboard.tsx
+|   |   |   |   welcome.tsx
+|   |   |   |   
+|   |   |   +---auth
+|   |   |   |       confirm-password.tsx
+|   |   |   |       forgot-password.tsx
+|   |   |   |       login.tsx
+|   |   |   |       register.tsx
+|   |   |   |       reset-password.tsx
+|   |   |   |       verify-email.tsx
+|   |   |   |       
+|   |   |   \---settings
+|   |   |           appearance.tsx
+|   |   |           password.tsx
+|   |   |           profile.tsx
+|   |   |           
+|   |   \---types
+|   |           global.d.ts
+|   |           index.d.ts
+|   |           vite-env.d.ts
+|   |           
+|   \---views
+|       |   app.blade.php
+|       |   
+|       \---vendor
+|           \---backpack
+|               +---crud
+|               |   |   create.blade.php
+|               |   |   details_row.blade.php
+|               |   |   edit.blade.php
+|               |   |   form_content.blade.php
+|               |   |   list.blade.php
+|               |   |   reorder.blade.php
+|               |   |   show.blade.php
+|               |   |   
+|               |   +---buttons
+|               |   |       create.blade.php
+|               |   |       delete.blade.php
+|               |   |       quick.blade.php
+|               |   |       reorder.blade.php
+|               |   |       show.blade.php
+|               |   |       update.blade.php
+|               |   |       
+|               |   +---columns
+|               |   |   |   boolean.blade.php
+|               |   |   |   check.blade.php
+|               |   |   |   checkbox.blade.php
+|               |   |   |   checklist.blade.php
+|               |   |   |   checklist_dependency.blade.php
+|               |   |   |   closure.blade.php
+|               |   |   |   color.blade.php
+|               |   |   |   custom_html.blade.php
+|               |   |   |   date.blade.php
+|               |   |   |   datetime.blade.php
+|               |   |   |   email.blade.php
+|               |   |   |   enum.blade.php
+|               |   |   |   hidden.blade.php
+|               |   |   |   image.blade.php
+|               |   |   |   json.blade.php
+|               |   |   |   model_function.blade.php
+|               |   |   |   model_function_attribute.blade.php
+|               |   |   |   month.blade.php
+|               |   |   |   multidimensional_array.blade.php
+|               |   |   |   number.blade.php
+|               |   |   |   password.blade.php
+|               |   |   |   phone.blade.php
+|               |   |   |   radio.blade.php
+|               |   |   |   range.blade.php
+|               |   |   |   relationship_count.blade.php
+|               |   |   |   row_number.blade.php
+|               |   |   |   select.blade.php
+|               |   |   |   select_from_array.blade.php
+|               |   |   |   select_grouped.blade.php
+|               |   |   |   select_multiple.blade.php
+|               |   |   |   summernote.blade.php
+|               |   |   |   switch.blade.php
+|               |   |   |   text.blade.php
+|               |   |   |   textarea.blade.php
+|               |   |   |   time.blade.php
+|               |   |   |   upload.blade.php
+|               |   |   |   upload_multiple.blade.php
+|               |   |   |   url.blade.php
+|               |   |   |   view.blade.php
+|               |   |   |   week.blade.php
+|               |   |   |   
+|               |   |   \---inc
+|               |   |           bulk_actions_checkbox.blade.php
+|               |   |           details_row_button.blade.php
+|               |   |           wrapper_end.blade.php
+|               |   |           wrapper_start.blade.php
+|               |   |           
+|               |   +---fields
+|               |   |   |   boolean.blade.php
+|               |   |   |   checkbox.blade.php
+|               |   |   |   checklist.blade.php
+|               |   |   |   checklist_dependency.blade.php
+|               |   |   |   color.blade.php
+|               |   |   |   custom_html.blade.php
+|               |   |   |   date.blade.php
+|               |   |   |   datetime.blade.php
+|               |   |   |   email.blade.php
+|               |   |   |   enum.blade.php
+|               |   |   |   hidden.blade.php
+|               |   |   |   month.blade.php
+|               |   |   |   number.blade.php
+|               |   |   |   password.blade.php
+|               |   |   |   radio.blade.php
+|               |   |   |   range.blade.php
+|               |   |   |   select.blade.php
+|               |   |   |   select_from_array.blade.php
+|               |   |   |   select_grouped.blade.php
+|               |   |   |   select_multiple.blade.php
+|               |   |   |   summernote.blade.php
+|               |   |   |   switch.blade.php
+|               |   |   |   text.blade.php
+|               |   |   |   textarea.blade.php
+|               |   |   |   time.blade.php
+|               |   |   |   upload.blade.php
+|               |   |   |   upload_multiple.blade.php
+|               |   |   |   url.blade.php
+|               |   |   |   view.blade.php
+|               |   |   |   week.blade.php
+|               |   |   |   
+|               |   |   \---inc
+|               |   |           attributes.blade.php
+|               |   |           translatable_icon.blade.php
+|               |   |           wrapper_end.blade.php
+|               |   |           wrapper_start.blade.php
+|               |   |           
+|               |   \---inc
+|               |           ajax_error_frame.blade.php
+|               |           button_stack.blade.php
+|               |           datatables_logic.blade.php
+|               |           details_row_logic.blade.php
+|               |           edit_translation_notice.blade.php
+|               |           export_buttons.blade.php
+|               |           filters_navbar.blade.php
+|               |           form_fields_script.blade.php
+|               |           form_page.blade.php
+|               |           form_save_buttons.blade.php
+|               |           grouped_errors.blade.php
+|               |           show_fields.blade.php
+|               |           show_tabbed_fields.blade.php
+|               |           show_tabbed_table.blade.php
+|               |           show_table.blade.php
+|               |           
+|               \---ui
+|                   |   dashboard.blade.php
+|                   |   
+|                   +---components
+|                   |       menu-dropdown-header.blade.php
+|                   |       menu-dropdown-item.blade.php
+|                   |       menu-dropdown.blade.php
+|                   |       menu-item.blade.php
+|                   |       menu-separator.blade.php
+|                   |       
+|                   +---errors
+|                   |       400.blade.php
+|                   |       401.blade.php
+|                   |       403.blade.php
+|                   |       404.blade.php
+|                   |       405.blade.php
+|                   |       408.blade.php
+|                   |       429.blade.php
+|                   |       4xx.blade.php
+|                   |       500.blade.php
+|                   |       503.blade.php
+|                   |       blank.blade.php
+|                   |       layout.blade.php
+|                   |       
+|                   +---inc
+|                   |       getting_started.blade.php
+|                   |       menu_items.blade.php
+|                   |       scripts.blade.php
+|                   |       styles.blade.php
+|                   |       
+|                   \---widgets
+|                       |   alert.blade.php
+|                       |   card.blade.php
+|                       |   div.blade.php
+|                       |   jumbotron.blade.php
+|                       |   livewire.blade.php
+|                       |   progress.blade.php
+|                       |   progress_white.blade.php
+|                       |   script.blade.php
+|                       |   style.blade.php
+|                       |   view.blade.php
+|                       |   
+|                       \---inc
+|                               wrapper_end.blade.php
+|                               wrapper_start.blade.php
+|                               
++---routes
+|   |   api.php
+|   |   auth.php
+|   |   console.php
+|   |   settings.php
+|   |   web.php
+|   |   
+|   \---backpack
+|           custom.php
+|           
++---storage
+|   +---app
+|   |   |   .gitignore
+|   |   |   
+|   |   +---private
+|   |   |       .gitignore
+|   |   |       
+|   |   \---public
+|   |       |   .gitignore
+|   |       |   
+|   |       \---basset
+|   |           |   .basset
+|   |           |   
+|   |           \---vendor
+|   |               \---backpack
+|   |                   +---basset
+|   |                   |   \---tests
+|   |                   |       \---Helpers
+|   |                   |               basset-test.js
+|   |                   |               
+|   |                   +---crud
+|   |                   |   \---src
+|   |                   |       \---resources
+|   |                   |           \---assets
+|   |                   |               +---css
+|   |                   |               |       common.css
+|   |                   |               |       
+|   |                   |               +---img
+|   |                   |               |       spinner.svg
+|   |                   |               |       
+|   |                   |               \---js
+|   |                   |                       common.js
+|   |                   |                       
+|   |                   \---theme-tabler
+|   |                       \---resources
+|   |                           \---assets
+|   |                               +---css
+|   |                               |       color-adjustments.css
+|   |                               |       colors.css
+|   |                               |       style.css
+|   |                               |       
+|   |                               \---js
+|   |                                       tabler.js
+|   |                                       
+|   +---framework
+|   |   |   .gitignore
+|   |   |   
+|   |   +---cache
+|   |   |   |   .gitignore
+|   |   |   |   
+|   |   |   \---data
+|   |   |           .gitignore
+|   |   |           
+|   |   +---sessions
+|   |   |       .gitignore
+|   |   |       
+|   |   +---testing
+|   |   |       .gitignore
+|   |   |       
+|   |   \---views
+|   |           .gitignore
+|   |           0055f20819354752c16718ccbb5c9da1.php
+|   |           0158e1002f9c331ba3ac933b5e3d213b.php
+|   |           01be051bcbd114dd16fae84e2cab5b70.php
+|   |           02432cf921f3fd56695435d4ea0c832d.php
+|   |           02666a53a1ab9cc51e4ecdb0fc05e05d.php
+|   |           03a74429824926e08f708616c9649a7c.php
+|   |           0524f546d4aa2e431dd47cd0763e721f.php
+|   |           056a04c8e6c3bf043e75733e6328c9ea.php
+|   |           06ed32b628a2e849b92541ad45f14d6c.php
+|   |           0830aba4acfbff5d3d836f62f210bb34.php
+|   |           09311bfb3fb8e43d6f9e079a6f18c540.php
+|   |           0a14cf87d2498f174884e2c1de5c0e30.php
+|   |           0a450d7e241263d05aa4c0816fcba628.php
+|   |           0b1f75502d3ea8444e66888b20a28908.php
+|   |           0c026e6afb467fadbd220654ef89767b.php
+|   |           0d0a8e3d0acebe72c839d34794b39494.php
+|   |           0d7e575e9f6a490099cf0c9389b2b14a.php
+|   |           0ed20742005f32baa37d3af0805df422.php
+|   |           0f58cc5fddd444f7e666b633b86c3312.php
+|   |           1135a60aae2255cb3e2b2f586cbb2411.php
+|   |           15f696f84c93ef58e62b692ed6bfdab5.php
+|   |           167f73d1a2b744b0dd5ece323cc3e1e3.php
+|   |           17d3f3327d0291750211f3400df2f8bf.php
+|   |           180ad91fa304975dd3ed178db273f2dd.php
+|   |           183b423ca38fe4cc4deb1dd2a6492f75.php
+|   |           1b0e513cfb14ae0a06deb4ac04ddb60b.php
+|   |           1dc94297d1766528e8a32f55fff60484.php
+|   |           1ea1498bdb27d8ceb01f3e88b62b7013.php
+|   |           208e97d268d3dbbb737202dec7f39244.php
+|   |           20baf7a8d166603f71a379f6645b5564.php
+|   |           20e039af6750da0a769ae5d3c500375a.php
+|   |           21867f4658cf533937c43d663d246c18.php
+|   |           220998d477039b75ca77a7123c4b29aa.php
+|   |           23179c2d41a07db4dbbaab2bf5be3ad3.php
+|   |           232892060144072340545e611dd745f4.php
+|   |           2348f5202a0004ee2ce487063cf12a06.php
+|   |           23531874d364c841e3ab1e87933bca72.php
+|   |           24b632d0ff50b479c63a471d5d8a81dc.php
+|   |           2b15d268c19c7683fac75c7e665837ee.php
+|   |           2c4284edcf1401563aaa0fccda0f27fe.php
+|   |           2cb278956647fe313de49911650dda81.php
+|   |           2e684d5617639e4f9b3de6b7fcce6a47.php
+|   |           2f291e3bce132fb3ec5ec0d0932793a3.php
+|   |           31e8973495d72f2a209e585a2d63bffc.php
+|   |           34382d90b4bad981be8de59ac2593cab.php
+|   |           3483165964da738027520d3e0b7472f6.php
+|   |           34e95cdf9d597cf8e59a13b4216a075c.php
+|   |           35083013e663fd34e3b68f0cf938315c.php
+|   |           3545dfdeac28fe5094ec93c4bd4fab18.php
+|   |           3b495474a982a282b4b3a18a9cbb7ce3.php
+|   |           3e10def6be06b4f1f355bdc2f7a338ff.php
+|   |           3e1b81def79ad0a7df0d2189b6396ed5.php
+|   |           412bd3c33937e83b80db6f36a7ca7ad9.php
+|   |           414840a5552122858e91fc2cfb08b6f4.php
+|   |           416ab76729a0530dddc4125b91dddf8a.php
+|   |           425b105b116b3eae39bb060a6f5dc381.php
+|   |           444200805558348dda999f419c5a5283.php
+|   |           45118be2f2ae34df664d20339eee4ddf.php
+|   |           45ca9a74f7e4b542cc89f1e3776b80aa.php
+|   |           4636fd649d5624b7c76c66123c6f166b.php
+|   |           4683e2fee6164923e7c75b28c9ba0c75.php
+|   |           47f11da471910a6496bdc8be77f0db93.php
+|   |           484b515233c2a1345d9e16886c57ee14.php
+|   |           4857b3941d72692a5328cc27da52f2dd.php
+|   |           487b511e1e862055f0b4733c50708bcd.php
+|   |           4b34222ab2382a8048ce7bdca3b0f87f.php
+|   |           4de4e8446924496dd4f093c5776e5cc8.php
+|   |           4ee7230c8276652ae9f7db2598d82d63.php
+|   |           4f4f24e66291b2d86cd127b1591dd1b4.php
+|   |           5066a866cbc61d4ba849a4b7188e419d.php
+|   |           530c2a614ab248763448ab67e7a92c6f.php
+|   |           532b206deff1e5a814f78cea2c1540f2.php
+|   |           5398b280c24a06b3ea642a8defa2fffc.php
+|   |           566710614fd3879f4b56ccd45653e2c4.php
+|   |           576c74327ff4288f0a896b74bcbdf10b.php
+|   |           5821659d1d2390f1069f8f9c02aad086.php
+|   |           5ad3a1bb0b3c391a8866619ddb20d0e8.php
+|   |           5b05a814a7174105792f0b1264d2caab.php
+|   |           5b6dbbe844d226e1336146b068a63ce6.php
+|   |           5b9a561793f03442fb2291c3b80ffdf7.php
+|   |           5bf54e60c146ce9c2a4dc8759bb4e051.php
+|   |           5e8ae76d13a2c1fcad64cd66a7f1f112.php
+|   |           5fc6e32d80313acf8f8b79240bfaefef.php
+|   |           5fe07ee849f929d4a6f113e94759ebdf.php
+|   |           632b1dc85efca4f232d6157ebf48ef56.php
+|   |           6647d8ce56d28a7311a1bf5081e75911.php
+|   |           676387d320002e9407658387a7df0f9e.php
+|   |           6796912cac06c99fe2f336f137c6144c.php
+|   |           6a14162e693d84a962e1acc1c3de5724.php
+|   |           6c3368c763e0d36bf41ef8d1468a6fa6.php
+|   |           6c652ff0c9bd7903fd69810a6b04ae3a.php
+|   |           6fb35c54f6860a5427708ee29cb69e9f.php
+|   |           6fd09e4dc7c10ee126ecc7a28a34a6b6.php
+|   |           71bcfd34f33468d231bdbe05c75704ce.php
+|   |           71bd1f3e145f7008397a23fca3b7f4dc.php
+|   |           71e6ea43f7bb450dee8741977c9577a7.php
+|   |           723fe3f0e44fe2b3529303522562360e.blade.php
+|   |           747066925389fca8d48b39a4e57f13d9.php
+|   |           7633b8fdc6d1cd1f29bd77360b591953.php
+|   |           77b3c0b15d66641ec21e0eb44714e954.php
+|   |           786575dda297bcd4c9a1d9bd419386d2.php
+|   |           7a42cc76e2983202f1624a2d19d5260d.php
+|   |           7a651e6ec994f8de87ac54eafc3d0c2b.php
+|   |           7a7a64a8c4b553079ba1459d8bbbfdd0.php
+|   |           7c24188dde6e7af1c6a7e5f973ba8610.php
+|   |           7c69a4f53d40e4c03996cfae8fb4da96.php
+|   |           7cd92e2604aca701cee847df6fe626a0.php
+|   |           7dcf8f85edbd2de4e37b77cf9b01e4bc.php
+|   |           7e5201883998ec19d5edd94d576ecb54.php
+|   |           801f796893336d9a73af05498d1e8ee3.php
+|   |           81e98d4207fb326942e54d9392fc86e0.php
+|   |           83bb3f5ee48456c8a5b147dd3eb369ed.php
+|   |           84ac9f5df1d92ef5a38cc79f38f4f9f0.php
+|   |           8626c5afafbd3dd2c6b3e62b1dacb862.php
+|   |           880418a79e141ee8d2f883fc988ceb5d.php
+|   |           88c96d5b4bbb5d6e11b5d780280cc211.php
+|   |           88de59fb38578f51f45f90c2bf93866c.php
+|   |           8a07812e6d8f9d2826754abad88e5380.blade.php
+|   |           8c089a5d08be5fe8029d87feeb28d2c2.php
+|   |           8ca72dc52fb7c5c56a71aa383b6ab702.php
+|   |           8e4ed78caaa7b91501b3f58b23762130.php
+|   |           8efd7a46a709604511e79b2532467129.php
+|   |           8fd4123ef5bc147098b62248a7c9a0d0.php
+|   |           91c3715e96a7e1093688c07bd77da560.php
+|   |           9421b554e3cef80480ffeacda8a675f3.php
+|   |           958afa7ae8328b2420876a6b331b9ed6.php
+|   |           9632ab077d564a90c48f3cbf043f8c1a.php
+|   |           96e22061b0d6447733f04fea1a82c654.php
+|   |           987af2866637276398e3a09e0755087a.php
+|   |           98d0769e14a4ee01a6c7e3da47c51cc5.php
+|   |           98fa1da961150cd3548418c2cc86a040.php
+|   |           996ee0024bbd3e8d70c25b0e08bf93b1.php
+|   |           a01a5d91bbcfb8d67004a51a1086e223.php
+|   |           a031e31be56a398723437da20ff467a9.php
+|   |           a22582ce06a55489d0ec73a93ce240eb.php
+|   |           a37dcf3a88b216aea2b3aa2935b1bc4e.php
+|   |           a451070b773f7bccc2cf9c5b2690947b.php
+|   |           a5a9adb4afe127d92a194542d0324e8c.php
+|   |           a6bff0a9c3050dcd992ebe869048cc07.php
+|   |           a70ffb8f2a2cfbdfe5b0ac562e84017b.php
+|   |           aa54a218fa6f2b91add4332f8425edb6.php
+|   |           ab46b18618820f3b83f30aed07df1795.php
+|   |           ac4a1ea82ac1ccf317160335fd3a40d7.php
+|   |           ac6832efc05c76212e381cbbdf083eb1.php
+|   |           ac921b00479b651645dde2271961d03c.php
+|   |           ad775763fed9a2c0b109e7c2771ae7f2.php
+|   |           ae1b5a9683d2871844059593ef529d4f.php
+|   |           b0904382bb823480118fa260c387e4ac.php
+|   |           b34c0c12755fbc1f004d97cea8060d36.php
+|   |           b6483f53a9aee0b8427a6b86b7488839.php
+|   |           b68a3a0fa3b959f561fe20359385fd93.php
+|   |           b7849b68349f7473665266be5a49d661.php
+|   |           b8f3fe75858131c61df83e843a345e66.php
+|   |           bbe57e3a892d4539a60f02d6204c8fce.php
+|   |           bc1ce9552fac02a8b2d748af974563b6.php
+|   |           bd83dc2db3d325d3187647610d4ae39a.php
+|   |           bda41a8b2d81c5a3256f7d858c8b0244.php
+|   |           bff53c8408f574e497abd49f856adee1.php
+|   |           c07294e75807cd822ed66b8482e9a43e.php
+|   |           c15f1171667c3f6ff63b2d4d95719125.php
+|   |           c2014c22f1615421699ec1f5985a7521.php
+|   |           c21f40b889deabe95a4d4a31c8c32af9.php
+|   |           c25136b6709195cc3e3762a1496f29c6.php
+|   |           c8f091de7a1c964106fc2d947a42b68c.php
+|   |           c93fd25b7e7a58563821fc8aac176d4e.php
+|   |           ca7ced5241381d03c884961b9934b6f9.php
+|   |           cb52f0f63552a20c3bc72a81443e37dc.php
+|   |           cbcafef56cb8f9780ae6c223d7a340a1.php
+|   |           cd5771dfad7a4cd3be5e6f6126d5ef6b.php
+|   |           cdbce5beec7490d83a5e21eba6849efc.php
+|   |           cfabb531592b5e583e810e7b8d85e0b0.php
+|   |           d1e5a68639d1d79b968384b5652f90d0.php
+|   |           d3cef13c8a30c0e637abffc9a7f5e1a1.php
+|   |           d4a129cc1d8cd1112084cbbc8753920d.php
+|   |           d624dbb2c584a04334ab76b44c93ffce.php
+|   |           d77bdf2887b355b0f460c4d6d7b998f7.php
+|   |           d8f9a1117fddf7555fbf6d54cd247305.php
+|   |           dad0f0b6bd5ee59227fd0924b3b9351d.php
+|   |           db8544760195e3f3190b8361ddc57f3f.php
+|   |           dc564c09a50069c54fedc4d4b187a1a8.php
+|   |           dd5a6ff973ccf2e97f812de9c059fe05.php
+|   |           deeaea07d7f37890ea3aaf5914b4c2be.php
+|   |           dfeff7cdbb6129b39717a561f43f23c8.php
+|   |           e082aa15d408085e8ec6197dca34af5f.php
+|   |           e0f21d7a21e935e7c10b41602fcf94ff.php
+|   |           e2b1902a87f8eddd4fa81a549dc56b3a.php
+|   |           e35bf4d33df68dec2a84df4957215086.php
+|   |           e44269f2b63f4cf301287d437cdce1a6.php
+|   |           e4611a773f6de95f33ccb4dbd0afff4e.php
+|   |           e5f6839c14f38634caa78d4452296ca5.php
+|   |           e836b6867f741dc1b43db3ebcbb619c3.php
+|   |           ea315fd6c470331149af33ccbd497e9c.php
+|   |           ea3f720517112a94aa545100a34aec23.php
+|   |           eb456abb15beba1aed9e3027feb900b7.php
+|   |           eebfd17dc5d74ebe1e514b9c35245bb8.php
+|   |           efde59822c5db453da307eeb0517c739.php
+|   |           f3f1dc9311f9a294d08b26a6480e3c71.php
+|   |           f435632da839c0185d5e4f0438437645.php
+|   |           f5e6efefc8d598c35c9d957dbef866b0.php
+|   |           f70f0ea90e491cde7ffef29507216dd7.php
+|   |           f9bb17d560035fa55e5a7c3c5f3125e6.php
+|   |           fab3ffecf0baa1127714c9343ffef6b1.php
+|   |           fddb96a1bd4bce447b8a4a78683a25ad.php
+|   |           fdf5fd985bcd4919893ddfbbad373e24.php
+|   |           fe899e6ded9b0d66ab9562868f120edb.php
+|   |           
+|   \---logs
+|           .gitignore
+|           laravel.log
+|           
++---tests
+|   |   Pest.php
+|   |   TestCase.php
+|   |   
+|   +---Feature
+|   |   |   DashboardTest.php
+|   |   |   ExampleTest.php
+|   |   |   
+|   |   +---Auth
+|   |   |       AuthenticationTest.php
+|   |   |       EmailVerificationTest.php
+|   |   |       PasswordConfirmationTest.php
+|   |   |       PasswordResetTest.php
+|   |   |       RegistrationTest.php
+|   |   |       
+|   |   \---Settings
+|   |           PasswordUpdateTest.php
+|   |           ProfileUpdateTest.php
+|   |           
+|   \---Unit
+|           ExampleTest.php
+|           

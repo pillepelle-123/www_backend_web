@@ -1,0 +1,62 @@
++---app
+|   +---Http
+|   |   +---Controllers
+|   |   |   |   Controller.php
+|   |   |   |   
+|   |   |   +---Admin
+|   |   |   |       CompanyCrudController.php
+|   |   |   |       OfferCrudController.php
+|   |   |   |       RatingCrudController.php
+|   |   |   |       UserCrudController.php
+|   |   |   |       
+|   |   |   +---Api
+|   |   |   |   \---V1
+|   |   |   |           CompanyController.php
+|   |   |   |           OfferController.php
+|   |   |   |           RatingController.php
+|   |   |   |           UserController.php
+|   |   |   |           
+|   |   |   +---Auth
+|   |   |   |       AuthenticatedSessionController.php
+|   |   |   |       ConfirmablePasswordController.php
+|   |   |   |       EmailVerificationNotificationController.php
+|   |   |   |       EmailVerificationPromptController.php
+|   |   |   |       NewPasswordController.php
+|   |   |   |       PasswordResetLinkController.php
+|   |   |   |       RegisteredUserController.php
+|   |   |   |       VerifyEmailController.php
+|   |   |   |       
+|   |   |   \---Settings
+|   |   |           PasswordController.php
+|   |   |           ProfileController.php
+|   |   |           
+|   |   +---Middleware
+|   |   |       CheckIfAdmin.php
+|   |   |       HandleAppearance.php
+|   |   |       HandleInertiaRequests.php
+|   |   |       
+|   |   +---Requests
+|   |   |   |   CompanyRequest.php
+|   |   |   |   OfferRequest.php
+|   |   |   |   ProfileUpdateRequest.php
+|   |   |   |   RatingRequest.php
+|   |   |   |   UserRequest.php
+|   |   |   |   
+|   |   |   +---Auth
+|   |   |   |       LoginRequest.php
+|   |   |   |       
+|   |   |   \---Settings
+|   |   |           ProfileUpdateRequest.php
+|   |   |           
+|   |   \---Rules
+|   |           OfferUserMatchRule.php
+|   |           
+|   +---Models
+|   |       Company.php
+|   |       Offer.php
+|   |       Rating.php
+|   |       User.php
+|   |       
+|   \---Providers
+|           AppServiceProvider.php
+|           
