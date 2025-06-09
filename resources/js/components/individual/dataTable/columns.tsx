@@ -92,7 +92,7 @@ export const columns: ColumnDef<Offer>[] = [
   },
   {
     accessorKey: "status",
-      header: ({ column }) => {
+    header: ({ column }) => {
       return (
         <Button
           variant="ghost"
@@ -103,6 +103,10 @@ export const columns: ColumnDef<Offer>[] = [
         </Button>
       )
     },
+    // folgender Code sorgt dafür, dass für "status" nach dem exakten Namen gefiltert, so kommt es nicht dazu, dass man bei Filterung auf "active" auch "inactive"-Einträge erhält
+    filterFn: (row, columnId, filterValue: string[]) => {
+    return filterValue.some((val) => row.getValue(columnId) === val)
+    }
   },
   {
     id: "actions",

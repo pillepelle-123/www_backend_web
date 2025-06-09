@@ -31,6 +31,8 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { DataTablePagination } from "./data-table-pagination"
+import { DataTableFacetedFilter } from "./data-table-faceted-filter"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -86,14 +88,40 @@ export function DataTable<TData, TValue>({
             }
             // className="mx-3"
           />
-            <Input
+            {table.getColumn("status") && (
+                <DataTableFacetedFilter
+                    column={table.getColumn("offered_by_type")}
+                    title="Filter Offered by"
+                    options={[
+                        { label: 'Referrer', value: 'referrer' },
+                        { label: 'Referred', value: 'referred' }
+                    ]
+
+                    }
+                />
+            )}
+            {table.getColumn("status") && (
+                <DataTableFacetedFilter
+                    column={table.getColumn("status")}
+                    title="Filter Status"
+                    options={[
+                        { label: 'Active', value: 'active' },
+                        { label: 'Inactive', value: 'inactive' },
+                        { label: 'Matched', value: 'matched' },
+                        { label: 'Closed', value: 'closed' }
+                    ]
+
+                    }
+                />
+            )}
+            {/* <Input
             placeholder="Filter Status..."
             value={(table.getColumn("status")?.getFilterValue() as string) ?? ""}
             onChange={(event) =>
               table.getColumn("status")?.setFilterValue(event.target.value)
             }
             // className="mx-3"
-          />
+          /> */}
             <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
@@ -169,7 +197,8 @@ export function DataTable<TData, TValue>({
       </Table>
     </div>
           <div className="flex items-center justify-end space-x-2 py-4">
-        <Button
+            <DataTablePagination table={table} />
+        {/* <Button
           variant="outline"
           size="sm"
           onClick={() => table.previousPage()}
@@ -184,7 +213,7 @@ export function DataTable<TData, TValue>({
           disabled={!table.getCanNextPage()}
         >
           Next
-        </Button>
+        </Button> */}
       </div>
     </div>
   )
