@@ -26,7 +26,7 @@ class UserFactory extends Factory
         return [
             'name' => $this->faker->unique()->name(),
             'email' => $this->faker->unique()->safeEmail(),
-            'email_verified_at' => $this->faker->dateTimeBetween('2 weeks'),
+            'email_verified_at' => $this->faker->dateTimeBetween('-2 weeks', 'now'),
             'password' => static::$password ??= Hash::make('djembe32'),
             'remember_token' => $this->faker->regexify('[a-z0-9]{8}')
         ];

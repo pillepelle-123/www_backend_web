@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Laravel\Sanctum\HasApiTokens;
+use App\Enums\RatingDirection;
 
 class Rating extends Model
 {
@@ -39,6 +40,9 @@ class Rating extends Model
         'score',
         'comment',
     ];
+    protected $casts = [
+        'direction' => RatingDirection::class, // Enum siehe unten
+    ];
 
     /*
     |--------------------------------------------------------------------------
@@ -46,22 +50,26 @@ class Rating extends Model
     |--------------------------------------------------------------------------
     */
 
-    public function offer(): BelongsTo
+    public function userMatch(): BelongsTo
     {
-        return $this->belongsTo(Offer::class);
+        return $this->belongsTo(UserMatch::class);
     }
+    // public function offer(): BelongsTo
+    // {
+    //     return $this->belongsTo(Offer::class);
+    // }
 
     // Ein Rating gehört zum "Bewerter" (from_user)
-    public function fromUser(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'from_user_id');
-    }
+    // public function fromUser(): BelongsTo
+    // {
+    //     return $this->belongsTo(User::class, 'from_user_id');
+    // }
 
-    // Ein Rating gehört zum "Bewerteten" (to_user)
-    public function toUser(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'to_user_id');
-    }
+    // // Ein Rating gehört zum "Bewerteten" (to_user)
+    // public function toUser(): BelongsTo
+    // {
+    //     return $this->belongsTo(User::class, 'to_user_id');
+    // }
 
     /*
     |--------------------------------------------------------------------------

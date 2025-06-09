@@ -7,7 +7,10 @@ use App\Models\Company;
 use Illuminate\Http\Request;
 
 use App\Http\Resources\V1\CompanyResource;
-use App\Http\Resources\V1\CompanyCollection;
+// use App\Http\Resources\V1\CompanyCollection;
+use Spatie\QueryBuilder\QueryBuilder;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\Enums\FilterOperator;
 
 class CompanyController extends ApiController
 {
@@ -16,35 +19,16 @@ class CompanyController extends ApiController
      */
     public function index(Request $request)
     {
-        // Query Aufbau
-        $query = Company::query();
+        $companies = QueryBuilder::for(Company::class)
+            ->allowedFilters(['name', 'logo_url', 'website', 'referral_program_url', 'description',
+                AllowedFilter::operator('created_at', FilterOperator::DYNAMIC),
+                AllowedFilter::operator('updated_at', FilterOperator::DYNAMIC),
+            ])
+            ->allowedIncludes('offers')
+            ->allowedSorts('name', 'email', 'created_at', 'updated_at')
+            ->paginate(15);
 
-        // Search-Parameter
-        [$key, $value] = $this->getFirstSearchParam($request->query->all());
-        if($key && $value) {
-            $query->where($key, 'LIKE', '%' . $value . '%');
-        }
-
-        // Filter-Parameter
-        $filters = $request->only(['name', 'logo_url', 'website', 'created_at', 'updated_at']);
-        foreach ($filters as $field => $value) {
-            // Felder aus fremden Tabellen werden mit "tabelle-feld_name" angesprochen. Hier wird - (Bindestrich) als Trenner genommen und im folgenden durch . ersetzt, da . (Punkt) im URL-Paramter nicht vorkommen darf.
-            if (str_contains($field, '-')) {
-                $field = str_replace('-', '.', $field);
-            };
-            $query->where($field, $value);
-        }
-
-        // Sort-Parameter
-        if ($request->has('sort_by')) {
-            $sortOrder = $request->input('sort_order', 'asc');
-            $query->orderBy($request->input('sort_by'), $sortOrder);
-        }
-
-        $perPage = $request->input('per_page', 10);
-        $paginatedItems = $query->paginate($perPage);
-
-        return response()->json($paginatedItems);
+        return $companies;
     }
 
     /**

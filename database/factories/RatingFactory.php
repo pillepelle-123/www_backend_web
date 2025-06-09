@@ -7,6 +7,7 @@ namespace Database\Factories;
 use App\Models\Rating;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
+use \App\Models\UserMatch;
 
 /**
  * @extends Factory<\App\Models\Rating>
@@ -29,9 +30,8 @@ final class RatingFactory extends Factory
     {
         return [
             // 'id' => Str::uuid(),
-            'offer_id' => \App\Models\Offer::factory(),
-            'from_user_id' => \App\Models\User::factory(),
-            'to_user_id' => \App\Models\User::factory(),
+            'user_match_id' => UserMatch::factory(),
+            'direction' => $this->faker->randomElement(['referrer_to_referred']),
             'score' => $this->faker->randomElement([1, 2, 3, 4, 5]),
             'comment' => $this->faker->optional($weight = 0.7)->paragraph(3, true),
         ];

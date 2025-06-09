@@ -71,7 +71,7 @@ class Offer extends Model
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     /**
@@ -79,7 +79,7 @@ class Offer extends Model
      */
     public function company(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Company::class, 'company_id');
     }
 
     /**
@@ -87,7 +87,7 @@ class Offer extends Model
      */
     public function ratings()
     {
-        return $this->hasMany(Rating::class);
+        return $this->hasMany(Rating::class, 'offer_id');
     }
     /*
     |--------------------------------------------------------------------------

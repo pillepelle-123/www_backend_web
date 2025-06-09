@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Api\ApiController;
 use App\Models\Offer;
 use Illuminate\Http\Request;
+use Spatie\QueryBuilder\QueryBuilder;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\Enums\FilterOperator;
 
 class OfferController extends ApiController
 {
@@ -13,45 +16,25 @@ class OfferController extends ApiController
      */
     public function index(Request $request)
     {
-        // Query Aufbau
-        $query = Offer::query()
-            ->join('users', 'offers.user_id', '=', 'users.id')
-            ->join('companies', 'offers.company_id', '=', 'companies.id')
-            ->select('offers.*', 'users.name as users-name', 'companies.name as companies-name')
-        ;
-
-        // Search-Parameter
-        [$key, $value] = $this->getFirstSearchParam($request->query->all());
-        if($key && $value) {
-            $query->where($key, 'LIKE', '%' . $value . '%');
-        }
-
-        // Filter-Parameter
-        $filters = $request->only(['offered_by_type', 'users-name', 'companies-name', 'offer_title', 'reward_total_cents', 'reward_offerer_percent', 'status', 'created_at', 'updated_at']);
-        foreach ($filters as $field => $value) {
-            // Felder aus fremden Tabellen werden mit "tabelle-feld_name" angesprochen. Hier wird - (Bindestrich) als Trenner genommen und im folgenden durch . ersetzt, da . (Punkt) im URL-Paramter nicht vorkommen darf.
-            if (str_contains($field, '-')) {
-                $field = str_replace('-', '.', $field);
-            };
-            $query->where($field, $value);
-        }
-
-        // Sort-Parameter
-        if ($request->has('sort_by')) {
-            $sortOrder = $request->input('sort_order', 'asc');
-
-
-
-            $sort_column = $request->input('sort_by');
-
-
-            $query->orderBy($sort_column, $sortOrder);
-        }
-
-        $perPage = $request->input('per_page', 10);
-        $paginatedItems = $query->paginate($perPage);
-
-        return response()->json($paginatedItems);
+        $offers = QueryBuilder::for(Offer::class)
+            // ->join('users', 'offers.user_id', 'users.id')
+            // ->join('companies', 'offers.company_id', 'companies.id')
+            // ->select([
+            //     'offers.*',
+            //     'users.name as user_name', // Alias für user name
+            //     'companies.name as company_name' // Alias für company name
+            // ])
+            ->allowedFilters(['offered_by_type', 'offer_title', 'offer_description', 'status', 'created_at', 'updated_at',
+            AllowedFilter::exact('user.name'),
+            AllowedFilter::operator('reward_total_cents', FilterOperator::DYNAMIC),
+            AllowedFilter::operator('reward_offerer_percent', FilterOperator::DYNAMIC),
+            ])
+            ->allowedFields('user.name')
+            ->allowedIncludes(['user', 'company'])
+            ->allowedSorts('offer_title', 'reward_total_cents', 'reward_offerer_percent', 'created_at')
+            ->with(['user', 'company'])
+            ->paginate(15);
+        return $offers;
     }
 
     /**

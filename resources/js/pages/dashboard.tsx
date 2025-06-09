@@ -1,7 +1,12 @@
-import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
+// import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
+// import { useOffers } from '../hooks/useOffers.';
+// import { Offer } from '@/types/offer';
+// import { useState } from 'react';
+// import { useOffers } from '@/hooks/useOffers';
+import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -9,6 +14,7 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/dashboard',
     },
 ];
+
 
 export default function Dashboard() {
     return (

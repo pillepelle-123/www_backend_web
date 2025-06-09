@@ -15,7 +15,7 @@ class RenameFieldsInOffersTable extends Migration
             // 1. offered_by → offered_by_type umbenennen
             $table->renameColumn('offered_by', 'offered_by_type');
 
-            // 2. reward_split_percent → reward_for_offerer_percent umbenennen
+            // 2. reward_split_percent → reward_offerer_percent umbenennen
             $table->renameColumn('reward_split_percent', 'reward_offerer_percent');
         });
     }
