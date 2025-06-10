@@ -20,6 +20,7 @@ class UserController extends ApiController
     public function index(/*Request $request*/)
     {
         $users = QueryBuilder::for(User::class)
+            ->allowedFields('name') // http://localhost:8000/api/v1/users?sort=-name&fields[users]=name
             ->allowedFilters(['name', 'email',
                 AllowedFilter::operator('created_at', FilterOperator::DYNAMIC),
                 AllowedFilter::operator('updated_at', FilterOperator::DYNAMIC),
@@ -28,7 +29,6 @@ class UserController extends ApiController
                 AllowedInclude::count('offersCount')
             ])
             ->allowedSorts('-name', 'email', 'created_at', 'updated_at')
-            ->allowedFields('name') // http://localhost:8000/api/v1/users?sort=-name&fields[users]=name
             ->paginate(15);
 
         return $users;

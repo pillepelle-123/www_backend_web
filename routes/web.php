@@ -3,6 +3,7 @@
 use App\Http\Controllers\Web\OfferController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     return Inertia::render('welcome');
@@ -27,6 +28,23 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Route::get('/list-offers', function () {
     //     return Inertia::render('Offers');
     // })->name('list-offers');
+
+    // Route::group([
+    //     'middleware' => ['admin'],
+    //     'prefix' => config('backpack.base.route_prefix', 'admin'),
+    //     'namespace' => 'App\Http\Controllers\Admin',
+    // ], function () {
+    //     // Route::get('/admin/login', function () {
+    //     //     return Inertia::render('dashboard');
+    //     // })->name('dashboard');
+    //     Route::get('logout', 'Backpack\Base\app\Http\Controllers\Auth\LoginController@login');
+    // // Route::inertia('/admin/dashboard', 'Admin/Dashboard');
+    //     // return Inertia::render('admin');
+
+    //     // Route::get('/admin/dashboard', function () {
+    //     //     return Inertia::render('dashboard');
+    //     // })->name('dashboard');
+    // });
 
 });
 
