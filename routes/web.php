@@ -24,8 +24,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
 
-    Route::get('/offers', [OfferController::class, 'Index'])
+    Route::get('/offers', [OfferController::class, 'index'])
         ->name('offers.index');
+
+    Route::get('/offers/{id}', [OfferController::class, 'show'])
+        ->name('offers.show');
 
     // Route::get('/list-offers', function () {
     //     return Inertia::render('Offers');

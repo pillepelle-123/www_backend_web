@@ -30,21 +30,18 @@ class Company extends Model
     */
     protected $fillable = [
         'name',
-        'logo_url',
-        'website',
+        'domain',
         'referral_program_url',
-        'description'
+        'logo_url',
+        'description',
+        'is_active'
     ];
     protected $hidden = [];
 
-    // protected $casts = [
-    //     'name' => 'string',
-    //     'reward_total_cents' => 'integer',
-    //     'reward_offerer_percent' => 'decimal:2',
-    //     'status' => 'string',
-    //     'created_at' => 'datetime',
-    //     'updated_at' => 'datetime',
-    // ];
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
+
     /*
     |--------------------------------------------------------------------------
     | RELATIONS
@@ -67,6 +64,21 @@ class Company extends Model
     | ACCESSORS
     |--------------------------------------------------------------------------
     */
+
+    public function getFullReferralUrlAttribute(): ?string
+    {
+        if (!$this->referral_program_url) {
+            return null;
+        }
+
+        // Wenn die URL bereits mit http:// oder https:// beginnt, gib sie direkt zurück
+        if (str_starts_with($this->referral_program_url, 'http')) {
+            return $this->referral_program_url;
+        }
+
+        // Ansonsten füge https:// hinzu
+        return 'https://' . $this->referral_program_url;
+    }
 
     /*
     |--------------------------------------------------------------------------

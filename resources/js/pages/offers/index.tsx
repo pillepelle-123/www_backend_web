@@ -1,11 +1,8 @@
-// import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
+// resources/js/Pages/Offers/List.tsx
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
-// import { useOffers } from '../hooks/useOffers.';
-import { Offer } from '@/types/offer';
-import { useState } from 'react';
-import { useOffers } from '@/hooks/use-offers';
+import { LazyOfferCard } from '@/components/individual/LazyOfferCard';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -14,89 +11,41 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function Index() {
+export type Offer = {
+  id: number;
+  title: string;
+  description: string;
+  offered_by_type: string;
+  offer_user: string;
+  offer_company: string;
+  logo_url: string;
+  reward_total_cents: number;
+  reward_offerer_percent: number;
+//   user: {
+//     name: string;
+//   };
+//   company: {
+//     name: string;
+//     logo_url: string;
+//   };
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const { offers, pagination } = useOffers(currentPage);
+  status: "active" | "inactive" | "closed" | 'matched';
+};
 
+export default function Index({ offers }: { offers: Offer[] }) {
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-        <Head title="Dashboard" />
-        <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4 ">
-        {/* <div className="grid auto-rows-min gap-4 md:grid-cols-3"> */}
-
+      <Head title="Dashboard" />
+      <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
         <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Offers</h1>
-{/* border-sidebar-border/70 dark:border-sidebar-border relative aspect-video overflow-hidden rounded-xl border */}
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white">
-          <thead>
-            <tr>
-              <th className="py-2 px-4 border-b-4">ID</th>
-              <th className="py-2 px-4 border-b-4">Title</th>
-              <th className="py-2 px-4 border-b-4">Reward</th>
-              <th className="py-2 px-4 border-b-4">Offerer Percent</th>
-              <th className="py-2 px-4 border-b-4">Status</th>
-              <th className="py-2 px-4 border-b-4">User</th>
-
-            </tr>
-          </thead>
-          <tbody>
-            {offers.map((offer: Offer) => (
-              <tr key={offer.id}>
-                <td className="py-2 px-4 ">{offer.id}</td>
-                <td className="py-2 px-4 border-l">{offer.offer_title}</td>
-                <td className="py-2 px-4 border-l">{offer.reward_total_cents}</td>
-                <td className="py-2 px-4 border-l">{offer.reward_offerer_percent}</td>
-                <td className="py-2 px-4 border-l">{offer.status}</td>
-                <td className="py-2 px-4 border-l">{offer.user.name}</td>
-                {/*<td className="py-2 px-4 border">{offer.company.name}</td>
-                <td className="py-2 px-4 border">
-                  <span className={`px-2 py-1 rounded-full text-xs ${
-                    offer.status === 'active'
-                      ? 'bg-green-100 text-green-800'
-                      : 'bg-red-100 text-red-800'
-                  }`}>
-                    {offer.status}
-                  </span>
-                </td>
-
-                  reward_total_cents: number;
-                    reward_offerer_percent: number;
-                    status: string;
-
-
-                */}
-              </tr>
+          <h1 className="text-2xl font-bold mb-6">Offers</h1>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-8">
+            {offers.map((offer) => (
+              <LazyOfferCard key={offer.id} offer={offer} />
             ))}
-          </tbody>
-        </table>
+          </div>
+        </div>
       </div>
-
-      {/* Pagination Controls */}
-      <div className="flex justify-between mt-4">
-        <button
-          onClick={() => setCurrentPage(p => Math.max(p - 1, 1))}
-          disabled={currentPage === 1}
-          className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
-        >
-          Previous
-        </button>
-
-        <span>Page {pagination.current_page} of {pagination.last_page}</span>
-
-        <button
-          onClick={() => setCurrentPage(p => Math.min(p + 1, pagination.last_page))}
-          disabled={currentPage === pagination.last_page}
-          className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
-        >
-          Next
-        </button>
-      </div>
-
-    </div>
-    {/* </div> */}
-    </div>
     </AppLayout>
   );
 }
