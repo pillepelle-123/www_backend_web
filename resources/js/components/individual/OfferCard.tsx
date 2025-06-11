@@ -14,11 +14,11 @@ export function OfferCard({ offer }: OfferCardProps) {
     }).format(cents);
   };
 
-  const formatPercent = (number: number) => {
-    return new Intl.NumberFormat("de-DE", {
-        style: 'percent',
-    }).format(1 - number);
-  };
+//   const formatPercent = (number: number) => {
+//     return new Intl.NumberFormat("de-DE", {
+//         style: 'percent',
+//     }).format(1 - number);
+//   };
 
   const truncateDescription = (text: string) => {
     if (!text) return '';
