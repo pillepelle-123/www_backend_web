@@ -1,4 +1,4 @@
-Auflistung der Ordnerpfade für Volume OS
+Auflistung der Ordnerpfade fï¿½r Volume OS
 Volumeseriennummer : 14A2-2B74
 C:.
 |   .editorconfig
@@ -19,28 +19,28 @@ C:.
 |   phpunit.xml
 |   tsconfig.json
 |   vite.config.ts
-|     
+|
 +---.vscode
 |       launch.json
-|       
+|
 +---app
 |   +---Http
 |   |   +---Controllers
 |   |   |   |   Controller.php
-|   |   |   |   
+|   |   |   |
 |   |   |   +---Admin
 |   |   |   |       CompanyCrudController.php
 |   |   |   |       OfferCrudController.php
 |   |   |   |       RatingCrudController.php
 |   |   |   |       UserCrudController.php
-|   |   |   |       
+|   |   |   |
 |   |   |   +---Api
 |   |   |   |   \---V1
 |   |   |   |           CompanyController.php
 |   |   |   |           OfferController.php
 |   |   |   |           RatingController.php
 |   |   |   |           UserController.php
-|   |   |   |           
+|   |   |   |
 |   |   |   +---Auth
 |   |   |   |       AuthenticatedSessionController.php
 |   |   |   |       ConfirmablePasswordController.php
@@ -50,50 +50,50 @@ C:.
 |   |   |   |       PasswordResetLinkController.php
 |   |   |   |       RegisteredUserController.php
 |   |   |   |       VerifyEmailController.php
-|   |   |   |       
+|   |   |   |
 |   |   |   \---Settings
 |   |   |           PasswordController.php
 |   |   |           ProfileController.php
-|   |   |           
+|   |   |
 |   |   +---Middleware
 |   |   |       CheckIfAdmin.php
 |   |   |       HandleAppearance.php
 |   |   |       HandleInertiaRequests.php
-|   |   |       
+|   |   |
 |   |   +---Requests
 |   |   |   |   CompanyRequest.php
 |   |   |   |   OfferRequest.php
 |   |   |   |   ProfileUpdateRequest.php
 |   |   |   |   RatingRequest.php
 |   |   |   |   UserRequest.php
-|   |   |   |   
+|   |   |   |
 |   |   |   +---Auth
 |   |   |   |       LoginRequest.php
-|   |   |   |       
+|   |   |   |
 |   |   |   \---Settings
 |   |   |           ProfileUpdateRequest.php
-|   |   |           
+|   |   |
 |   |   \---Rules
 |   |           OfferUserMatchRule.php
-|   |           
+|   |
 |   +---Models
 |   |       Company.php
 |   |       Offer.php
 |   |       Rating.php
 |   |       User.php
-|   |       
+|   |
 |   \---Providers
 |           AppServiceProvider.php
-|           
+|
 +---bootstrap
 |   |   app.php
 |   |   providers.php
-|   |   
+|   |
 |   \---cache
 |           .gitignore
 |           packages.php
 |           services.php
-|           
+|
 +---config
 |   |   app.php
 |   |   auth.php
@@ -108,13 +108,13 @@ C:.
 |   |   sanctum.php
 |   |   services.php
 |   |   session.php
-|   |   
+|   |
 |   \---backpack
 |       |   base.php
 |       |   crud.php
 |       |   theme-tabler.php
 |       |   ui.php
-|       |   
+|       |
 |       \---operations
 |               create.php
 |               form.php
@@ -122,17 +122,17 @@ C:.
 |               reorder.php
 |               show.php
 |               update.php
-|               
+|
 +---database
 |   |   .gitignore
 |   |   database.sqlite
-|   |   
+|   |
 |   +---factories
 |   |       CompanyFactory.php
 |   |       OfferFactory.php
 |   |       RatingFactory.php
 |   |       UserFactory.php
-|   |       
+|   |
 |   +---migrations
 |   |       0001_01_01_000000_create_users_table.php
 |   |       0001_01_01_000001_create_cache_table.php
@@ -142,10 +142,10 @@ C:.
 |   |       2025_06_02_201018_create_ratings_table.php
 |   |       2025_06_03_171438_rename_fields_in_offers_table.php
 |   |       2025_06_05_164310_create_personal_access_tokens_table.php
-|   |       
+|   |
 |   \---seeders
 |           DatabaseSeeder.php
-|           
+|
 +---lang
 |   \---vendor
 |       \---backpack
@@ -158,7 +158,7 @@ C:.
 |           |       pagemanager.php
 |           |       permissionmanager.php
 |           |       settings.php
-|           |       
+|           |
 |           +---bg
 |           |       backup.php
 |           |       base.php
@@ -168,7 +168,7 @@ C:.
 |           |       pagemanager.php
 |           |       permissionmanager.php
 |           |       settings.php
-|           |       
+|           |
 |           +---bn
 |           |       backup.php
 |           |       base.php
@@ -177,7 +177,7 @@ C:.
 |           |       pagemanager.php
 |           |       permissionmanager.php
 |           |       settings.php
-|           |       
+|           |
 |           +---ca
 |           |       backup.php
 |           |       base.php
@@ -187,12 +187,12 @@ C:.
 |           |       pagemanager.php
 |           |       permissionmanager.php
 |           |       settings.php
-|           |       
+|           |
 |           +---cs
 |           |       base.php
 |           |       crud.php
 |           |       langfilemanager.php
-|           |       
+|           |
 |           +---da-DK
 |           |       backup.php
 |           |       base.php
@@ -202,7 +202,7 @@ C:.
 |           |       pagemanager.php
 |           |       permissionmanager.php
 |           |       settings.php
-|           |       
+|           |
 |           +---da_DK
 |           |       backup.php
 |           |       base.php
@@ -212,7 +212,7 @@ C:.
 |           |       pagemanager.php
 |           |       permissionmanager.php
 |           |       settings.php
-|           |       
+|           |
 |           +---de
 |           |       backup.php
 |           |       base.php
@@ -222,7 +222,7 @@ C:.
 |           |       pagemanager.php
 |           |       permissionmanager.php
 |           |       settings.php
-|           |       
+|           |
 |           +---el
 |           |       backup.php
 |           |       base.php
@@ -232,7 +232,7 @@ C:.
 |           |       pagemanager.php
 |           |       permissionmanager.php
 |           |       settings.php
-|           |       
+|           |
 |           +---en
 |           |       backup.php
 |           |       base.php
@@ -242,7 +242,7 @@ C:.
 |           |       pagemanager.php
 |           |       permissionmanager.php
 |           |       settings.php
-|           |       
+|           |
 |           +---es
 |           |       backup.php
 |           |       base.php
@@ -252,7 +252,7 @@ C:.
 |           |       pagemanager.php
 |           |       permissionmanager.php
 |           |       settings.php
-|           |       
+|           |
 |           +---fa
 |           |       backup.php
 |           |       base.php
@@ -262,7 +262,7 @@ C:.
 |           |       pagemanager.php
 |           |       permissionmanager.php
 |           |       settings.php
-|           |       
+|           |
 |           +---fr
 |           |       backup.php
 |           |       base.php
@@ -272,7 +272,7 @@ C:.
 |           |       pagemanager.php
 |           |       permissionmanager.php
 |           |       settings.php
-|           |       
+|           |
 |           +---fr-CA
 |           |       backup.php
 |           |       base.php
@@ -282,7 +282,7 @@ C:.
 |           |       pagemanager.php
 |           |       permissionmanager.php
 |           |       settings.php
-|           |       
+|           |
 |           +---fr_CA
 |           |       backup.php
 |           |       base.php
@@ -292,7 +292,7 @@ C:.
 |           |       pagemanager.php
 |           |       permissionmanager.php
 |           |       settings.php
-|           |       
+|           |
 |           +---gr
 |           |       backup.php
 |           |       langfilemanager.php
@@ -300,7 +300,7 @@ C:.
 |           |       pagemanager.php
 |           |       permissionmanager.php
 |           |       settings.php
-|           |       
+|           |
 |           +---hu
 |           |       backup.php
 |           |       base.php
@@ -310,7 +310,7 @@ C:.
 |           |       pagemanager.php
 |           |       permissionmanager.php
 |           |       settings.php
-|           |       
+|           |
 |           +---id
 |           |       backup.php
 |           |       base.php
@@ -320,7 +320,7 @@ C:.
 |           |       pagemanager.php
 |           |       permissionmanager.php
 |           |       settings.php
-|           |       
+|           |
 |           +---it
 |           |       backup.php
 |           |       base.php
@@ -330,7 +330,7 @@ C:.
 |           |       pagemanager.php
 |           |       permissionmanager.php
 |           |       settings.php
-|           |       
+|           |
 |           +---ja
 |           |       backup.php
 |           |       base.php
@@ -340,7 +340,7 @@ C:.
 |           |       pagemanager.php
 |           |       permissionmanager.php
 |           |       settings.php
-|           |       
+|           |
 |           +---lo
 |           |       backup.php
 |           |       langfilemanager.php
@@ -348,7 +348,7 @@ C:.
 |           |       pagemanager.php
 |           |       permissionmanager.php
 |           |       settings.php
-|           |       
+|           |
 |           +---lv
 |           |       backup.php
 |           |       base.php
@@ -358,7 +358,7 @@ C:.
 |           |       pagemanager.php
 |           |       permissionmanager.php
 |           |       settings.php
-|           |       
+|           |
 |           +---my
 |           |       backup.php
 |           |       base.php
@@ -368,7 +368,7 @@ C:.
 |           |       pagemanager.php
 |           |       permissionmanager.php
 |           |       settings.php
-|           |       
+|           |
 |           +---nl
 |           |       backup.php
 |           |       base.php
@@ -378,7 +378,7 @@ C:.
 |           |       pagemanager.php
 |           |       permissionmanager.php
 |           |       settings.php
-|           |       
+|           |
 |           +---pt
 |           |       backup.php
 |           |       base.php
@@ -388,7 +388,7 @@ C:.
 |           |       pagemanager.php
 |           |       permissionmanager.php
 |           |       settings.php
-|           |       
+|           |
 |           +---pt-BR
 |           |       backup.php
 |           |       base.php
@@ -398,7 +398,7 @@ C:.
 |           |       pagemanager.php
 |           |       permissionmanager.php
 |           |       settings.php
-|           |       
+|           |
 |           +---pt_br
 |           |       backup.php
 |           |       base.php
@@ -408,7 +408,7 @@ C:.
 |           |       pagemanager.php
 |           |       permissionmanager.php
 |           |       settings.php
-|           |       
+|           |
 |           +---ro
 |           |       backup.php
 |           |       base.php
@@ -418,7 +418,7 @@ C:.
 |           |       pagemanager.php
 |           |       permissionmanager.php
 |           |       settings.php
-|           |       
+|           |
 |           +---ru
 |           |       backup.php
 |           |       base.php
@@ -428,7 +428,7 @@ C:.
 |           |       pagemanager.php
 |           |       permissionmanager.php
 |           |       settings.php
-|           |       
+|           |
 |           +---sr
 |           |       backup.php
 |           |       base.php
@@ -438,7 +438,7 @@ C:.
 |           |       pagemanager.php
 |           |       permissionmanager.php
 |           |       settings.php
-|           |       
+|           |
 |           +---th
 |           |       backup.php
 |           |       base.php
@@ -448,11 +448,11 @@ C:.
 |           |       pagemanager.php
 |           |       permissionmanager.php
 |           |       settings.php
-|           |       
+|           |
 |           +---tr
 |           |       crud.php
 |           |       langfilemanager.php
-|           |       
+|           |
 |           +---uk
 |           |       backup.php
 |           |       base.php
@@ -462,7 +462,7 @@ C:.
 |           |       pagemanager.php
 |           |       permissionmanager.php
 |           |       settings.php
-|           |       
+|           |
 |           +---vi
 |           |       backup.php
 |           |       base.php
@@ -472,7 +472,7 @@ C:.
 |           |       pagemanager.php
 |           |       permissionmanager.php
 |           |       settings.php
-|           |       
+|           |
 |           +---zh-cn
 |           |       backup.php
 |           |       base.php
@@ -482,7 +482,7 @@ C:.
 |           |       pagemanager.php
 |           |       permissionmanager.php
 |           |       settings.php
-|           |       
+|           |
 |           \---zh-Hant
 |                   backup.php
 |                   base.php
@@ -492,19 +492,18 @@ C:.
 |                   pagemanager.php
 |                   permissionmanager.php
 |                   settings.php
-|                   
+|
 +---public
 |   |   .htaccess
 |   |   apple-touch-icon.png
 |   |   favicon.ico
 |   |   favicon.svg
 |   |   index.php
-|   |   logo.svg
 |   |   robots.txt
-|   |   
+|   |
 |   +---build
 |   |   |   manifest.json
-|   |   |   
+|   |   |
 |   |   \---assets
 |   |           app-Cfayyaka.css
 |   |           app-GBhW32uO.js
@@ -528,33 +527,33 @@ C:.
 |   |           transition-DTDBk-r4.js
 |   |           verify-email-B_q0gMT_.js
 |   |           welcome-CRT1chEr.js
-|   |           
+|   |
 |   \---storage
 |       |   .gitignore
-|       |   
+|       |
 |       \---basset
 |           |   .basset
-|           |   
+|           |
 |           \---vendor
 |               \---backpack
 |                   +---basset
 |                   |   \---tests
 |                   |       \---Helpers
 |                   |               basset-test.js
-|                   |               
+|                   |
 |                   +---crud
 |                   |   \---src
 |                   |       \---resources
 |                   |           \---assets
 |                   |               +---css
 |                   |               |       common.css
-|                   |               |       
+|                   |               |
 |                   |               +---img
 |                   |               |       spinner.svg
-|                   |               |       
+|                   |               |
 |                   |               \---js
 |                   |                       common.js
-|                   |                       
+|                   |
 |                   \---theme-tabler
 |                       \---resources
 |                           \---assets
@@ -562,18 +561,18 @@ C:.
 |                               |       color-adjustments.css
 |                               |       colors.css
 |                               |       style.css
-|                               |       
+|                               |
 |                               \---js
 |                                       tabler.js
-|                                       
+|
 +---resources
 |   +---css
 |   |       app.css
-|   |       
+|   |
 |   +---js
 |   |   |   app.tsx
 |   |   |   ssr.tsx
-|   |   |   
+|   |   |
 |   |   +---components
 |   |   |   |   app-content.tsx
 |   |   |   |   app-header.tsx
@@ -596,7 +595,7 @@ C:.
 |   |   |   |   text-link.tsx
 |   |   |   |   user-info.tsx
 |   |   |   |   user-menu-content.tsx
-|   |   |   |   
+|   |   |   |
 |   |   |   \---ui
 |   |   |           alert.tsx
 |   |   |           avatar.tsx
@@ -621,36 +620,36 @@ C:.
 |   |   |           toggle-group.tsx
 |   |   |           toggle.tsx
 |   |   |           tooltip.tsx
-|   |   |           
+|   |   |
 |   |   +---hooks
 |   |   |       use-appearance.tsx
 |   |   |       use-initials.tsx
 |   |   |       use-mobile-navigation.ts
 |   |   |       use-mobile.tsx
-|   |   |       
+|   |   |
 |   |   +---layouts
 |   |   |   |   app-layout.tsx
 |   |   |   |   auth-layout.tsx
-|   |   |   |   
+|   |   |   |
 |   |   |   +---app
 |   |   |   |       app-header-layout.tsx
 |   |   |   |       app-sidebar-layout.tsx
-|   |   |   |       
+|   |   |   |
 |   |   |   +---auth
 |   |   |   |       auth-card-layout.tsx
 |   |   |   |       auth-simple-layout.tsx
 |   |   |   |       auth-split-layout.tsx
-|   |   |   |       
+|   |   |   |
 |   |   |   \---settings
 |   |   |           layout.tsx
-|   |   |           
+|   |   |
 |   |   +---lib
 |   |   |       utils.ts
-|   |   |       
+|   |   |
 |   |   +---pages
 |   |   |   |   dashboard.tsx
 |   |   |   |   welcome.tsx
-|   |   |   |   
+|   |   |   |
 |   |   |   +---auth
 |   |   |   |       confirm-password.tsx
 |   |   |   |       forgot-password.tsx
@@ -658,20 +657,20 @@ C:.
 |   |   |   |       register.tsx
 |   |   |   |       reset-password.tsx
 |   |   |   |       verify-email.tsx
-|   |   |   |       
+|   |   |   |
 |   |   |   \---settings
 |   |   |           appearance.tsx
 |   |   |           password.tsx
 |   |   |           profile.tsx
-|   |   |           
+|   |   |
 |   |   \---types
 |   |           global.d.ts
 |   |           index.d.ts
 |   |           vite-env.d.ts
-|   |           
+|   |
 |   \---views
 |       |   app.blade.php
-|       |   
+|       |
 |       \---vendor
 |           \---backpack
 |               +---crud
@@ -682,7 +681,7 @@ C:.
 |               |   |   list.blade.php
 |               |   |   reorder.blade.php
 |               |   |   show.blade.php
-|               |   |   
+|               |   |
 |               |   +---buttons
 |               |   |       create.blade.php
 |               |   |       delete.blade.php
@@ -690,7 +689,7 @@ C:.
 |               |   |       reorder.blade.php
 |               |   |       show.blade.php
 |               |   |       update.blade.php
-|               |   |       
+|               |   |
 |               |   +---columns
 |               |   |   |   boolean.blade.php
 |               |   |   |   check.blade.php
@@ -732,13 +731,13 @@ C:.
 |               |   |   |   url.blade.php
 |               |   |   |   view.blade.php
 |               |   |   |   week.blade.php
-|               |   |   |   
+|               |   |   |
 |               |   |   \---inc
 |               |   |           bulk_actions_checkbox.blade.php
 |               |   |           details_row_button.blade.php
 |               |   |           wrapper_end.blade.php
 |               |   |           wrapper_start.blade.php
-|               |   |           
+|               |   |
 |               |   +---fields
 |               |   |   |   boolean.blade.php
 |               |   |   |   checkbox.blade.php
@@ -770,13 +769,13 @@ C:.
 |               |   |   |   url.blade.php
 |               |   |   |   view.blade.php
 |               |   |   |   week.blade.php
-|               |   |   |   
+|               |   |   |
 |               |   |   \---inc
 |               |   |           attributes.blade.php
 |               |   |           translatable_icon.blade.php
 |               |   |           wrapper_end.blade.php
 |               |   |           wrapper_start.blade.php
-|               |   |           
+|               |   |
 |               |   \---inc
 |               |           ajax_error_frame.blade.php
 |               |           button_stack.blade.php
@@ -793,17 +792,17 @@ C:.
 |               |           show_tabbed_fields.blade.php
 |               |           show_tabbed_table.blade.php
 |               |           show_table.blade.php
-|               |           
+|               |
 |               \---ui
 |                   |   dashboard.blade.php
-|                   |   
+|                   |
 |                   +---components
 |                   |       menu-dropdown-header.blade.php
 |                   |       menu-dropdown-item.blade.php
 |                   |       menu-dropdown.blade.php
 |                   |       menu-item.blade.php
 |                   |       menu-separator.blade.php
-|                   |       
+|                   |
 |                   +---errors
 |                   |       400.blade.php
 |                   |       401.blade.php
@@ -817,13 +816,13 @@ C:.
 |                   |       503.blade.php
 |                   |       blank.blade.php
 |                   |       layout.blade.php
-|                   |       
+|                   |
 |                   +---inc
 |                   |       getting_started.blade.php
 |                   |       menu_items.blade.php
 |                   |       scripts.blade.php
 |                   |       styles.blade.php
-|                   |       
+|                   |
 |                   \---widgets
 |                       |   alert.blade.php
 |                       |   card.blade.php
@@ -835,54 +834,54 @@ C:.
 |                       |   script.blade.php
 |                       |   style.blade.php
 |                       |   view.blade.php
-|                       |   
+|                       |
 |                       \---inc
 |                               wrapper_end.blade.php
 |                               wrapper_start.blade.php
-|                               
+|
 +---routes
 |   |   api.php
 |   |   auth.php
 |   |   console.php
 |   |   settings.php
 |   |   web.php
-|   |   
+|   |
 |   \---backpack
 |           custom.php
-|           
+|
 +---storage
 |   +---app
 |   |   |   .gitignore
-|   |   |   
+|   |   |
 |   |   +---private
 |   |   |       .gitignore
-|   |   |       
+|   |   |
 |   |   \---public
 |   |       |   .gitignore
-|   |       |   
+|   |       |
 |   |       \---basset
 |   |           |   .basset
-|   |           |   
+|   |           |
 |   |           \---vendor
 |   |               \---backpack
 |   |                   +---basset
 |   |                   |   \---tests
 |   |                   |       \---Helpers
 |   |                   |               basset-test.js
-|   |                   |               
+|   |                   |
 |   |                   +---crud
 |   |                   |   \---src
 |   |                   |       \---resources
 |   |                   |           \---assets
 |   |                   |               +---css
 |   |                   |               |       common.css
-|   |                   |               |       
+|   |                   |               |
 |   |                   |               +---img
 |   |                   |               |       spinner.svg
-|   |                   |               |       
+|   |                   |               |
 |   |                   |               \---js
 |   |                   |                       common.js
-|   |                   |                       
+|   |                   |
 |   |                   \---theme-tabler
 |   |                       \---resources
 |   |                           \---assets
@@ -890,25 +889,25 @@ C:.
 |   |                               |       color-adjustments.css
 |   |                               |       colors.css
 |   |                               |       style.css
-|   |                               |       
+|   |                               |
 |   |                               \---js
 |   |                                       tabler.js
-|   |                                       
+|   |
 |   +---framework
 |   |   |   .gitignore
-|   |   |   
+|   |   |
 |   |   +---cache
 |   |   |   |   .gitignore
-|   |   |   |   
+|   |   |   |
 |   |   |   \---data
 |   |   |           .gitignore
-|   |   |           
+|   |   |
 |   |   +---sessions
 |   |   |       .gitignore
-|   |   |       
+|   |   |
 |   |   +---testing
 |   |   |       .gitignore
-|   |   |       
+|   |   |
 |   |   \---views
 |   |           .gitignore
 |   |           0055f20819354752c16718ccbb5c9da1.php
@@ -1116,30 +1115,30 @@ C:.
 |   |           fddb96a1bd4bce447b8a4a78683a25ad.php
 |   |           fdf5fd985bcd4919893ddfbbad373e24.php
 |   |           fe899e6ded9b0d66ab9562868f120edb.php
-|   |           
+|   |
 |   \---logs
 |           .gitignore
 |           laravel.log
-|           
+|
 +---tests
 |   |   Pest.php
 |   |   TestCase.php
-|   |   
+|   |
 |   +---Feature
 |   |   |   DashboardTest.php
 |   |   |   ExampleTest.php
-|   |   |   
+|   |   |
 |   |   +---Auth
 |   |   |       AuthenticationTest.php
 |   |   |       EmailVerificationTest.php
 |   |   |       PasswordConfirmationTest.php
 |   |   |       PasswordResetTest.php
 |   |   |       RegistrationTest.php
-|   |   |       
+|   |   |
 |   |   \---Settings
 |   |           PasswordUpdateTest.php
 |   |           ProfileUpdateTest.php
-|   |           
+|   |
 |   \---Unit
 |           ExampleTest.php
-|           
+|

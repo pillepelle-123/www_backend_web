@@ -18,9 +18,11 @@ export type Offer = {
   offered_by_type: string;
   offer_user: string;
   offer_company: string;
-  logo_url: string;
+  logo_path: string;
   reward_total_cents: number;
   reward_offerer_percent: number;
+  created_at: string;
+
 //   user: {
 //     name: string;
 //   };

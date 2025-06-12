@@ -27,6 +27,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/offers', [OfferController::class, 'index'])
         ->name('offers.index');
 
+    Route::get('/offers/create', [OfferController::class, 'create'])
+        ->name('offers.create');
+
+    Route::post('/offers', [OfferController::class, 'store'])
+        ->name('offers.store');
+
     Route::get('/offers/{id}', [OfferController::class, 'show'])
         ->name('offers.show');
 
