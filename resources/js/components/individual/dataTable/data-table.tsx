@@ -50,6 +50,16 @@ export function DataTable<TData, TValue>({
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({})
 
+  // Sichtbarkeit des Filterbereichs steuern
+  const [showFilters, setShowFilters] = React.useState(false)
+
+  React.useEffect(() => {
+    const handler = () => setShowFilters((prev) => !prev)
+    window.addEventListener('toggleFilterPanel', handler)
+    return () => {
+      window.removeEventListener('toggleFilterPanel', handler)
+    }
+  }, [])
 
   const table = useReactTable({
     data,
@@ -71,6 +81,7 @@ export function DataTable<TData, TValue>({
   return (
     <div>
       <div>
+        {showFilters && (
         <div className="flex items-center py-4 gap-8">
           <Input
             placeholder="Filter Title..."
@@ -151,6 +162,7 @@ export function DataTable<TData, TValue>({
           </DropdownMenuContent>
         </DropdownMenu>
         </div>
+        )}
       </div>
     <div className="rounded-md border">
       <Table>
