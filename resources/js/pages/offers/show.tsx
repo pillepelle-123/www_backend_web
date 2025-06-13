@@ -29,10 +29,10 @@ export default function Show({ offer }: { offer: Offer }) {
         <div className="container mx-auto p-4">
           <div className="max-w-4xl mx-auto">
             <div className="bg-white dark:bg-white/10 rounded-xl shadow-md overflow-hidden relative">
-              {offer.logo_url && (
+              {offer.logo_path && (
                 <div className="absolute inset-0 opacity-5 pointer-events-none">
                   <img
-                    src={offer.logo_url}
+                    src={offer.logo_path}
                     alt="Firmenlogo"
                     className="w-full h-full object-contain"
                   />

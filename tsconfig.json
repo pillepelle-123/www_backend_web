@@ -117,8 +117,8 @@
         },
         "jsx": "react-jsx",
         "types": [
-            "react",
-            "react-dom"
+            "@types/react",
+            "@types/react-dom"
         ],
         "jsxImportSource": "react"
     },
