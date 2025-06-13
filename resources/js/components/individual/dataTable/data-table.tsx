@@ -33,6 +33,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { DataTablePagination } from "./data-table-pagination"
 import { DataTableFacetedFilter } from "./data-table-faceted-filter"
+import { cn } from "@/lib/utils"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -80,89 +81,90 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div>
-        {showFilters && (
-        <div className="flex items-center py-4 gap-8">
-          <Input
-            placeholder="Filter Title..."
-            value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-              table.getColumn("title")?.setFilterValue(event.target.value)
-            }
-            // className="mx-3"
-          />
-          <Input
-            placeholder="Filter User..."
-            value={(table.getColumn("offer_user")?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-              table.getColumn("offer_user")?.setFilterValue(event.target.value)
-            }
-            // className="mx-3"
-          />
-            {table.getColumn("status") && (
-                <DataTableFacetedFilter
-                    column={table.getColumn("offered_by_type")}
-                    title="Filter Offered by"
-                    options={[
-                        { label: 'Referrer', value: 'referrer' },
-                        { label: 'Referred', value: 'referred' }
-                    ]
-
-                    }
-                />
-            )}
-            {table.getColumn("status") && (
-                <DataTableFacetedFilter
-                    column={table.getColumn("status")}
-                    title="Filter Status"
-                    options={[
-                        { label: 'Active', value: 'active' },
-                        { label: 'Inactive', value: 'inactive' },
-                        { label: 'Matched', value: 'matched' },
-                        { label: 'Closed', value: 'closed' }
-                    ]
-
-                    }
-                />
-            )}
-            {/* <Input
-            placeholder="Filter Status..."
-            value={(table.getColumn("status")?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-              table.getColumn("status")?.setFilterValue(event.target.value)
-            }
-            // className="mx-3"
-          /> */}
-            <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Columns
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter(
-                (column) => column.getCanHide()
-              )
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                )
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
-        </div>
+      <div
+        className={cn(
+          "flex items-center gap-8 overflow-hidden transition-all duration-300",
+          showFilters ? "py-4 max-h-48 opacity-100" : "max-h-0 opacity-0 pointer-events-none"
         )}
+      >
+        <Input
+          placeholder="Filter Title..."
+          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
+          onChange={(event) =>
+            table.getColumn("title")?.setFilterValue(event.target.value)
+          }
+          // className="mx-3"
+        />
+        <Input
+          placeholder="Filter User..."
+          value={(table.getColumn("offer_user")?.getFilterValue() as string) ?? ""}
+          onChange={(event) =>
+            table.getColumn("offer_user")?.setFilterValue(event.target.value)
+          }
+          // className="mx-3"
+        />
+          {table.getColumn("status") && (
+              <DataTableFacetedFilter
+                  column={table.getColumn("offered_by_type")}
+                  title="Filter Offered by"
+                  options={[
+                      { label: 'Referrer', value: 'referrer' },
+                      { label: 'Referred', value: 'referred' }
+                  ]
+
+                  }
+              />
+          )}
+          {table.getColumn("status") && (
+              <DataTableFacetedFilter
+                  column={table.getColumn("status")}
+                  title="Filter Status"
+                  options={[
+                      { label: 'Active', value: 'active' },
+                      { label: 'Inactive', value: 'inactive' },
+                      { label: 'Matched', value: 'matched' },
+                      { label: 'Closed', value: 'closed' }
+                  ]
+
+                  }
+              />
+          )}
+          {/* <Input
+          placeholder="Filter Status..."
+          value={(table.getColumn("status")?.getFilterValue() as string) ?? ""}
+          onChange={(event) =>
+            table.getColumn("status")?.setFilterValue(event.target.value)
+          }
+          // className="mx-3"
+        /> */}
+          <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline" className="ml-auto">
+            Columns
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          {table
+            .getAllColumns()
+            .filter(
+              (column) => column.getCanHide()
+            )
+            .map((column) => {
+              return (
+                <DropdownMenuCheckboxItem
+                  key={column.id}
+                  className="capitalize"
+                  checked={column.getIsVisible()}
+                  onCheckedChange={(value) =>
+                    column.toggleVisibility(!!value)
+                  }
+                >
+                  {column.id}
+                </DropdownMenuCheckboxItem>
+              )
+            })}
+        </DropdownMenuContent>
+      </DropdownMenu>
       </div>
     <div className="rounded-md border">
       <Table>
