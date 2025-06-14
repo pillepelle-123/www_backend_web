@@ -33,7 +33,8 @@ final class CompanyFactory extends Factory
             'logo_url' => $this->faker->url(),
             'website' => $this->faker->url(),
             'referral_program_url' => $this->faker->url(),
-            'description' => $this->faker->paragraph(5, true)
+            'description' => $this->faker->paragraph(5, true),
+            'industry' => $this->faker->word(),
         ];
     }
 }

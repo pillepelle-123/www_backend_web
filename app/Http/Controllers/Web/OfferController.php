@@ -32,6 +32,8 @@ class OfferController extends Controller
                     'reward_offerer_percent' => $offer->reward_offerer_percent,
                     'status' => $offer->status, //->isPast() ? 'expired' : 'active',
                     'created_at' => $offer->created_at->format('Y-m-d H:i:s'),
+                    'average_rating' => $offer->user->average_rating,
+                    'industry' => $offer->company->industry,
                 ];
             })
             ->sortByDesc('created_at')
@@ -58,6 +60,7 @@ class OfferController extends Controller
             'reward_total_cents' => $offer->reward_total_cents / 100,
             'reward_offerer_percent' => $offer->reward_offerer_percent,
             'status' => $offer->status,
+            'industry' => $offer->company->industry,
         ];
 
         return Inertia::render('offers/show', [
@@ -81,6 +84,7 @@ class OfferController extends Controller
             'company_id' => 'required|exists:companies,id',
             'reward_total_cents' => 'required|integer|min:0|max:100000',
             'reward_offerer_percent' => 'required|numeric|min:0|max:1', // Dezimalwert, z.B. 0.5
+            'offered_by_type' => 'required|in:referrer,referred',
         ]);
 
         $offer = Offer::create([
@@ -91,6 +95,7 @@ class OfferController extends Controller
             'reward_offerer_percent' => $validated['reward_offerer_percent'],
             'user_id' => Auth::id(),
             'status' => 'active',
+            'offered_by_type' => $validated['offered_by_type'],
         ]);
 
         return redirect()->route('offers.index')

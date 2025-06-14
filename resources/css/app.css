@@ -7,6 +7,96 @@
 
 @custom-variant dark (&:is(.dark *));
 
+
+/* Chrome, Safari, Edge, Opera */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* ##### REACT SELECT START ##### */
+  .select__control {
+    @apply dark:bg-zinc-800 !border-none text-gray-900 dark:!text-gray-300 rounded-lg;
+  }
+
+  .select__control--is-focused, .select__control--menu-is-open {
+    @apply !shadow-none !border !border-gray-300 !ring !ring-gray-300 !text-gray-900 dark:!text-gray-300;
+  }
+
+  .select__indicator {
+    @apply !text-gray-900 dark:!text-gray-300 dark:hover:!text-gray-400;
+  }
+
+  .select__indicator-separator {
+    @apply !hidden;
+  }
+
+  .select__indicator--is-focused, .select__indicator--is-selected, .select__indicator--menu-is-open {
+    @apply !text-yellow-900 dark:!text-yellow-500;
+  }
+
+  .select__menu {
+    @apply bg-white dark:bg-zinc-800 text-gray-900 dark:text-gray-200 dark:focus:bg-zinc-700;
+  }
+
+  /* .select__option {
+  } */
+
+  .select__option--is-focused {
+    @apply !bg-[var(--accent)];
+  }
+
+  .select__option--is-selected {
+    @apply !bg-[var(--accent)];
+    /* background-color: yellow !important; */
+  }
+
+  .select__option--is-focused {
+  @apply bg-zinc-100 text-gray-900;
+}
+
+  /* .select__option--is-focused {
+    background-color: none !important;
+    @apply bg-none;
+  } */
+
+  .select__single-value {
+    @apply !text-gray-300 dark:!text-gray-300;
+  }
+
+  .select__single-value--is-focused {
+    @apply !text-gray-300 dark:!text-gray-300;
+  }
+
+  .select__single-value--menu-is-open{
+    @apply !text-gray-300 dark:!text-gray-300;
+  }
+
+  #react-select-2-option-0 {
+    @apply bg-none;
+  }
+
+  .select__input {
+    @apply !text-gray-900 dark:!text-gray-300;
+  }
+
+  .select__placeholder {
+    @apply !text-gray-900 dark:!text-zinc-400;
+  }
+
+  input:-internal-autofill-selected {
+    @apply !bg-gray-800 dark:!bg-zinc-800;
+    background-color: black !important;
+  }
+  /* ##### END REACT SELECT ##### */
+
 @theme {
     --font-sans:
         'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
@@ -79,7 +169,7 @@
 
 :root {
     --background: oklch(1 0 0);
-    --foreground: oklch(0.145 0 0);
+    --foreground: var(--color-gray-900);
     --card: oklch(1 0 0);
     --card-foreground: oklch(0.145 0 0);
     --popover: oklch(1 0 0);
@@ -90,7 +180,8 @@
     --secondary-foreground: oklch(0.205 0 0);
     --muted: oklch(0.97 0 0);
     --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.97 0 0);
+    --accent: var(--color-sky-600); /* oklch(0.269 0 0); */
+    --accent-hover: var(--color-sky-700); /* oklch(0.269 0 0); */
     --accent-foreground: oklch(0.205 0 0);
     --destructive: oklch(0.577 0.245 27.325);
     --destructive-foreground: oklch(0.577 0.245 27.325);
@@ -114,8 +205,8 @@
 }
 
 .dark {
---background: var(--color-zinc-700);
-    --foreground: oklch(0.985 0 0);
+    --background: var(--color-zinc-700);
+    --foreground: var(--color-gray-200);  /* oklch(.872 .01 258.338)*/
     --card: oklch(0.145 0 0);
     --card-foreground: oklch(0.985 0 0);
     --popover: var(--color-zinc-900);
@@ -126,8 +217,9 @@
     --secondary-foreground: oklch(0.985 0 0);
     --muted: oklch(0.269 0 0);
     --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.269 0 0);
-    --accent-foreground: oklch(0.985 0 0);
+    --accent: var(--color-sky-600); /* oklch(0.269 0 0); */
+    --accent-hover: var(--color-sky-700); /* oklch(0.269 0 0); */
+    --accent-foreground: oklch(0.985 0 0); /* momentan pink */
     --destructive: oklch(0.396 0.141 25.723);
     --destructive-foreground: oklch(0.637 0.237 25.331);
     --border: rgba(255, 255, 255, 0.3);

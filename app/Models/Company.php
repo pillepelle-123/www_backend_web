@@ -34,7 +34,8 @@ class Company extends Model
         'referral_program_url',
         'logo_url',
         'description',
-        'is_active'
+        'is_active',
+        'industry',
     ];
     protected $hidden = [];
 

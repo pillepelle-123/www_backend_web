@@ -20,8 +20,8 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         $companies = Company::factory()
-            ->count(40)
-            ->create();
+        ->count(40)
+        ->create();
 
         $users = User::factory()
             ->count(50)
@@ -30,12 +30,12 @@ class DatabaseSeeder extends Seeder
         $offers = Offer::factory()
             ->count(30)
             ->create([
-                'user_id' => function() use ($users) {
-                    return $users->random()->id;
-                },
-                'company_id' => function() use ($companies) {
-                    return $companies->random()->id;
-                }
+            'user_id' => function() use ($users) {
+                return $users->random()->id;
+            },
+            'company_id' => function() use ($companies) {
+                return $companies->random()->id;
+            }
             ]);
 
         // Wir erzeugen für 20 zufällige Offers passende UserMatches

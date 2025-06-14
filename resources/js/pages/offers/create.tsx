@@ -5,6 +5,8 @@ import { router } from '@inertiajs/react';
 import Select from 'react-select';
 import { useState, useEffect } from 'react';
 import { Inertia } from '@inertiajs/inertia';
+import { ChevronDown, ChevronUp } from 'lucide-react';
+
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -29,6 +31,7 @@ export default function Create({ companies }: { companies: Company[] }) {
         company_id: '',
         reward_total_eur: 0,
         reward_offerer_percent: 0,
+        offered_by_type: 'referrer',
     });
 
     const [selectedCompany, setSelectedCompany] = useState<{ value: string; label: string } | null>(null);
@@ -49,6 +52,7 @@ export default function Create({ companies }: { companies: Company[] }) {
             ...data,
             reward_total_cents: Math.round((data.reward_total_eur || 0) * 100),
             reward_offerer_percent: (data.reward_offerer_percent || 0) / 100,
+            offered_by_type: data.offered_by_type,
         }, {
             onSuccess: () => {
                 router.visit('/offers');
@@ -80,10 +84,28 @@ export default function Create({ companies }: { companies: Company[] }) {
     //     return Math.round(number / 100).toString();
     // };
 
+    // const selectClassNames = {
+    //     control: (base) => ({
+    //         ...base,
+    //         'mt-1 bg-zinc-100 dark:bg-zinc-800'
+    //     }),
+    // };
+
+    const selectClassNames = {
+        control: () => 'mt-1 rounded-md bg-zinc-100 dark:bg-zinc-800 border-none shadow-none min-h-[36px]',
+        menu: () => 'rounded-md bg-white dark:bg-zinc-800 mt-1 shadow-lg',
+        option: ({ isFocused, isSelected }) =>
+          `cursor-pointer px-4 py-2 ${isSelected ? 'bg-sky-100 dark:bg-zinc-700 text-sky-900' : isFocused ? 'bg-zinc-200 dark:bg-zinc-700' : ''}`,
+        singleValue: () => 'text-gray-900 dark:text-gray-100',
+        input: () => 'text-gray-900 dark:text-gray-100',
+        placeholder: () => 'text-gray-400 dark:text-gray-400',
+      };
+
     const selectStyles = {
         control: (base) => ({
             ...base,
-            backgroundColor: isDark ? 'rgb(39 39 42)' : '#fff', // dark:bg-zinc-800, light:bg-white
+            backgroundColor: isDark ? 'rgb(39 39 42)' : 'rgb(243, 244, 246)', // '#fff', // dark:bg-zinc-800, light:bg-white
+            border: 'none',
             borderColor: isDark ? 'rgb(63 63 70)' : '#d1d5db', // dark:border-zinc-700, light:border-gray-300
             color: isDark ? 'rgb(209 213 219)' : '#111827', // dark:text-gray-300, light:text-gray-900
             '&:hover': {
@@ -99,9 +121,9 @@ export default function Create({ companies }: { companies: Company[] }) {
         option: (base, state) => ({
             ...base,
             backgroundColor: state.isFocused
-                ? (isDark ? 'rgb(63 63 70)' : '#f3f4f6') // dark:bg-zinc-700, light:bg-gray-100
-                : (isDark ? 'rgb(39 39 42)' : '#fff'), // dark:bg-zinc-800, light:bg-white
-            color: isDark ? 'rgb(209 213 219)' : '#111827', // dark:text-gray-300, light:text-gray-900
+                ? (isDark ? 'oklch(0.588 0.158 241.966)' : '#f3f4f6') // dark:bg-zinc-700, light:bg-gray-100
+                : (isDark ? 'oklch(0.2739 0.0055 286.03)' : '#fff'), // dark:bg-zinc-800, light:bg-white
+            color: isDark ? 'oklch(0.9276 0.0058 264.53)' : '#111827', // dark:text-gray-300, light:text-gray-900
             '&:active': {
                 backgroundColor: isDark ? 'rgb(82 82 91)' : '#e5e7eb', // dark:active:bg-zinc-600, light:active:bg-gray-200
             },
@@ -123,48 +145,121 @@ export default function Create({ companies }: { companies: Company[] }) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Create Offer" />
-            <div className="py-12">
+            <div className="p-5">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div className="bg-white dark:bg-white/10 overflow-hidden shadow-sm sm:rounded-lg">
-                        <div className="p-6 text-gray-900 dark:text-gray-100">
+                        {/* <div className="p-1"> */}
                             <form onSubmit={handleSubmit} className="space-y-6">
                                 <div>
-                                    <label htmlFor="offer_title" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                        Title
+                                    { /* ########## OFFERED BY TYPE ########## */ }
+                                    <label className="block text-sm font-medium mb-2">
+                                        Du bist...
+                                    </label>
+                                    <div className="space-y-2">
+                                        <div
+                                            className={`relative flex cursor-pointer rounded-lg border bg-white dark:bg-zinc-800 px-5 py-4 shadow-sm focus:outline-none ${
+                                                data.offered_by_type === 'referrer'
+                                                    ? 'border-[var(--accent)] ring-2 ring-[var(--accent)]'
+                                                    : 'border-zinc-800 hover:border-gray-300 transition-all duration-300'
+                                            }`}
+                                            onClick={() => setData('offered_by_type', 'referrer')}
+                                            tabIndex={0}
+                                            onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') setData('offered_by_type', 'referrer') }}
+                                            role="radio"
+                                            aria-checked={data.offered_by_type === 'referrer'}
+                                        >
+                                            <span className="flex h-5 items-center">
+                                                <span
+                                                    className={`inline-block h-4 w-4 rounded-full border-2 ${
+                                                        data.offered_by_type === 'referrer'
+                                                            ? 'border-[var(--accent)] bg-[var(--accent)]'
+                                                            : 'border-gray-300 bg-white'
+                                                    }`}
+                                                />
+                                            </span>
+                                            <span className="ml-3 flex flex-col">
+                                                <span className="block text-sm font-medium">
+                                                    Werbender
+                                                </span>
+                                                <span className="block text-xs">
+                                                    Du hast einen Account und möchtest jemanden werben.
+                                                </span>
+                                            </span>
+                                        </div>
+                                        <div
+                                            className={`relative flex cursor-pointer rounded-lg border bg-white dark:bg-zinc-800 px-5 py-4 shadow-sm focus:outline-none ${
+                                                data.offered_by_type === 'referred'
+                                                    ? 'border-[var(--accent)] ring-2 ring-[var(--accent)]'
+                                                    : 'border-zinc-800 hover:border-gray-300 transition-all duration-300'
+                                            }`}
+                                            onClick={() => setData('offered_by_type', 'referred')}
+                                            tabIndex={0}
+                                            onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') setData('offered_by_type', 'referred') }}
+                                            role="radio"
+                                            aria-checked={data.offered_by_type === 'referred'}
+                                        >
+                                            <span className="flex h-5 items-center">
+                                                <span
+                                                    className={`inline-block h-4 w-4 rounded-full border-2 ${
+                                                        data.offered_by_type === 'referred'
+                                                            ? 'border-[var(--accent)] bg-[var(--accent)]'
+                                                            : 'border-gray-300 bg-white'
+                                                    }`}
+                                                />
+                                            </span>
+                                            <span className="ml-3 flex flex-col">
+                                                <span className="block text-sm font-medium">
+                                                    Beworbener
+                                                </span>
+                                                <span className="block text-xs">
+                                                    Du hast noch keinen Account und möchtest von jemandem beworben werden.
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    {errors.offered_by_type && (
+                                        <p className="mt-1 text-sm text-red-600">{errors.offered_by_type}</p>
+                                    )}
+                                </div>
+                                <div>
+                                    { /* ########## TITLE ########## */ }
+                                    <label htmlFor="offer_title" className="block text-sm font-medium">
+                                        Titel
                                     </label>
                                     <input
                                         type="text"
                                         id="offer_title"
                                         value={data.offer_title}
                                         onChange={e => setData('offer_title', e.target.value)}
-                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-zinc-800 dark:border-gray-600 h-9"
+                                        className="mt-1 block w-full rounded-md border-gray-900 shadow-sm bg-zinc-100 dark:bg-zinc-800 h-9 p-2 autofill:!bg-gray-800 dark:autofill:!bg-zinc-800"
                                         required
+                                        placeholder="Unter welchem Titel soll dein Angebot angezeigt werden?"
                                     />
                                     {errors.offer_title && (
                                         <p className="mt-1 text-sm text-red-600">{errors.offer_title}</p>
                                     )}
                                 </div>
-
                                 <div>
-                                    <label htmlFor="offer_description" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                        Description
+                                    { /* ########## DESCRIPTION ########## */ }
+                                    <label htmlFor="offer_description" className="block text-sm font-medium">
+                                        Beschreibung
                                     </label>
                                     <textarea
                                         id="offer_description"
                                         value={data.offer_description}
                                         onChange={e => setData('offer_description', e.target.value)}
                                         rows={4}
-                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-zinc-800 dark:border-gray-600"
+                                        className="mt-1 block w-full rounded-md shadow-sm bg-zinc-100 dark:bg-zinc-800 dark:border-gray-600 p-2"
                                         required
+                                        placeholder="Beschreibe dein Angebot"
                                     />
                                     {errors.offer_description && (
                                         <p className="mt-1 text-sm text-red-600">{errors.offer_description}</p>
                                     )}
                                 </div>
-
                                 <div>
-                                    <label htmlFor="company" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                        Company
+                                    { /* ########## COMPANY ########## */ }
+                                    <label htmlFor="company" className="block text-sm font-medium">
+                                        Anbieter
                                     </label>
                                     <Select
                                         id="company"
@@ -174,24 +269,24 @@ export default function Create({ companies }: { companies: Company[] }) {
                                             setData('company_id', option?.value || '');
                                         }}
                                         options={companyOptions}
-                                        className="mt-1"
+                                        classNames= {selectClassNames} // 'mt-1'
                                         classNamePrefix="select"
                                         isClearable
                                         required
-                                        styles={selectStyles}
+                                        // styles={selectStyles}
                                     />
                                     {errors.company_id && (
                                         <p className="mt-1 text-sm text-red-600">{errors.company_id}</p>
                                     )}
                                 </div>
-
                                 <div>
-                                    <label htmlFor="reward_total_eur" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                    { /* ########## REWARD ########## */ }
+                                    <label htmlFor="reward_total_eur" className="block text-sm font-medium">
                                         Reward
                                     </label>
-                                    <div className="relative mt-1">
-                                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                                            <span className="text-gray-500 dark:text-gray-400 sm:text-sm">EUR</span>
+                                    <div className="relative mt-1 flex rounded-md shadow-sm">
+                                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 border-r border-gray-300 dark:border-zinc-600 pr-2 w-14">
+                                            <span className="text-zinc-400 sm:text-sm">EUR</span>
                                         </div>
                                         <input
                                             type="number"
@@ -201,22 +296,42 @@ export default function Create({ companies }: { companies: Company[] }) {
                                             step="0.01"
                                             value={data.reward_total_eur}
                                             onChange={e => setData('reward_total_eur', parseFloat(e.target.value) || 0)}
-                                            className="block w-full rounded-md border-gray-300 pl-12 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 h-9"
+                                            className="block w-full rounded-md border-gray-300 pl-16 pr-10 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 bg-gray-100 dark:bg-zinc-800 dark:text-gray-300 h-9"
                                             required
+                                            placeholder="0.00"
                                         />
+                                        <div className="absolute right-1 top-1 flex flex-col h-7 justify-center">
+                                            <button
+                                                type="button"
+                                                tabIndex={-1}
+                                                className="bg-zinc-100 dark:bg-zinc-800 text-gray-900 dark:text-gray-300 rounded-t w-7 h-3 flex items-center justify-center"
+                                                onMouseDown={e => { e.preventDefault(); setData('reward_total_eur', Math.round((data.reward_total_eur + 1) * 100) / 100); }}
+                                            >
+                                            <ChevronUp className="hover:text-[var(--accent)] dark:hover:text-gray-400 flex-none w-5 h-5 mr-1" />
+                                            </button>
+                                            <button
+                                                type="button"
+                                                tabIndex={-1}
+                                                className="bg-zinc-100 dark:bg-zinc-800 text-gray-900 dark:text-gray-300 rounded-t w-7 h-3 flex items-center justify-center"
+                                                onMouseDown={e => { e.preventDefault(); setData('reward_total_eur', Math.max(0, Math.round((data.reward_total_eur - 1) * 100) / 100)); }}
+                                            >
+                                            <ChevronDown className="hover:text-[var(--accent)] dark:hover:text-gray-400 flex-none w-5 h-5 mr-1" />
+                                            </button>
+                                        </div>
                                     </div>
                                     {errors.reward_total_eur && (
                                         <p className="mt-1 text-sm text-red-600">{errors.reward_total_eur}</p>
                                     )}
                                 </div>
-
                                 <div>
-                                    <label htmlFor="reward_offerer_percent" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                    { /* ########## REWARD OFFERER PERCENT ########## */ }
+                                    <label htmlFor="reward_offerer_percent" className="block text-sm font-medium">
                                         Dein einbehaltener Anteil
                                     </label>
-                                    <div className="relative mt-1">
-                                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                                            <span className="text-gray-500 dark:text-gray-400 sm:text-sm">%</span>
+                                    <div className="relative mt-1 flex rounded-md shadow-sm">
+                                        { /* ##### % Zeichen ##### */ }
+                                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 border-r border-gray-300 dark:border-zinc-600 pr-2 w-14">
+                                            <span className="text-zinc-400 sm:text-sm">%</span>
                                         </div>
                                         <input
                                             type="number"
@@ -226,9 +341,28 @@ export default function Create({ companies }: { companies: Company[] }) {
                                             step="1"
                                             value={data.reward_offerer_percent}
                                             onChange={e => setData('reward_offerer_percent', parseInt(e.target.value) || 0)}
-                                            className="block w-full rounded-md border-gray-300 pl-12 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 h-9"
+                                            className="block w-full rounded-md pl-16 pr-10 shadow-sm bg-zinc-100 dark:bg-zinc-800 dark:text-gray-300 h-9"
                                             required
+                                            placeholder="z.B. 20"
                                         />
+                                        <div className="absolute right-1 top-1 flex flex-col h-7 justify-center">
+                                            <button
+                                                type="button"
+                                                tabIndex={-1}
+                                                className="bg-zinc-100 dark:bg-zinc-800 text-gray-900 dark:text-zinc-300 rounded-t w-7 h-3 flex items-center justify-center"
+                                                onMouseDown={e => { e.preventDefault(); setData('reward_offerer_percent', Math.min(100, data.reward_offerer_percent + 1)); }}
+                                            >
+                                            <ChevronUp className="hover:text-[var(--accent)] dark:hover:text-gray-400 flex-none w-5 h-5 mr-1" />
+                                            </button>
+                                            <button
+                                                type="button"
+                                                tabIndex={-1}
+                                                className="bg-zinc-100 dark:bg-zinc-800 text-gray-900 dark:text-gray-300 rounded-b w-7 h-3 flex items-center justify-center"
+                                                onMouseDown={e => { e.preventDefault(); setData('reward_offerer_percent', Math.max(0, data.reward_offerer_percent - 1)); }}
+                                            >
+                                            <ChevronDown className="hover:text-[var(--accent)] dark:hover:text-gray-400 flex-none w-5 h-5 mr-1" />
+                                            </button>
+                                        </div>
                                     </div>
                                     {errors.reward_offerer_percent && (
                                         <p className="mt-1 text-sm text-red-600">{errors.reward_offerer_percent}</p>
@@ -239,15 +373,13 @@ export default function Create({ companies }: { companies: Company[] }) {
                                     <button
                                         type="submit"
                                         disabled={processing}
-                                        className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50"
+                                        className="inline-flex justify-center rounded-md border border-transparent bg-sky-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 cursor-pointer"
                                     >
                                         {processing ? 'Creating...' : 'Create Offer'}
                                     </button>
                                 </div>
                             </form>
-                        </div>
                     </div>
-                </div>
             </div>
         </AppLayout>
     );
