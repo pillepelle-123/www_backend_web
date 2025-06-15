@@ -1,4 +1,11 @@
-/.phpunit.cache
+# alle Dateien beginnend mit Punkt, außer .gitignore
+.*
+!.gitignore
+# alle Dateien beginnend mit Punkt, außer .gitignore
+.*/
+!.*/github
+
+#/.phpunit.cache
 /bootstrap/ssr
 /node_modules
 /public/build
@@ -7,18 +14,20 @@
 /storage/*.key
 /storage/pail
 /vendor
-.env
-.env.backup
-.env.production
-.phpactor.json
-.phpunit.result.cache
+#.env
+#.env.backup
+#.env.production
+#.phpactor.json
+#.phpunit.result.cache
 Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
 /auth.json
-/.fleet
-/.idea
-/.nova
-/.vscode
-/.zed
+#/.fleet
+#/.idea
+#/.nova
+#/.vscode
+#/.zed
+#/.Peter
+#.editorconfig

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ChevronDown, ChevronUp, Star, StarOff } from "lucide-react";
+import { Star, StarOff } from "lucide-react";
 
 interface OfferFilterBarFilters {
   offered_by_type: string;
@@ -16,7 +16,6 @@ interface OfferFilterBarProps {
   sort: { field: string; direction: string };
   setSort: (s: { field: string; direction: string }) => void;
   show: boolean;
-  setShow: (show: boolean) => void;
   isMobile: boolean;
 }
 
@@ -28,7 +27,6 @@ export function OfferFilterBar({
   sort,
   setSort,
   show,
-  setShow,
   isMobile,
 }: OfferFilterBarProps) {
   // Für Sterne-Filter
@@ -41,12 +39,6 @@ export function OfferFilterBar({
 
   return (
     <div className={wrapperClass} style={isMobile ? { maxWidth: '100vw' } : {}}>
-      <button
-        className="flex items-center gap-2 px-4 py-2 bg-zinc-100 dark:bg-zinc-800 rounded hover:bg-zinc-200 dark:hover:bg-zinc-700 transition mb-2"
-        onClick={() => setShow(!show)}
-      >
-        {show ? <ChevronUp /> : <ChevronDown />} Filter & Suche
-      </button>
       {show && (
         <div className="flex flex-wrap gap-4 items-end">
           {/* Suche */}

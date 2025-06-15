@@ -30,7 +30,7 @@ final class CompanyFactory extends Factory
         return [
             // 'id' => Str::uuid(),
             'name' => $this->faker->company(), // fake()->company(),
-            'logo_url' => $this->faker->url(),
+            'logo_path' => $this->faker->url(),
             'website' => $this->faker->url(),
             'referral_program_url' => $this->faker->url(),
             'description' => $this->faker->paragraph(5, true),

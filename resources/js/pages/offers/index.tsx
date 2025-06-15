@@ -58,8 +58,23 @@ export default function Index({ offers }: { offers: Offer[] }) {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  // Filter Button für die Header-Navigation
+  const FilterButton = () => (
+    <button
+      className="flex items-center gap-2 px-4 py-2 bg-zinc-100 dark:bg-zinc-800 rounded hover:bg-zinc-200 dark:hover:bg-zinc-700 transition"
+      onClick={() => setShowFilters(!showFilters)}
+      aria-label="Filter & Suche öffnen"
+      type="button"
+    >
+      {showFilters ? <Filter className="w-6 h-6 " /> : <Filter className="w-6 h-6 "  />}  { /* Filter & Suche */ }
+    </button>
+  );
+
   return (
-    <AppLayout breadcrumbs={breadcrumbs}>
+    <AppLayout
+      breadcrumbs={breadcrumbs}
+      headerRightContent={!isMobile ? <FilterButton /> : undefined}
+    >
       <Head title="List of Offers" />
       {/* Mobile: Button unten rechts, Sheet von rechts */}
       {isMobile && !showFilters && (
@@ -97,7 +112,6 @@ export default function Index({ offers }: { offers: Offer[] }) {
                 sort={sort}
                 setSort={setSort}
                 show={true}
-                setShow={setShowFilters}
                 isMobile={true}
               />
             </div>
@@ -106,17 +120,18 @@ export default function Index({ offers }: { offers: Offer[] }) {
       )}
       {/* Desktop: Filterbar oben */}
       {!isMobile && (
-        <OfferFilterBar
-          search={search}
-          setSearch={setSearch}
-          filters={filters}
-          setFilters={setFilters}
-          sort={sort}
-          setSort={setSort}
-          show={showFilters}
-          setShow={setShowFilters}
-          isMobile={false}
-        />
+        <div className={`transition-all duration-300 overflow-hidden ${showFilters ? 'max-h-96' : 'max-h-0'}`}>
+          <OfferFilterBar
+            search={search}
+            setSearch={setSearch}
+            filters={filters}
+            setFilters={setFilters}
+            sort={sort}
+            setSort={setSort}
+            show={showFilters}
+            isMobile={false}
+          />
+        </div>
       )}
       <div className="flex flex-col gap-4 rounded-xl p-4">
         {/* Gefilterte & sortierte Liste */}

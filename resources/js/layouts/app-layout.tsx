@@ -5,10 +5,15 @@ import { type ReactNode } from 'react';
 interface AppLayoutProps {
     children: ReactNode;
     breadcrumbs?: BreadcrumbItem[];
+    headerRightContent?: ReactNode;
 }
 
-export default ({ children, breadcrumbs, ...props }: AppLayoutProps) => (
-    <AppLayoutTemplate breadcrumbs={breadcrumbs} {...props}>
+export default ({ children, breadcrumbs, headerRightContent, ...props }: AppLayoutProps) => (
+    <AppLayoutTemplate
+        breadcrumbs={breadcrumbs}
+        headerRightContent={headerRightContent}
+        {...props}
+    >
         {children}
     </AppLayoutTemplate>
 );
