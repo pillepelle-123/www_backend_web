@@ -3,12 +3,9 @@ import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
 import { LazyOfferCard } from '@/components/individual/LazyOfferCard';
-import { useState, useEffect, useMemo } from "react";
-import { Filter, X, Loader2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { ChevronDown, ChevronUp, Filter, X } from "lucide-react";
 import { OfferFilterBar } from '@/components/individual/OfferFilterBar';
-import { useOffers, type OfferFilters, type OfferSort } from '@/hooks/use-offers';
-import { useInfiniteScroll } from '@/hooks/use-infinite-scroll';
-import { useDebounce } from '@/hooks/use-debounce';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -17,7 +14,31 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function Index({ initialOffers }: { initialOffers: any[] }) {
+export type Offer = {
+  id: number;
+  title: string;
+  description: string;
+  offered_by_type: string;
+  offer_user: string;
+  offer_company: string;
+  logo_path: string;
+  reward_total_cents: number;
+  reward_offerer_percent: number;
+  created_at: string;
+  average_rating: number;
+
+//   user: {
+//     name: string;
+//   };
+//   company: {
+//     name: string;
+//     logo_url: string;
+//   };
+
+  status: "active" | "inactive" | "closed" | 'matched';
+};
+
+export default function Index({ offers }: { offers: Offer[] }) {
   const [showFilters, setShowFilters] = useState(false);
   const [search, setSearch] = useState({ title: "", offer_company: "" });
   const [filters, setFilters] = useState({
@@ -28,17 +49,6 @@ export default function Index({ initialOffers }: { initialOffers: any[] }) {
   });
   const [sort, setSort] = useState({ field: "created_at", direction: "desc" });
 
-  // Use the offers hook for data management
-  const { offers, loading, hasMore, loadMore, applyFilters } = useOffers();
-
-  // Set up infinite scrolling
-  const sentinelRef = useInfiniteScroll({
-    hasMore,
-    loading,
-    onLoadMore: loadMore,
-    threshold: 300, // Load more when 300px from bottom
-  });
-
   // Mobile-Detection (einfach, für Demo-Zwecke)
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
@@ -48,28 +58,6 @@ export default function Index({ initialOffers }: { initialOffers: any[] }) {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Debounce search inputs to avoid too many API calls
-  const debouncedSearch = useDebounce(search, 500);
-
-  // Apply filters when they change
-  useEffect(() => {
-    const offerFilters: OfferFilters = {
-      title: debouncedSearch.title || undefined,
-      offer_company: debouncedSearch.offer_company || undefined,
-      offered_by_type: filters.offered_by_type || undefined,
-      status: filters.status || undefined,
-      average_rating_min: filters.average_rating_min > 0 ? filters.average_rating_min : undefined,
-      created_at_from: filters.created_at_from || undefined,
-    };
-
-    const offerSort: OfferSort = {
-      field: sort.field,
-      direction: sort.direction as 'asc' | 'desc',
-    };
-
-    applyFilters(offerFilters, offerSort);
-  }, [debouncedSearch, filters, sort, applyFilters]);
-
   // Filter Button für die Header-Navigation
   const FilterButton = () => (
     <button
@@ -78,7 +66,7 @@ export default function Index({ initialOffers }: { initialOffers: any[] }) {
       aria-label="Filter & Suche öffnen"
       type="button"
     >
-      <Filter className="w-6 h-6" />
+      {showFilters ? <Filter className="w-6 h-6 " /> : <Filter className="w-6 h-6 "  />}  { /* Filter & Suche */ }
     </button>
   );
 
@@ -146,41 +134,46 @@ export default function Index({ initialOffers }: { initialOffers: any[] }) {
         </div>
       )}
       <div className="flex flex-col gap-4 rounded-xl p-4">
-        {/* Offers Grid */}
+        {/* Gefilterte & sortierte Liste */}
         <div className="container mx-auto p-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 gap-8">
-            {offers.map((offer) => (
-              <LazyOfferCard key={offer.id} offer={offer} />
-            ))}
+            {offers
+              .filter(offer =>
+                (!search.title || offer.title.toLowerCase().includes(search.title.toLowerCase())) &&
+                (!search.offer_company || offer.offer_company.toLowerCase().includes(search.offer_company.toLowerCase())) &&
+                (!filters.offered_by_type || offer.offered_by_type === filters.offered_by_type) &&
+                (!filters.status || offer.status === filters.status) &&
+                (!filters.average_rating_min || offer.average_rating >= filters.average_rating_min) &&
+                (!filters.created_at_from || new Date(offer.created_at) >= new Date(filters.created_at_from))
+              )
+              .sort((a, b) => {
+                const { field, direction } = sort;
+                let av = a[field];
+                let bv = b[field];
+                if (field === 'reward_total_cents') {
+                  av = a.reward_total_cents;
+                  bv = b.reward_total_cents;
+                }
+                if (field === 'reward_offerer_percent') {
+                  av = a.reward_offerer_percent;
+                  bv = b.reward_offerer_percent;
+                }
+                if (field === 'created_at') {
+                  av = new Date(a.created_at).getTime();
+                  bv = new Date(b.created_at).getTime();
+                }
+                if (field === 'average_rating') {
+                  av = a.average_rating;
+                  bv = b.average_rating;
+                }
+                if (av < bv) return direction === 'asc' ? -1 : 1;
+                if (av > bv) return direction === 'asc' ? 1 : -1;
+                return 0;
+              })
+              .map((offer) => (
+                <LazyOfferCard key={offer.id} offer={offer} />
+              ))}
           </div>
-          
-          {/* Loading indicator */}
-          {loading && (
-            <div className="flex justify-center items-center py-8">
-              <Loader2 className="w-8 h-8 animate-spin text-gray-500" />
-              <span className="ml-2 text-gray-500">Lade weitere Angebote...</span>
-            </div>
-          )}
-          
-          {/* Infinite scroll sentinel */}
-          <div ref={sentinelRef} className="h-4" />
-          
-          {/* No more data indicator */}
-          {!hasMore && offers.length > 0 && (
-            <div className="text-center py-8 text-gray-500">
-              Alle Angebote wurden geladen.
-            </div>
-          )}
-          
-          {/* No offers found */}
-          {!loading && offers.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-gray-500 text-lg">Keine Angebote gefunden.</p>
-              <p className="text-gray-400 text-sm mt-2">
-                Versuchen Sie, Ihre Filter anzupassen.
-              </p>
-            </div>
-          )}
         </div>
       </div>
     </AppLayout>

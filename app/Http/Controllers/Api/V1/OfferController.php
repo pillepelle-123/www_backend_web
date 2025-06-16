@@ -16,50 +16,24 @@ class OfferController extends ApiController
      */
     public function index(Request $request)
     {
-        $perPage = $request->get('per_page', 20);
-        
-        $query = QueryBuilder::for(Offer::class)
-            ->allowedFilters([
-                AllowedFilter::exact('offered_by_type'), 
-                AllowedFilter::exact('status'),
-                AllowedFilter::partial('offer_title'),
-                AllowedFilter::partial('company.name'),
-                AllowedFilter::operator('reward_total_cents', FilterOperator::DYNAMIC),
-                AllowedFilter::operator('reward_offerer_percent', FilterOperator::DYNAMIC),
-                AllowedFilter::operator('created_at', FilterOperator::DYNAMIC),
-                AllowedFilter::callback('average_rating_min', function ($query, $value) {
-                    $query->whereHas('user', function ($q) use ($value) {
-                        $q->where('average_rating', '>=', $value)
-                          ->whereNotNull('average_rating');
-                    });
-                }),
+        $offers = QueryBuilder::for(Offer::class)
+            // ->join('users', 'offers.user_id', 'users.id')
+            // ->join('companies', 'offers.company_id', 'companies.id')
+            // ->select([
+            //     'offers.*',
+            //     'users.name as user_name', // Alias für user name
+            //     'companies.name as company_name' // Alias für company name
+            // ])
+            ->allowedFilters(['offered_by_type', 'offer_title', 'offer_description', 'status', 'created_at', 'updated_at',
+            AllowedFilter::exact('user.name'),
+            AllowedFilter::operator('reward_total_cents', FilterOperator::DYNAMIC),
+            AllowedFilter::operator('reward_offerer_percent', FilterOperator::DYNAMIC),
             ])
+            ->allowedFields('user.name')
             ->allowedIncludes(['user', 'company'])
-            ->allowedSorts('offer_title', 'reward_total_cents', 'reward_offerer_percent', 'created_at', 'user.average_rating')
-            ->defaultSort('-created_at') // Default sort by created_at desc
-            ->with(['user', 'company']);
-        
-        $offers = $query->paginate($perPage);
-
-        // Transform the data to match the frontend expectations
-        $offers->getCollection()->transform(function ($offer) {
-            return [
-                'id' => $offer->id,
-                'title' => $offer->offer_title,
-                'description' => $offer->offer_description,
-                'offered_by_type' => $offer->offered_by_type == 'referrer' ? 'Werbender' : 'Beworbener',
-                'offer_user' => $offer->user->name,
-                'offer_company' => $offer->company->name,
-                'logo_path' => $offer->company->logo_path,
-                'reward_total_cents' => $offer->reward_total_cents,
-                'reward_offerer_percent' => $offer->reward_offerer_percent,
-                'status' => $offer->status,
-                'created_at' => $offer->created_at->format('Y-m-d H:i:s'),
-                'average_rating' => $offer->user->average_rating ?? 0,
-                'industry' => $offer->company->industry,
-            ];
-        });
-
+            ->allowedSorts('offer_title', 'reward_total_cents', 'reward_offerer_percent', 'created_at')
+            ->with(['user', 'company'])
+            ->paginate(15);
         return $offers;
     }
 
