@@ -41,16 +41,6 @@ export const useOffers = () => {
   
   // Use ref to track if we're currently fetching to prevent duplicate requests
   const isFetching = useRef(false);
-  
-  // Use refs to store current values for stable references
-  const filtersRef = useRef(filters);
-  const sortRef = useRef(sort);
-  const currentPageRef = useRef(currentPage);
-  
-  // Update refs when state changes
-  useEffect(() => { filtersRef.current = filters; }, [filters]);
-  useEffect(() => { sortRef.current = sort; }, [sort]);
-  useEffect(() => { currentPageRef.current = currentPage; }, [currentPage]);
 
   const buildQueryParams = useCallback((page: number, currentFilters: OfferFilters, currentSort: OfferSort) => {
     const params = new URLSearchParams();
@@ -69,7 +59,9 @@ export const useOffers = () => {
       params.append('filter[company.name]', currentFilters.offer_company);
     }
     if (currentFilters.offered_by_type) {
-      params.append('filter[offered_by_type]', currentFilters.offered_by_type);
+      // Convert display value back to database value
+      const dbValue = currentFilters.offered_by_type === 'Werbender' ? 'referrer' : 'referred';
+      params.append('filter[offered_by_type]', dbValue);
     }
     if (currentFilters.status) {
       params.append('filter[status]', currentFilters.status);
@@ -112,16 +104,15 @@ export const useOffers = () => {
 
   // Load initial data
   useEffect(() => {
-    fetchOffers(1, {}, { field: 'created_at', direction: 'desc' }, false);
+    fetchOffers(1, filters, sort, false);
   }, []);
 
   // Load more data (infinite scroll)
   const loadMore = useCallback(() => {
     if (!loading && hasMore && !isFetching.current) {
-      const nextPage = currentPageRef.current + 1;
-      fetchOffers(nextPage, filtersRef.current, sortRef.current, true);
+      fetchOffers(currentPage + 1, filters, sort, true);
     }
-  }, [loading, hasMore, fetchOffers]);
+  }, [loading, hasMore, currentPage, filters, sort, fetchOffers]);
 
   // Apply new filters/sort (reset pagination)
   const applyFilters = useCallback((newFilters: OfferFilters, newSort?: OfferSort) => {
