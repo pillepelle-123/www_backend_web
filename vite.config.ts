@@ -10,15 +10,9 @@ export default defineConfig({
         port: 5173,
         strictPort: true,
         hmr: {
-          host: '192.168.178.23',
-          protocol: 'ws',
           port: 5173,
         },
-        cors: {
-          origin: ['http://192.168.178.23:8000', 'http://localhost:8000'],
-          methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-          credentials: true
-        }
+        cors: true
     },
     plugins: [
         laravel({

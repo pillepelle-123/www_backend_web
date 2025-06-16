@@ -16,32 +16,10 @@ class OfferController extends Controller
     // }
     public function index()
     {
-        $offers = Offer::query()
-            // ->where('user_id', auth()->id())
-            ->get()
-            ->map(function ($offer) {
-                return [
-                    'id' => $offer->id,
-                    'title' => $offer->offer_title,
-                    'description' => $offer->offer_description,
-                    'offered_by_type' => $offer->offered_by_type == 'referrer' ? 'Werbender' : 'Beworbener',
-                    'offer_user' => $offer->user->name,
-                    'offer_company' => $offer->company->name,
-                    'logo_path' => $offer->company->logo_path,
-                    'reward_total_cents' => $offer->reward_total_cents,
-                    'reward_offerer_percent' => $offer->reward_offerer_percent,
-                    'status' => $offer->status, //->isPast() ? 'expired' : 'active',
-                    'created_at' => $offer->created_at->format('Y-m-d H:i:s'),
-                    'average_rating' => $offer->user->average_rating,
-                    'industry' => $offer->company->industry,
-                ];
-            })
-            ->sortByDesc('created_at')
-            ->values()  // Konvertiert die Collection in ein Array
-            ->toArray(); // Stellt sicher, dass es ein Array ist
-
+        // For initial page load, we'll pass empty array and let frontend fetch via API
+        // This enables infinite scrolling and server-side filtering from the start
         return Inertia::render('offers/index', [
-            'offers' => $offers,
+            'initialOffers' => [], // Empty initial data, will be loaded via API
         ]);
     }
 

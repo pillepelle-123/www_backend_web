@@ -1,0 +1,10 @@
+
+> dev
+> vite
+
+error when starting dev server:
+Error: Port 5173 is already in use
+    at Server.onError (file:///workspace/www_backend_web/node_modules/vite/dist/node/chunks/dep-DBxKXgDP.js:25023:18)
+    at Server.emit (node:events:518:28)
+    at emitErrorNT (node:net:1975:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)
