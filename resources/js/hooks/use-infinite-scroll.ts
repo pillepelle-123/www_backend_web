@@ -19,6 +19,7 @@ export const useInfiniteScroll = ({
   const handleIntersection = useCallback((entries: IntersectionObserverEntry[]) => {
     const [entry] = entries;
     if (entry.isIntersecting && hasMore && !loading) {
+      console.log('Intersection detected, loading more...');
       onLoadMore();
     }
   }, [hasMore, loading, onLoadMore]);
@@ -59,6 +60,7 @@ export const useInfiniteScroll = ({
       
       // If we're within threshold pixels of the bottom
       if (scrollTop + windowHeight >= documentHeight - threshold) {
+        console.log('Scroll threshold reached, loading more...');
         onLoadMore();
       }
     };
