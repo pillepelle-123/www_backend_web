@@ -29,15 +29,6 @@
     @include('crud::inc.ajax_error_frame')
 @endif
 
-@push('after_scripts')
-    @basset(base_path('vendor/backpack/crud/src/resources/assets/js/common.js'))
-@endpush
-
-<!-- Neu PSt - notwendig zur Verhinderung von 419 | Page Expired -->
-@if(config('app.debug'))
-    @include('crud::inc.ajax_error_frame')
-@endif
-
 {{-- CSRF-Token für alle jQuery-AJAX-Requests setzen --}}
 <script>
   $.ajaxSetup({
