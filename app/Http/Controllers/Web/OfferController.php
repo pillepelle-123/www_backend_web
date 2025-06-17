@@ -21,14 +21,14 @@ class OfferController extends Controller
         $query = Offer::query()
             ->with(['user', 'company']);
             
-        // Suche
+        // Suche (case-insensitive)
         if ($request->has('title') && !empty($request->title)) {
-            $query->where('offer_title', 'like', '%' . $request->title . '%');
+            $query->where('offer_title', 'ilike', '%' . $request->title . '%');
         }
         
         if ($request->has('offer_company') && !empty($request->offer_company)) {
             $query->whereHas('company', function($q) use ($request) {
-                $q->where('name', 'like', '%' . $request->offer_company . '%');
+                $q->where('name', 'ilike', '%' . $request->offer_company . '%');
             });
         }
         
@@ -180,14 +180,14 @@ class OfferController extends Controller
         $query = Offer::query()
             ->with(['user', 'company']);
             
-        // Suche
+        // Suche (case-insensitive)
         if ($request->has('title') && !empty($request->title)) {
-            $query->where('offer_title', 'like', '%' . $request->title . '%');
+            $query->where('offer_title', 'ilike', '%' . $request->title . '%');
         }
         
         if ($request->has('offer_company') && !empty($request->offer_company)) {
             $query->whereHas('company', function($q) use ($request) {
-                $q->where('name', 'like', '%' . $request->offer_company . '%');
+                $q->where('name', 'ilike', '%' . $request->offer_company . '%');
             });
         }
         

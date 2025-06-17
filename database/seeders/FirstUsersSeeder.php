@@ -6,7 +6,7 @@ use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class FirstUserSeeder extends Seeder
+class FirstUsersSeeder extends Seeder
 {
     /**
      * Seed the application's database.
@@ -14,7 +14,7 @@ class FirstUserSeeder extends Seeder
     public function run(): void
     {
 
-        // Admin User (Rolle: Admin)
+        // Admin User Peter (Admin)
         User::factory()->create([
             'name' => 'pillepelle',
             'email' => 'pillepelle@freenet.de',
@@ -26,12 +26,24 @@ class FirstUserSeeder extends Seeder
             'updated_at' => now()
         ]);
 
-        // Admin User (Rolle: Admin)
+        // Admin User Tim (Admin)
         User::factory()->create([
-            'name' => 'pillepelle',
-            'email' => 'pillepelle@freenet.de',
+            'name' => 'timmi',
+            'email' => 'timgoerner@web.de',
             'email_verified_at' => now(),
-            'password' => bcrypt('djembe32'),
+            'password' => bcrypt('abcd'),
+            'role' => 'admin',
+            'average_rating' => 0.00,
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        // Admin User Flo (Admin)
+        User::factory()->create([
+            'name' => 'flo',
+            'email' => 'thallerflorian@gmail.com',
+            'email_verified_at' => now(),
+            'password' => bcrypt('perhaenschn'),
             'role' => 'admin',
             'average_rating' => 0.00,
             'created_at' => now(),
@@ -42,8 +54,12 @@ class FirstUserSeeder extends Seeder
         User::factory()->create([
             'name' => 'user',
             'email' => 'user@user.de',
+            'email_verified_at' => now(),
             'password' => bcrypt('djembe32'),
-            'role' => 'user'
+            'role' => 'user',
+            'average_rating' => 0.00,
+            'created_at' => now(),
+            'updated_at' => now()
         ]);
     }
 }
