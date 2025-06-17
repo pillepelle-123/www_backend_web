@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CompanyRequest extends FormRequest
 {
@@ -26,12 +27,17 @@ class CompanyRequest extends FormRequest
     {
         $id = $this->id ?? 'NULL';
         return [
-
             'name' => 'required|min:2|max:100|unique:companies,name,'.$id,
+            'domain' => 'nullable|string|max:255',
             'logo_url' => 'nullable|url|max:255',
-            'website' => 'nullable|url|max:255',
             'referral_program_url' => 'nullable|url|max:255',
-            'description' => 'nullable|string|max:2000'
+            'description' => 'nullable|string|max:2000',
+            'is_active' => 'boolean',
+            'industry' => 'nullable|string|max:100',
+            'admin_status' => [
+                'required',
+                Rule::in(['pending', 'active', 'inactive', 'review', 'archived'])
+            ],
         ];
     }
 
@@ -45,10 +51,13 @@ class CompanyRequest extends FormRequest
         return [
             'id' => 'Unternehmens-ID',
             'name' => 'Firmenname',
+            'domain' => 'Domain',
             'logo_url' => 'Logo URL',
-            'website' => 'Webseite',
             'referral_program_url' => 'Empfehlungsprogramm URL',
-            'description' => 'Beschreibung'
+            'description' => 'Beschreibung',
+            'is_active' => 'Aktiv',
+            'industry' => 'Branche',
+            'admin_status' => 'Admin Status',
         ];
     }
 
@@ -68,16 +77,20 @@ class CompanyRequest extends FormRequest
             'name.max' => 'Der Firmenname darf maximal :max Zeichen lang sein.',
             'name.unique' => 'Dieser Firmenname existiert bereits.',
 
+            'domain.max' => 'Die Domain darf maximal :max Zeichen lang sein.',
+
             'logo_url.url' => 'Bitte geben Sie eine gültige URL für das Logo an.',
             'logo_url.max' => 'Die Logo-URL darf maximal :max Zeichen lang sein.',
-
-            'website.url' => 'Bitte geben Sie eine gültige Webseiten-URL an.',
-            'website.max' => 'Die Webseiten-URL darf maximal :max Zeichen lang sein.',
 
             'referral_program_url.url' => 'Bitte geben Sie eine gültige URL für das Empfehlungsprogramm an.',
             'referral_program_url.max' => 'Die Empfehlungsprogramm-URL darf maximal :max Zeichen lang sein.',
 
-            'description.max' => 'Die Beschreibung darf maximal :max Zeichen lang sein.'
+            'description.max' => 'Die Beschreibung darf maximal :max Zeichen lang sein.',
+            
+            'industry.max' => 'Die Branche darf maximal :max Zeichen lang sein.',
+            
+            'admin_status.required' => 'Bitte einen Admin-Status auswählen.',
+            'admin_status.in' => 'Ungültiger Admin-Status ausgewählt.',
         ];
     }
 }

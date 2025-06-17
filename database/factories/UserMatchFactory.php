@@ -5,6 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\User;
 use App\Models\Offer;
+use App\Models\AffiliateLink;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\UserMatch>
@@ -27,9 +28,10 @@ class UserMatchFactory extends Factory
                     ->first()
                     ->id;
             },
-            'affiliate_link' => $this->faker->url(),
+            'affiliate_link_id' => AffiliateLink::factory(),
             'link_clicked' => $this->faker->boolean(0.25),
-            'status' => $this->faker->randomElement(['open', 'in_progress', 'successful', 'unsuccessful', 'inactive']),
+            'status' => $this->faker->randomElement(['opened', 'closed']),
+            'success_status' => $this->faker->randomElement(['pending', 'successful', 'unsuccessful']),
             'reason_unsuccessful_referrer' => $this->faker->paragraph(),
             'reason_unsuccessful_referred' => $this->faker->paragraph(),
         ];

@@ -22,7 +22,12 @@ class UserMatch extends Model
         'offer_id',
         'user_referrer_id',
         'user_referred_id',
-        'link_clicked'
+        'affiliate_link_id',
+        'link_clicked',
+        'status',
+        'success_status',
+        'reason_unsuccessful_referrer',
+        'reason_unsuccessful_referred'
     ];
 
     protected $casts = [
@@ -32,6 +37,11 @@ class UserMatch extends Model
     public function offer(): BelongsTo
     {
         return $this->belongsTo(Offer::class);
+    }
+    
+    public function affiliateLink(): BelongsTo
+    {
+        return $this->belongsTo(AffiliateLink::class);
     }
 
     public function referrer(): BelongsTo

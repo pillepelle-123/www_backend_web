@@ -36,11 +36,13 @@ class Company extends Model
         'description',
         'is_active',
         'industry',
+        'admin_status',
     ];
     protected $hidden = [];
 
     protected $casts = [
         'is_active' => 'boolean',
+        'admin_status' => 'string',
     ];
 
     /*
@@ -52,6 +54,11 @@ class Company extends Model
     public function offers()
     {
         return $this->hasMany(Offer::class, 'company_id');
+    }
+    
+    public function affiliateLinks()
+    {
+        return $this->hasMany(AffiliateLink::class, 'company_id');
     }
 
     /*

@@ -21,7 +21,7 @@ class UserCrudController extends CrudController
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
-     * 
+     *
      * @return void
      */
     public function setup()
@@ -30,7 +30,7 @@ class UserCrudController extends CrudController
         CRUD::setRoute(config('backpack.base.route_prefix') . '/user');
         CRUD::setEntityNameStrings('user', 'users');
 
-        $this->crud->setColumns( [
+        $this->crud->setColumns([
             [
                 'name' => 'id',
                 'label' => 'ID',
@@ -43,12 +43,42 @@ class UserCrudController extends CrudController
                 'name' => 'email',
                 'label' => 'E-Mail',
             ],
+            [
+                'name' => 'role',
+                'label' => 'Rolle',
+            ],
+            [
+                'name' => 'average_rating',
+                'label' => 'Durchschnittliche Bewertung',
+                'type' => 'number',
+            ],
+            [
+                'name' => 'admin_status',
+                'label' => 'Admin Status',
+                'type' => 'enum',
+                'options' => [
+                    'active' => 'Active',
+                    'inactive' => 'Inactive',
+                    'review' => 'Review',
+                    'archived' => 'Archived',
+                ],
+            ],
+            [
+                'name' => 'email_verified_at',
+                'label' => 'E-Mail verifiziert',
+                'type' => 'datetime',
+            ],
+            [
+                'name' => 'created_at',
+                'label' => 'Erstellt am',
+                'type' => 'datetime',
+            ],
         ]);
     }
 
     /**
      * Define what happens when the List operation is loaded.
-     * 
+     *
      * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
      * @return void
      */
@@ -64,29 +94,59 @@ class UserCrudController extends CrudController
 
     /**
      * Define what happens when the Create operation is loaded.
-     * 
+     *
      * @see https://backpackforlaravel.com/docs/crud-operation-create
      * @return void
      */
     protected function setupCreateOperation()
     {
         CRUD::setValidation(UserRequest::class);
-        CRUD::setFromDb(); // set fields from db columns.
 
-        /**
-         * Fields can be defined using the fluent syntax:
-         * - CRUD::field('price')->type('number');
-         */
+        CRUD::field('name')->type('text');
+        CRUD::field('email')->type('email');
+        CRUD::field('password')->type('password');
+        CRUD::field('average_rating')
+            ->type('number')
+            ->attributes([
+                'step' => '0.01',
+                'min' => '0',
+                'max' => '5',
+            ])
+            ->default(0);
+
+        // admin_status
+        CRUD::field('admin_status')
+            ->label('Admin Status')
+            ->type('select_from_array')
+            ->options([
+                'active' => 'Active',
+                'inactive' => 'Inactive',
+                'review' => 'Review',
+                'archived' => 'Archived',
+            ])
+            ->allows_null(false)
+            ->default('active');
     }
 
     /**
      * Define what happens when the Update operation is loaded.
-     * 
+     *
      * @see https://backpackforlaravel.com/docs/crud-operation-update
      * @return void
      */
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+
+    /**
+     * Define what happens when the Show operation is loaded.
+     *
+     * @see https://backpackforlaravel.com/docs/crud-operation-show
+     * @return void
+     */
+    protected function setupShowOperation()
+    {
+        $this->setupListOperation();
     }
 }

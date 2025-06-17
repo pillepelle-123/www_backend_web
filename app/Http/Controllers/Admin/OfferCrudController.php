@@ -74,7 +74,18 @@ class OfferCrudController extends CrudController
                 'label' => 'Status',
                 'type' => 'model_function',
                 'function_name' => 'getStatusLabelAttribute',         
-            ],         
+            ],
+            [
+                'name' => 'admin_status',
+                'label' => 'Admin Status',
+                'type' => 'enum',
+                'options' => [
+                    'active' => 'Active',
+                    'inactive' => 'Inactive',
+                    'review' => 'Review',
+                    'archived' => 'Archived',
+                ],
+            ],
         ]);
         
     }
@@ -170,10 +181,24 @@ class OfferCrudController extends CrudController
             ->label('Status')
             ->type('select_from_array')
             ->options([
-                'active' => 'Aktiv',
-                'inactive' => 'Inaktiv', 
+                'draft' => 'Entwurf',
+                'live' => 'Live',
+                'hidden' => 'Versteckt',
                 'matched' => 'Zugewiesen',
-                'closed' => 'Abgeschlossen'
+                'deleted' => 'Gelöscht'
+            ])
+            ->allows_null(false)
+            ->default('draft');
+            
+        // admin_status
+        CRUD::field('admin_status')
+            ->label('Admin Status')
+            ->type('select_from_array')
+            ->options([
+                'active' => 'Active',
+                'inactive' => 'Inactive',
+                'review' => 'Review',
+                'archived' => 'Archived'
             ])
             ->allows_null(false)
             ->default('active');

@@ -39,7 +39,11 @@ class OfferRequest extends FormRequest
             'reward_offerer_percent' => 'required|numeric|between:0.01,1.00',
             'status' => [
                 'required',
-                Rule::in(['active', 'inactive', 'matched', 'closed'])
+                Rule::in(['draft', 'live', 'hidden', 'matched', 'deleted'])
+            ],
+            'admin_status' => [
+                'required',
+                Rule::in(['active', 'inactive', 'review', 'archived'])
             ],
         ];
     }
@@ -61,6 +65,7 @@ class OfferRequest extends FormRequest
             'reward_total_cents' => 'Belohnungsbetrag',
             'reward_offerer_percent' => 'Aufteilungsprozentsatz',
             'status' => 'Status',
+            'admin_status' => 'Admin Status',
         ];
     }
 
@@ -100,6 +105,9 @@ class OfferRequest extends FormRequest
             
             'status.required' => 'Bitte einen Status auswählen.',
             'status.in' => 'Ungültiger Status ausgewählt.',
+            
+            'admin_status.required' => 'Bitte einen Admin-Status auswählen.',
+            'admin_status.in' => 'Ungültiger Admin-Status ausgewählt.',
         ];
     }
 }

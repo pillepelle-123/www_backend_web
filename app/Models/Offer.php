@@ -32,7 +32,8 @@ class Offer extends Model
         'offer_description',
         'reward_total_cents',
         'reward_offerer_percent',
-        'status'
+        'status',
+        'admin_status'
     ];
 
     /**
@@ -56,7 +57,8 @@ class Offer extends Model
      */
     protected $attributes = [
         'reward_offerer_percent' => 0.50,
-        'status' => 'active',
+        'status' => 'draft',
+        'admin_status' => 'active',
     ];
 
 
@@ -127,10 +129,11 @@ class Offer extends Model
     public function getStatusLabelAttribute(): string
     {
         return [
-            'active' => 'Aktiv',
-            'inactive' => 'Inaktiv',
+            'draft' => 'Entwurf',
+            'live' => 'Live',
+            'hidden' => 'Versteckt',
             'matched' => 'Zugewiesen',
-            'closed' => 'Abgeschlossen'
+            'deleted' => 'Gelöscht'
         ][$this->status] ?? $this->status;
     }
     /*
@@ -153,11 +156,19 @@ class Offer extends Model
     |--------------------------------------------------------------------------
     */
     /**
-     * Scope for active offers
+     * Scope for live offers
+     */
+    public function scopeLive($query)
+    {
+        return $query->where('status', 'live');
+    }
+    
+    /**
+     * Scope for active offers (admin status)
      */
     public function scopeActive($query)
     {
-        return $query->where('status', 'active');
+        return $query->where('admin_status', 'active');
     }
 
     /**

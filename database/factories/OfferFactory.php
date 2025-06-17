@@ -39,7 +39,8 @@ final class OfferFactory extends Factory
             'offer_description' => $this->faker->paragraph(4, true),
             'reward_total_cents' => $this->faker->numberBetween(1000, 10000),
             'reward_offerer_percent' => $this->faker->randomFloat(2, 0, 1),
-            'status' => $this->faker->randomElement(['active', 'inactive', 'matched', 'closed']),
+            'status' => $this->faker->randomElement(['draft', 'live', 'hidden', 'matched', 'deleted']),
+            'admin_status' => $this->faker->randomElement(['active', 'inactive', 'review', 'archived']),
         ];
     }
 }

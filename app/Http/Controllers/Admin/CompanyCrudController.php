@@ -30,7 +30,7 @@ class CompanyCrudController extends CrudController
         CRUD::setRoute(config('backpack.base.route_prefix') . '/company');
         CRUD::setEntityNameStrings('company', 'companies');
 
-                $this->crud->setColumns([
+        $this->crud->setColumns([
             [
                 'name' => 'id',
                 'label' => 'ID',
@@ -55,8 +55,25 @@ class CompanyCrudController extends CrudController
             ],
             [
                 'name' => 'description',
-                'label' => 'Beschreibumg',
-            ],              
+                'label' => 'Beschreibung',
+            ],
+            [
+                'name' => 'is_active',
+                'label' => 'Aktiv',
+                'type' => 'boolean',
+            ],
+            [
+                'name' => 'admin_status',
+                'label' => 'Admin Status',
+                'type' => 'enum',
+                'options' => [
+                    'pending' => 'Pending',
+                    'active' => 'Active',
+                    'inactive' => 'Inactive',
+                    'review' => 'Review',
+                    'archived' => 'Archived',
+                ],
+            ],
         ]);
     }
 
@@ -85,15 +102,28 @@ class CompanyCrudController extends CrudController
     protected function setupCreateOperation()
     {
         CRUD::setValidation(CompanyRequest::class);
-        CRUD::setFromDb(); // set fields from db columns.
-
-        /**
-         * Fields can be defined using the fluent syntax:
-         * - CRUD::field('price')->type('number');
-         */
-        // - CRUD::field('status')->label('Status')->type('select_from_array')->options([
-        //     'active' => 'Aktiv',
-        //     'inactive' => 'Inaktiv',
+        
+        CRUD::field('name')->type('text');
+        CRUD::field('domain')->type('text');
+        CRUD::field('referral_program_url')->type('url');
+        CRUD::field('logo_url')->type('url');
+        CRUD::field('description')->type('textarea');
+        CRUD::field('is_active')->type('boolean');
+        CRUD::field('industry')->type('text');
+        
+        // admin_status
+        CRUD::field('admin_status')
+            ->label('Admin Status')
+            ->type('select_from_array')
+            ->options([
+                'pending' => 'Pending',
+                'active' => 'Active',
+                'inactive' => 'Inactive',
+                'review' => 'Review',
+                'archived' => 'Archived',
+            ])
+            ->allows_null(false)
+            ->default('pending');
     }
 
     /**
@@ -105,5 +135,16 @@ class CompanyCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+    
+    /**
+     * Define what happens when the Show operation is loaded.
+     * 
+     * @see https://backpackforlaravel.com/docs/crud-operation-show
+     * @return void
+     */
+    protected function setupShowOperation()
+    {
+        $this->setupListOperation();
     }
 }
