@@ -13,6 +13,18 @@ class UserMatch extends Model
 {
     use HasFactory, CrudTrait, HasApiTokens;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'offer_id',
+        'user_referrer_id',
+        'user_referred_id',
+        'link_clicked'
+    ];
+
     protected $casts = [
         'link_clicked' => 'boolean',
     ];

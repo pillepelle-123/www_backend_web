@@ -3,8 +3,8 @@ import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
-import { Link } from '@inertiajs/react';
-import { /*BookOpen, Folder,*/ LayoutGrid, ListTodo, CirclePlus } from 'lucide-react';
+import { Link, usePage } from '@inertiajs/react';
+import { /*BookOpen, Folder,*/ LayoutGrid, ListTodo, CirclePlus, Mail } from 'lucide-react';
 import AppLogo from './app-logo';
 // import { cn } from '@/lib/utils';
 // import { route } from '@/lib/ziggy';
@@ -25,6 +25,11 @@ const mainNavItems: NavItem[] = [
         href: '/offers/create',
         icon: CirclePlus,
     },
+    {
+        title: 'Nachrichten',
+        href: '/applications',
+        icon: Mail,
+    },
 ];
 
 const footerNavItems: NavItem[] = [
@@ -41,6 +46,20 @@ const footerNavItems: NavItem[] = [
 ];
 
 export function AppSidebar() {
+    const { props } = usePage();
+    const unreadCount = props.unreadApplicationsCount || 0;
+    
+    // Füge Badge zum Nachrichten-Menüpunkt hinzu
+    const navItemsWithBadges = mainNavItems.map(item => {
+        if (item.title === 'Nachrichten') {
+            return {
+                ...item,
+                badge: unreadCount
+            };
+        }
+        return item;
+    });
+    
     return (
         <Sidebar collapsible="icon" variant="sidebar">
             <SidebarHeader>
@@ -56,7 +75,7 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain items={mainNavItems} />
+                <NavMain items={navItemsWithBadges} />
             </SidebarContent>
 
             <SidebarFooter>

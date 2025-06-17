@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Web\OfferController;
+use App\Http\Controllers\Web\ApplicationController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
@@ -38,6 +39,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/offers-fetch-more', [OfferController::class, 'fetchMore'])
         ->name('web.offers.fetch-more');
+        
+    // Application routes
+    Route::get('/offers/{id}/apply', [ApplicationController::class, 'create'])
+        ->name('web.offers.apply.create');
+    Route::post('/offers/{id}/apply', [ApplicationController::class, 'store'])
+        ->name('web.offers.apply');
+        
+    Route::get('/applications', [ApplicationController::class, 'index'])
+        ->name('web.applications.index');
+    Route::get('/applications/{id}', [ApplicationController::class, 'show'])
+        ->name('web.applications.show');
+    Route::post('/applications/{id}/approve', [ApplicationController::class, 'approve'])
+        ->name('web.applications.approve');
+    Route::post('/applications/{id}/reject', [ApplicationController::class, 'reject'])
+        ->name('web.applications.reject');
 
     // Route::get('/list-offers', function () {
     //     return Inertia::render('Offers');

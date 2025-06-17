@@ -497,24 +497,37 @@ function SidebarMenuButton({
   size = "lg",
   tooltip,
   className,
+  badge,
   ...props
 }: React.ComponentProps<"button"> & {
   asChild?: boolean
   isActive?: boolean
   tooltip?: string | React.ComponentProps<typeof TooltipContent>
+  badge?: number
 } & VariantProps<typeof sidebarMenuButtonVariants>) {
   const Comp = asChild ? Slot : "button"
   const { isMobile, state } = useSidebar()
 
+  // Wenn ein Badge vorhanden ist und asChild true ist, können wir nicht direkt ein Badge hinzufügen
+  // Stattdessen müssen wir das Badge außerhalb des Slots platzieren
+  const hasBadge = badge && badge > 0
+
   const button = (
-    <Comp
-      data-slot="sidebar-menu-button"
-      data-sidebar="menu-button"
-      data-size={size}
-      data-active={isActive}
-      className={cn(sidebarMenuButtonVariants({ variant, size }), className, "text-md hover:!bg-gray-700")} // PSt: text-md added
-      {...props}
-    />
+    <div className="relative">
+      <Comp
+        data-slot="sidebar-menu-button"
+        data-sidebar="menu-button"
+        data-size={size}
+        data-active={isActive}
+        className={cn(sidebarMenuButtonVariants({ variant, size }), className, "text-md hover:!bg-gray-700")} // PSt: text-md added
+        {...props}
+      />
+      {hasBadge && (
+        <span className="absolute top-0 right-0 -mt-1 -mr-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 text-xs font-medium text-white">
+          {badge > 99 ? '99+' : badge}
+        </span>
+      )}
+    </div>
   )
 
   if (!tooltip) {

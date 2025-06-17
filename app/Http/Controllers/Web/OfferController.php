@@ -116,14 +116,16 @@ class OfferController extends Controller
             'id' => $offer->id,
             'title' => $offer->offer_title,
             'description' => $offer->offer_description,
-            'offered_by_type' => $offer->offered_by_type,
+            'offered_by_type' => $offer->offered_by_type == 'referrer' ? 'Werbender' : 'Beworbener',
             'offer_user' => $offer->user->name,
             'offer_company' => $offer->company->name,
-            'logo_url' => $offer->company->logo_url,
-            'reward_total_cents' => $offer->reward_total_cents / 100,
+            'logo_url' => $offer->company->logo_path,
+            'reward_total_cents' => $offer->reward_total_cents,
             'reward_offerer_percent' => $offer->reward_offerer_percent,
             'status' => $offer->status,
             'industry' => $offer->company->industry,
+            'created_at' => $offer->created_at->format('Y-m-d H:i:s'),
+            'average_rating' => $offer->user->average_rating,
         ];
 
         return Inertia::render('offers/show', [

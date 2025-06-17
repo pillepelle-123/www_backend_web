@@ -10,16 +10,24 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
             <SidebarMenu>
                 {items.map((item) => (
                     <SidebarMenuItem key={item.title} >
-                        <SidebarMenuButton
-                            // className="hover:text-gray-300"
-                            asChild isActive={item.href === page.url}
-                            tooltip={{ children: item.title }}
-                        >
-                            <Link href={item.href} prefetch >
-                                {item.icon && <item.icon />}
-                                <span>{item.title}</span>
-                            </Link>
-                        </SidebarMenuButton>
+                        <div className="relative">
+                            <SidebarMenuButton
+                                // className="hover:text-gray-300"
+                                asChild 
+                                isActive={item.href === page.url}
+                                tooltip={{ children: item.title }}
+                            >
+                                <Link href={item.href} prefetch >
+                                    {item.icon && <item.icon />}
+                                    <span>{item.title}</span>
+                                </Link>
+                            </SidebarMenuButton>
+                            {item.badge && item.badge > 0 && (
+                                <span className="absolute top-0 right-0 -mt-1 -mr-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 text-xs font-medium text-white">
+                                    {item.badge > 99 ? '99+' : item.badge}
+                                </span>
+                            )}
+                        </div>
                     </SidebarMenuItem>
                 ))}
             </SidebarMenu>
