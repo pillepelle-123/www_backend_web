@@ -9,7 +9,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 Route::get('/', function () {
     return Inertia::render('welcome');
-})->name('web.home');
+})->name('home');
 
 // Route::get('/dashboard', function () {
 //     return Inertia::render('Dashboard');
@@ -35,6 +35,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/offers/{id}', [OfferController::class, 'show'])
         ->name('web.offers.show');
+
+    Route::get('/offers-fetch-more', [OfferController::class, 'fetchMore'])
+        ->name('web.offers.fetch-more');
 
     // Route::get('/list-offers', function () {
     //     return Inertia::render('Offers');

@@ -3,9 +3,10 @@ import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
 import { LazyOfferCard } from '@/components/individual/LazyOfferCard';
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { ChevronDown, ChevronUp, Filter, X } from "lucide-react";
 import { OfferFilterBar } from '@/components/individual/OfferFilterBar';
+import { useOffers } from '@/hooks/use-offers';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -26,19 +27,10 @@ export type Offer = {
   reward_offerer_percent: number;
   created_at: string;
   average_rating: number;
-
-//   user: {
-//     name: string;
-//   };
-//   company: {
-//     name: string;
-//     logo_url: string;
-//   };
-
   status: "active" | "inactive" | "closed" | 'matched';
 };
 
-export default function Index({ offers }: { offers: Offer[] }) {
+export default function Index({ offers: initialOffers, pagination: initialPagination }) {
   const [showFilters, setShowFilters] = useState(false);
   const [search, setSearch] = useState({ title: "", offer_company: "" });
   const [filters, setFilters] = useState({
@@ -48,6 +40,63 @@ export default function Index({ offers }: { offers: Offer[] }) {
     created_at_from: "",
   });
   const [sort, setSort] = useState({ field: "created_at", direction: "desc" });
+  
+  // Offers Hook für Infinite Scrolling und serverseitige Filterung
+  const { 
+    offers, 
+    loading, 
+    error, 
+    loadMore, 
+    updateDelayedFilters,
+    updateImmediateFilters,
+    applyFilters,
+    hasMore 
+  } = useOffers();
+
+  // Observer für Infinite Scrolling
+  const observer = useRef<IntersectionObserver | null>(null);
+  const lastOfferElementRef = useCallback((node: HTMLDivElement | null) => {
+    if (loading) return;
+    if (observer.current) observer.current.disconnect();
+    
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && hasMore) {
+        loadMore();
+      }
+    }, { rootMargin: '200px' }); // Frühzeitig laden, wenn 200px vor dem Ende
+    
+    if (node) observer.current.observe(node);
+  }, [loading, hasMore, loadMore]);
+
+  // Verzögerte Filter-Änderungen speichern
+  useEffect(() => {
+    updateDelayedFilters({
+      title: search.title,
+      offer_company: search.offer_company,
+      created_at_from: filters.created_at_from
+    });
+  }, [search, filters.created_at_from, updateDelayedFilters]);
+  
+  // Sofortige Filter-Änderungen speichern und anwenden
+  useEffect(() => {
+    updateImmediateFilters({
+      offered_by_type: filters.offered_by_type,
+      status: filters.status,
+      average_rating_min: filters.average_rating_min,
+      sort_field: sort.field,
+      sort_direction: sort.direction
+    });
+  }, [filters.offered_by_type, filters.status, filters.average_rating_min, sort, updateImmediateFilters]);
+
+  // Funktion zum Anwenden der Filter
+  const handleApplyFilters = () => {
+    applyFilters();
+    if (isMobile) {
+      setShowFilters(false);
+    }
+  };
+  
+  // Diese Funktion wird nicht mehr benötigt, da die sofortigen Filter direkt im Hook angewendet werden
 
   // Mobile-Detection (einfach, für Demo-Zwecke)
   const [isMobile, setIsMobile] = useState(false);
@@ -113,6 +162,9 @@ export default function Index({ offers }: { offers: Offer[] }) {
                 setSort={setSort}
                 show={true}
                 isMobile={true}
+                onApplyFilters={handleApplyFilters}
+                onImmediateFilterChange={() => {}}
+                onClose={() => setShowFilters(false)}
               />
             </div>
           </div>
@@ -130,6 +182,8 @@ export default function Index({ offers }: { offers: Offer[] }) {
             setSort={setSort}
             show={showFilters}
             isMobile={false}
+            onApplyFilters={handleApplyFilters}
+            onImmediateFilterChange={() => {}}
           />
         </div>
       )}
@@ -137,43 +191,47 @@ export default function Index({ offers }: { offers: Offer[] }) {
         {/* Gefilterte & sortierte Liste */}
         <div className="container mx-auto p-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 gap-8">
-            {offers
-              .filter(offer =>
-                (!search.title || offer.title.toLowerCase().includes(search.title.toLowerCase())) &&
-                (!search.offer_company || offer.offer_company.toLowerCase().includes(search.offer_company.toLowerCase())) &&
-                (!filters.offered_by_type || offer.offered_by_type === filters.offered_by_type) &&
-                (!filters.status || offer.status === filters.status) &&
-                (!filters.average_rating_min || offer.average_rating >= filters.average_rating_min) &&
-                (!filters.created_at_from || new Date(offer.created_at) >= new Date(filters.created_at_from))
-              )
-              .sort((a, b) => {
-                const { field, direction } = sort;
-                let av = a[field];
-                let bv = b[field];
-                if (field === 'reward_total_cents') {
-                  av = a.reward_total_cents;
-                  bv = b.reward_total_cents;
-                }
-                if (field === 'reward_offerer_percent') {
-                  av = a.reward_offerer_percent;
-                  bv = b.reward_offerer_percent;
-                }
-                if (field === 'created_at') {
-                  av = new Date(a.created_at).getTime();
-                  bv = new Date(b.created_at).getTime();
-                }
-                if (field === 'average_rating') {
-                  av = a.average_rating;
-                  bv = b.average_rating;
-                }
-                if (av < bv) return direction === 'asc' ? -1 : 1;
-                if (av > bv) return direction === 'asc' ? 1 : -1;
-                return 0;
-              })
-              .map((offer) => (
-                <LazyOfferCard key={offer.id} offer={offer} />
-              ))}
+            {offers.map((offer, index) => {
+              // Letztes Element mit Ref für Infinite Scrolling
+              if (offers.length === index + 1) {
+                return (
+                  <div ref={lastOfferElementRef} key={offer.id}>
+                    <LazyOfferCard offer={offer} />
+                  </div>
+                );
+              } else {
+                return <LazyOfferCard key={offer.id} offer={offer} />;
+              }
+            })}
           </div>
+          
+          {/* Lade-Indikator */}
+          {loading && (
+            <div className="flex justify-center my-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+            </div>
+          )}
+          
+          {/* Fehleranzeige */}
+          {error && (
+            <div className="text-center my-8 text-red-500">
+              {error}. <button onClick={() => loadMore()} className="text-blue-500 underline">Erneut versuchen</button>
+            </div>
+          )}
+          
+          {/* Ende der Liste */}
+          {!hasMore && offers.length > 0 && (
+            <div className="text-center my-8 text-gray-500">
+              Keine weiteren Angebote verfügbar
+            </div>
+          )}
+          
+          {/* Keine Ergebnisse */}
+          {!loading && offers.length === 0 && (
+            <div className="text-center my-8 text-gray-500">
+              Keine Angebote gefunden
+            </div>
+          )}
         </div>
       </div>
     </AppLayout>

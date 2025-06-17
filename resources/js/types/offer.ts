@@ -1,13 +1,15 @@
 export type Offer = {
   id: number;
-  offer_title: string;
-  "user.name": string;
+  title: string;
+  description: string;
+  offered_by_type: string;
+  offer_user: string;
+  offer_company: string;
+  logo_path: string;
   reward_total_cents: number;
   reward_offerer_percent: number;
-  status: string;
-  user: { name: string };
-  //   status: 'active' | 'inactive';
-//   user: { "user.name": string };
-//   company: { name: string };
-//   created_at: string;
+  created_at: string;
+  average_rating: number;
+  status: "active" | "inactive" | "closed" | "matched";
+  industry?: string;
 };

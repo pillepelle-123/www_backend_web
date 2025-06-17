@@ -1,10 +1,8 @@
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { Head, useForm } from '@inertiajs/react';
-import { router } from '@inertiajs/react';
+import { Head, useForm, router } from '@inertiajs/react';
 import Select from 'react-select';
-import { useState, useEffect } from 'react';
-import { Inertia } from '@inertiajs/inertia';
+import { useState, /* useEffect */ } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 
 
@@ -35,11 +33,13 @@ export default function Create({ companies }: { companies: Company[] }) {
     });
 
     const [selectedCompany, setSelectedCompany] = useState<{ value: string; label: string } | null>(null);
-    const [isDark, setIsDark] = useState(false);
+    // const [isDark, setIsDark] = useState(false);
 
+    { /*
     useEffect(() => {
         setIsDark(document.documentElement.classList.contains('dark'));
     }, []);
+    */ }
 
     const companyOptions = companies.map(company => ({
         value: company.id.toString(),
@@ -48,15 +48,11 @@ export default function Create({ companies }: { companies: Company[] }) {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        Inertia.post('/offers', {
+        router.post('/offers', {
             ...data,
             reward_total_cents: Math.round((data.reward_total_eur || 0) * 100),
             reward_offerer_percent: (data.reward_offerer_percent || 0) / 100,
             offered_by_type: data.offered_by_type,
-        }, {
-            onSuccess: () => {
-                router.visit('/offers');
-            },
         });
     };
 
@@ -101,46 +97,46 @@ export default function Create({ companies }: { companies: Company[] }) {
         placeholder: () => 'text-gray-400 dark:text-gray-400',
       };
 
-    const selectStyles = {
-        control: (base) => ({
-            ...base,
-            backgroundColor: isDark ? 'rgb(39 39 42)' : 'rgb(243, 244, 246)', // '#fff', // dark:bg-zinc-800, light:bg-white
-            border: 'none',
-            borderColor: isDark ? 'rgb(63 63 70)' : '#d1d5db', // dark:border-zinc-700, light:border-gray-300
-            color: isDark ? 'rgb(209 213 219)' : '#111827', // dark:text-gray-300, light:text-gray-900
-            '&:hover': {
-                borderColor: isDark ? 'rgb(82 82 91)' : '#a1a1aa', // dark:hover:border-zinc-600, light:hover:border-gray-400
-            },
-            boxShadow: 'none',
-        }),
-        menu: (base) => ({
-            ...base,
-            backgroundColor: isDark ? 'rgb(39 39 42)' : '#fff', // dark:bg-zinc-800, light:bg-white
-            color: isDark ? 'rgb(209 213 219)' : '#111827',
-        }),
-        option: (base, state) => ({
-            ...base,
-            backgroundColor: state.isFocused
-                ? (isDark ? 'oklch(0.588 0.158 241.966)' : '#f3f4f6') // dark:bg-zinc-700, light:bg-gray-100
-                : (isDark ? 'oklch(0.2739 0.0055 286.03)' : '#fff'), // dark:bg-zinc-800, light:bg-white
-            color: isDark ? 'oklch(0.9276 0.0058 264.53)' : '#111827', // dark:text-gray-300, light:text-gray-900
-            '&:active': {
-                backgroundColor: isDark ? 'rgb(82 82 91)' : '#e5e7eb', // dark:active:bg-zinc-600, light:active:bg-gray-200
-            },
-        }),
-        singleValue: (base) => ({
-            ...base,
-            color: isDark ? 'rgb(209 213 219)' : '#111827', // dark:text-gray-300, light:text-gray-900
-        }),
-        input: (base) => ({
-            ...base,
-            color: isDark ? 'rgb(209 213 219)' : '#111827', // dark:text-gray-300, light:text-gray-900
-        }),
-        placeholder: (base) => ({
-            ...base,
-            color: isDark ? 'rgb(156 163 175)' : '#6b7280', // dark:text-gray-400, light:text-gray-500
-        }),
-    };
+    // const selectStyles = {
+    //     control: (base) => ({
+    //         ...base,
+    //         backgroundColor: isDark ? 'rgb(39 39 42)' : 'rgb(243, 244, 246)', // '#fff', // dark:bg-zinc-800, light:bg-white
+    //         border: 'none',
+    //         borderColor: isDark ? 'rgb(63 63 70)' : '#d1d5db', // dark:border-zinc-700, light:border-gray-300
+    //         color: isDark ? 'rgb(209 213 219)' : '#111827', // dark:text-gray-300, light:text-gray-900
+    //         '&:hover': {
+    //             borderColor: isDark ? 'rgb(82 82 91)' : '#a1a1aa', // dark:hover:border-zinc-600, light:hover:border-gray-400
+    //         },
+    //         boxShadow: 'none',
+    //     }),
+    //     menu: (base) => ({
+    //         ...base,
+    //         backgroundColor: isDark ? 'rgb(39 39 42)' : '#fff', // dark:bg-zinc-800, light:bg-white
+    //         color: isDark ? 'rgb(209 213 219)' : '#111827',
+    //     }),
+    //     option: (base, state) => ({
+    //         ...base,
+    //         backgroundColor: state.isFocused
+    //             ? (isDark ? 'oklch(0.588 0.158 241.966)' : '#f3f4f6') // dark:bg-zinc-700, light:bg-gray-100
+    //             : (isDark ? 'oklch(0.2739 0.0055 286.03)' : '#fff'), // dark:bg-zinc-800, light:bg-white
+    //         color: isDark ? 'oklch(0.9276 0.0058 264.53)' : '#111827', // dark:text-gray-300, light:text-gray-900
+    //         '&:active': {
+    //             backgroundColor: isDark ? 'rgb(82 82 91)' : '#e5e7eb', // dark:active:bg-zinc-600, light:active:bg-gray-200
+    //         },
+    //     }),
+    //     singleValue: (base) => ({
+    //         ...base,
+    //         color: isDark ? 'rgb(209 213 219)' : '#111827', // dark:text-gray-300, light:text-gray-900
+    //     }),
+    //     input: (base) => ({
+    //         ...base,
+    //         color: isDark ? 'rgb(209 213 219)' : '#111827', // dark:text-gray-300, light:text-gray-900
+    //     }),
+    //     placeholder: (base) => ({
+    //         ...base,
+    //         color: isDark ? 'rgb(156 163 175)' : '#6b7280', // dark:text-gray-400, light:text-gray-500
+    //     }),
+    // };
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
