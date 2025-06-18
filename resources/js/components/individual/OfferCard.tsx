@@ -15,23 +15,26 @@ export function OfferCard({ offer }: OfferCardProps) {
   const [showTypeTooltip, setShowTypeTooltip] = useState(false);
   const [tooltipPos, setTooltipPos] = useState<{x: number, y: number} | null>(null);
 
-  const getTooltipText = (type: string) => {
+  const getTooltipText = (type: string | undefined | null) => {
     if (type === 'Werbender') {
       return 'Hat einen Account und möchte dich werben.';
     } else if (type === 'Beworbener') {
       return 'Hat noch keinen Account und möchte von dir beworben werden.';
     }
+    return '';
   };
 
   // ### Formatting ###
-  const formatCurrency = (cents: number) => {
+  const formatCurrency = (cents: number | undefined | null) => {
+    if (cents === undefined || cents === null) return '€0,00';
     return new Intl.NumberFormat("de-DE", {
       style: "currency",
       currency: "EUR",
     }).format(cents / 100);
   };
 
-  const formatDateTime = (date: string) => {
+  const formatDateTime = (date: string | undefined | null) => {
+    if (!date) return '';
     return new Date(date).toLocaleDateString('de-DE', {
       day: '2-digit',
       month: '2-digit',
@@ -52,19 +55,19 @@ export function OfferCard({ offer }: OfferCardProps) {
 //   };
 
   // ### Truncation ###
-  const truncateTitle = (text: string) => {
+  const truncateTitle = (text: string | undefined | null) => {
     if (!text) return '';
     if (text.length <= 47) return text;
     return text.substring(0, 44) + '...';
   };
 
-  const truncateCompany = (text: string) => {
+  const truncateCompany = (text: string | undefined | null) => {
     if (!text) return '';
     if (text.length <= 40) return text;
     return text.substring(0, 37) + '...';
   };
 
-  const truncateDescription = (text: string) => {
+  const truncateDescription = (text: string | undefined | null) => {
     if (!text) return '';
     if (text.length <= 200) return text;
     return text.substring(0, 197) + '...';
@@ -112,13 +115,13 @@ export function OfferCard({ offer }: OfferCardProps) {
         </div>
       )}
       <div className="p-6 relative">
-      <div className="w-[75%] items-start text-xs mb-4">{formatDateTime(offer.created_at) }
+      <div className="w-[75%] items-start text-xs mb-4">{offer?.created_at ? formatDateTime(offer.created_at) : ''}
         </div>
         <div className="flex justify-between w-[75%] items-start  min-h-26">
           <h3 className="text-xl font-semibold text-gray-900 dark:text-white group w-full">
             <span className="relative block w-full">
-              <span className="relative z-10 block w-full">{truncateTitle(offer.title)}</span>
-              {offer.title.length > 47 && (
+              <span className="relative z-10 block w-full">{truncateTitle(offer?.title || '')}</span>
+              {offer?.title && offer.title.length > 47 && (
                 <span className="absolute -left-2 -top-2 w-full z-20 pointer-events-none transition-opacity duration-300 opacity-0 group-hover:opacity-100">
                   <span className="block w-full bg-neutral-800 bg-opacity-95 text-white text-xl  rounded-lg text-left whitespace-pre-line p-2">
                     {offer.title}
@@ -139,8 +142,8 @@ export function OfferCard({ offer }: OfferCardProps) {
             <Building2 className="flex-none w-5 h-5 mr-1" />
             <div className="flex flex-col items-left grow">
             <span className="relative block w-full">
-              <span className="relative z-10 block w-full">{truncateCompany(offer.offer_company)}</span>
-              {offer.offer_company.length > 40 && (
+              <span className="relative z-10 block w-full">{truncateCompany(offer?.offer_company || '')}</span>
+              {offer?.offer_company && offer.offer_company.length > 40 && (
                 <span className="absolute -left-2 -top-2 w-full z-20 pointer-events-none transition-opacity duration-300 opacity-0 group-hover:opacity-100">
                   <span className="block w-full bg-neutral-800 bg-opacity-95 text-white text-base rounded-lg text-left whitespace-pre-line p-2">
                     {offer.offer_company}
@@ -155,7 +158,7 @@ export function OfferCard({ offer }: OfferCardProps) {
             <div className="flex flex-col items-left grow">
 
             {/* // Username */}
-            <span className="ml-2">{offer.offer_user}</span>
+            <span className="ml-2">{offer?.offer_user || ''}</span>
 
             {/* // Rating */}
             <span className="ml-2 text-xs text-gray-500 flex flex-row items-center gap-0.5 relative"
@@ -194,12 +197,12 @@ export function OfferCard({ offer }: OfferCardProps) {
           <div className="flex gap-2 items-start justify-between pt-4 min-h-14 w-full" >
               <div className="flex flex-col grow text-gray-600 dark:text-gray-300">
               <span className="font-medium">Gesamte Prämie:<br/></span>
-              <span className="ml-2 text-xl">{formatCurrency(offer.reward_total_cents)}</span>
+              <span className="ml-2 text-xl">{formatCurrency(offer?.reward_total_cents || 0)}</span>
               </div>
               <div className="flex flex-col grow text-gray-600 dark:text-gray-300">
                 <span className="font-medium">Anteil für dich:<br/></span>
                 <span className="ml-2 text-xl text-green-500 font-bold">{
-                formatCurrency((1-offer.reward_offerer_percent) * offer.reward_total_cents)
+                formatCurrency((1-(offer?.reward_offerer_percent || 0)) * (offer?.reward_total_cents || 0))
                 //formatPercent(offer.reward_offerer_percent)
                 }</span>
               </div>
@@ -210,7 +213,7 @@ export function OfferCard({ offer }: OfferCardProps) {
             <div className="space-y-1">
               <div className="text-gray-600 dark:text-gray-300 flex flex-row gap-2">
                 <Link
-                href={`/offers/${offer.id}`}
+                href={`/offers/${offer?.id || ''}`}
                 className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
                 >
                 Details anzeigen
@@ -229,7 +232,7 @@ export function OfferCard({ offer }: OfferCardProps) {
               onMouseLeave={() => setShowTypeTooltip(false)}
             >
               <UsersRound className="text-white w-5 h-5 mr-2" />
-              <span className="block w-full">{offer.offered_by_type}</span>
+              <span className="block w-full">{offer?.offered_by_type || ''}</span>
             </div>
             {showTypeTooltip && tooltipPos && createPortal(
               <span
@@ -237,7 +240,7 @@ export function OfferCard({ offer }: OfferCardProps) {
                 style={{ left: tooltipPos.x - 110, top: tooltipPos.y }}
               >
                 <span className="block w-fit bg-neutral-800 bg-opacity-95 text-white text-sm rounded-lg text-left whitespace-pre-line p-1">
-                  <b>{offer.offered_by_type}:</b> {getTooltipText(offer.offered_by_type)}
+                  <b>{offer?.offered_by_type || ''}:</b> {getTooltipText(offer?.offered_by_type || '')}
                 </span>
               </span>,
               document.body
