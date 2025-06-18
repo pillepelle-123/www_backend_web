@@ -82,12 +82,11 @@ export default function Show({ offer }: { offer: Offer }) {
         <div className="container mx-auto p-4">
           <div className="max-w-4xl mx-auto">
             <div className="bg-white dark:bg-white/10 rounded-xl shadow-lg overflow-hidden relative">
-              {offer.logo_url && (
+              {offer.logo_path && (
                 <div className="absolute right-0 top-0 w-[50%] pointer-events-none">
                   <div className="relative w-full h-full">
                     <img
-                      src={`/storage/${offer.logo_url}`}
-                      alt="Firmenlogo"
+                      src={`/storage/${offer.logo_path}`}
                       className="w-full h-full object-contain"
                     />
                     <div className="absolute inset-0 bg-radial-[at_90%_10%] from-transparent dark:from-transparent via-white dark:via-[#535258] via-69% to-white dark:to-[#535258]" />
@@ -99,14 +98,14 @@ export default function Show({ offer }: { offer: Offer }) {
                 <div className="w-[75%] items-start text-xs mb-4">
                   {offer.created_at && formatDateTime(offer.created_at)}
                 </div>
-                
+
                 {/* Titel */}
                 <div className="flex justify-between w-[75%] items-start min-h-26">
                   <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
                     {offer.title}
                   </h1>
                 </div>
-                
+
                 {/* Company, User, Description */}
                 <div className="space-y-4 mt-4">
                   <div className="flex gap-2 items-start text-gray-600 dark:text-gray-300 group w-full text-sm">
@@ -123,7 +122,7 @@ export default function Show({ offer }: { offer: Offer }) {
                       <div className="flex flex-col items-left grow">
                         {/* Username */}
                         <span className="ml-2">{offer.offer_user}</span>
-                        
+
                         {/* Rating */}
                         <span className="ml-2 text-xs text-gray-500 flex flex-row items-center gap-0.5 relative"
                           onMouseEnter={e => {
@@ -151,14 +150,14 @@ export default function Show({ offer }: { offer: Offer }) {
                       </div>
                     </div>
                   </div>
-                  
+
                   {/* Beschreibung */}
                   {offer.description && (
                     <div className="text-gray-600 dark:text-gray-300">
                       <p className="text-base">{offer.description}</p>
                     </div>
                   )}
-                  
+
                   {/* Reward */}
                   <div className="flex gap-2 items-start justify-between pt-4 min-h-14 w-full">
                     <div className="flex flex-col grow text-gray-600 dark:text-gray-300">
@@ -172,7 +171,7 @@ export default function Show({ offer }: { offer: Offer }) {
                       </span>
                     </div>
                   </div>
-                  
+
                   {/* Aktions-Buttons */}
                   <div className="flex justify-between items-center pt-4">
                     <Link
@@ -188,7 +187,7 @@ export default function Show({ offer }: { offer: Offer }) {
                       Anfragen
                     </Link>
                   </div>
-                  
+
                   {/* Typ-Badge */}
                   <div className="absolute right-0 bottom-0 w-27">
                     <div

@@ -119,7 +119,7 @@ class OfferController extends Controller
             'offered_by_type' => $offer->offered_by_type == 'referrer' ? 'Werbender' : 'Beworbener',
             'offer_user' => $offer->user->name,
             'offer_company' => $offer->company->name,
-            'logo_url' => $offer->company->logo_path,
+            'logo_path' => $offer->company->logo_path,
             'reward_total_cents' => $offer->reward_total_cents,
             'reward_offerer_percent' => $offer->reward_offerer_percent,
             'status' => $offer->status,

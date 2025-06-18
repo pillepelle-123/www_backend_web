@@ -60,13 +60,16 @@ class ApplicationController extends Controller
      */
     public function create(Offer $offer)
     {
+        // Lade die Beziehungen explizit
+        $offer->load(['company', 'user']);
+        
         return Inertia::render('applications/create', [
             'offer' => [
                 'id' => $offer->id,
                 'title' => $offer->title,
                 'description' => $offer->description,
-                'company' => $offer->company->name,
-                'user' => $offer->user->name,
+                'company' => $offer->company ? $offer->company->name : null,
+                'user' => $offer->user ? $offer->user->name : null,
             ],
         ]);
     }
