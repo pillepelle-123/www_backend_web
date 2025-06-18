@@ -28,7 +28,10 @@ class UserFactory extends Factory
             'email' => $this->faker->unique()->safeEmail(),
             'email_verified_at' => $this->faker->dateTimeBetween('-2 weeks', 'now'),
             'password' => static::$password ??= Hash::make('djembe32'),
-            'remember_token' => $this->faker->regexify('[a-z0-9]{8}')
+            'remember_token' => $this->faker->regexify('[a-z0-9]{8}'),
+            'role' => 'user',
+            'average_rating' => $this->faker->randomFloat(2, 0.00, 5.00),
+            'admin_status' => 'active'
         ];
     }
 

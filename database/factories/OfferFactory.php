@@ -32,11 +32,11 @@ final class OfferFactory extends Factory
     {
         return [
             // 'id' => Str::uuid(),
-            'offered_by_type' => $this->faker->randomElement(['referrer', 'referred']),
             'user_id' => User::factory(),
             'company_id' => Company::factory(),
-            'offer_title' => $this->faker->sentence(6, true),
-            'offer_description' => $this->faker->paragraph(4, true),
+            'offered_by_type' => $this->faker->randomElement(['referrer', 'referred']),
+            'title' => $this->faker->sentence(6, true),
+            'description' => $this->faker->optional($weight = 0.7)->paragraph(4, true),
             'reward_total_cents' => $this->faker->numberBetween(1000, 10000),
             'reward_offerer_percent' => $this->faker->randomFloat(2, 0, 1),
             'status' => $this->faker->randomElement(['draft', 'live', 'hidden', 'matched', 'deleted']),

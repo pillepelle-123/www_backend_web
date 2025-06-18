@@ -18,9 +18,6 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
-            $table->enum('role', ['user', 'admin'])->default('user');
-            $table->decimal('average_rating', 3, 2);
-            $table->enum('admin_status', ['active', 'inactive', 'review', 'archived'])->default('active');
             $table->timestamps();
         });
 
