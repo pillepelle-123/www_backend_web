@@ -56,7 +56,7 @@ export default function Welcome() {
 
                                 <svg className="p-4 mx-auto fill-currentcolor" xmlns="http://www.w3.org/2000/svg"  width="400" height="200" viewBox="200 0 50 210">
 
-                                <path id="circle" fill="transparent" stroke="currentcolor" stroke-width="3" d="M175.71,157.759A96.029,96.029,0,1,1,195,100"/>
+                                <path id="circle" fill="transparent" stroke="currentcolor" strokeWidth="3" d="M175.71,157.759A96.029,96.029,0,1,1,195,100"/>
     <circle id="dot_1" fill="currentcolor" data-name="dot 1" cx="189.5" cy="114.5" r="3.5"/>
     <circle id="dot_1_Kopie" fill="currentcolor" data-name="dot 1 Kopie" cx="185.5" cy="129.5" r="3.5"/>
     <circle id="dot_1_Kopie_2" fill="currentcolor" data-name="dot 1 Kopie 2" cx="180.5" cy="144.5" r="3.5"/>
