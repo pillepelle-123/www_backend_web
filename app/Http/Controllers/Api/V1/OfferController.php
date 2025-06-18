@@ -24,14 +24,14 @@ class OfferController extends ApiController
             //     'users.name as user_name', // Alias für user name
             //     'companies.name as company_name' // Alias für company name
             // ])
-            ->allowedFilters(['offered_by_type', 'offer_title', 'offer_description', 'status', 'created_at', 'updated_at',
+            ->allowedFilters(['offered_by_type', 'title', 'description', 'status', 'created_at', 'updated_at',
             AllowedFilter::exact('user.name'),
             AllowedFilter::operator('reward_total_cents', FilterOperator::DYNAMIC),
             AllowedFilter::operator('reward_offerer_percent', FilterOperator::DYNAMIC),
             ])
             ->allowedFields('user.name')
             ->allowedIncludes(['user', 'company'])
-            ->allowedSorts('offer_title', 'reward_total_cents', 'reward_offerer_percent', 'created_at')
+            ->allowedSorts('title', 'reward_total_cents', 'reward_offerer_percent', 'created_at')
             ->with(['user', 'company'])
             ->paginate(15);
         return $offers;

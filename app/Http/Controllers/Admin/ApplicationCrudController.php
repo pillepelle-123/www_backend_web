@@ -22,7 +22,7 @@ class ApplicationCrudController extends CrudController
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
-     * 
+     *
      * @return void
      */
     public function setup()
@@ -34,7 +34,7 @@ class ApplicationCrudController extends CrudController
 
     /**
      * Define what happens when the List operation is loaded.
-     * 
+     *
      * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
      * @return void
      */
@@ -44,7 +44,7 @@ class ApplicationCrudController extends CrudController
         CRUD::column('offer_id')
             ->type('relationship')
             ->label('Offer')
-            ->attribute('offer_title');
+            ->attribute('title');
         CRUD::column('applicant_id')
             ->type('relationship')
             ->label('Applicant')
@@ -76,7 +76,7 @@ class ApplicationCrudController extends CrudController
 
     /**
      * Define what happens when the Create operation is loaded.
-     * 
+     *
      * @see https://backpackforlaravel.com/docs/crud-operation-create
      * @return void
      */
@@ -88,7 +88,7 @@ class ApplicationCrudController extends CrudController
             ->type('relationship')
             ->label('Offer')
             ->entity('offer')
-            ->attribute('offer_title')
+            ->attribute('title')
             ->inline_create(true)
             ->ajax(true);
         CRUD::field('applicant_id')
@@ -128,7 +128,7 @@ class ApplicationCrudController extends CrudController
 
     /**
      * Define what happens when the Update operation is loaded.
-     * 
+     *
      * @see https://backpackforlaravel.com/docs/crud-operation-update
      * @return void
      */
@@ -139,14 +139,14 @@ class ApplicationCrudController extends CrudController
 
     /**
      * Define what happens when the Show operation is loaded.
-     * 
+     *
      * @see https://backpackforlaravel.com/docs/crud-operation-show
      * @return void
      */
     protected function setupShowOperation()
     {
         $this->setupListOperation();
-        
+
         // Zeige den vollständigen Nachrichtentext ohne Begrenzung
         CRUD::modifyColumn('message', [
             'type' => 'text',

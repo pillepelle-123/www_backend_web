@@ -17,8 +17,8 @@ const breadcrumbs: BreadcrumbItem[] = [
 type ApplicationDetails = {
   id: number;
   offer_id: number;
-  offer_title: string;
-  offer_description: string;
+  title: string;
+  description: string;
   company_name: string;
   message: string | null;
   status: 'pending' | 'approved' | 'rejected';
@@ -74,20 +74,20 @@ export default function Show({ application }: { application: ApplicationDetails 
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title={`Anfrage: ${application.offer_title}`} />
+      <Head title={`Anfrage: ${application.title}`} />
       <div className="container mx-auto p-4">
         <div className="max-w-3xl mx-auto">
           <div className="bg-white dark:bg-white/10 rounded-xl shadow-lg overflow-hidden">
             <div className="p-6">
               <div className="flex justify-between items-start mb-6">
                 <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
-                  {application.offer_title}
+                  {application.title}
                 </h1>
                 <div>
                   {getStatusBadge(application.status)}
                 </div>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div>
                   <p className="text-sm text-gray-500 dark:text-gray-400">Unternehmen</p>
@@ -112,14 +112,14 @@ export default function Show({ application }: { application: ApplicationDetails 
                   </div>
                 )}
               </div>
-              
+
               <div className="mb-6">
                 <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-2">Angebotsbeschreibung</h2>
                 <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4">
-                  <p className="text-gray-600 dark:text-gray-300">{application.offer_description}</p>
+                  <p className="text-gray-600 dark:text-gray-300">{application.description}</p>
                 </div>
               </div>
-              
+
               {application.message && (
                 <div className="mb-6">
                   <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-2">Nachricht</h2>
@@ -128,7 +128,7 @@ export default function Show({ application }: { application: ApplicationDetails 
                   </div>
                 </div>
               )}
-              
+
               <div className="flex justify-between pt-4">
                 <Link
                   href={route('web.applications.index')}
@@ -138,7 +138,7 @@ export default function Show({ application }: { application: ApplicationDetails 
                 >
                   Zurück zur Übersicht
                 </Link>
-                
+
                 {!application.is_applicant && application.status === 'pending' && (
                   <div className="flex gap-2">
                     <Link

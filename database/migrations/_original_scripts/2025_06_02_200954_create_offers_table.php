@@ -16,8 +16,8 @@ return new class extends Migration
             $table->enum('offered_by_type', ['referrer', 'referred'])->default('referrer');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('company_id')->constrained()->onDelete('cascade');
-            $table->string('offer_title');
-            $table->text('offer_description');
+            $table->string('title');
+            $table->text('description');
             $table->integer('reward_total_cents');
             // $table->percent('reward_split_percent')->default(50);
             $table->decimal('reward_offerer_percent', 3, 2)->default(0.5);

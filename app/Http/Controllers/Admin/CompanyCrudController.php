@@ -46,7 +46,7 @@ class CompanyCrudController extends CrudController
             //     'label' => 'Logo URL',
             // ],
             [
-                'name' => 'website',
+                'name' => 'website_url',
                 'label' => 'Webseite',
                 'type' => 'text',
                 'priority' => 3,

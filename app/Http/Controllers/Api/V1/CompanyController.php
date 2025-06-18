@@ -20,7 +20,7 @@ class CompanyController extends ApiController
     public function index(Request $request)
     {
         $companies = QueryBuilder::for(Company::class)
-            ->allowedFilters(['name', 'logo_url', 'website', 'referral_program_url', 'description',
+            ->allowedFilters(['name', 'logo_url', 'website_url', 'referral_program_url', 'description',
                 AllowedFilter::operator('created_at', FilterOperator::DYNAMIC),
                 AllowedFilter::operator('updated_at', FilterOperator::DYNAMIC),
             ])

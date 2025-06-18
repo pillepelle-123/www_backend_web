@@ -14,7 +14,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 type Application = {
   id: number;
   offer_id: number;
-  offer_title: string;
+  title: string;
   company_name: string;
   message: string | null;
   status: 'pending' | 'approved' | 'rejected';
@@ -27,7 +27,7 @@ type Application = {
 
 export default function Index({ applications, unreadCount }: { applications: Application[], unreadCount: number }) {
   const [filter, setFilter] = useState<'all' | 'sent' | 'received'>('all');
-  
+
   const filteredApplications = applications.filter(app => {
     if (filter === 'all') return true;
     if (filter === 'sent') return app.is_applicant;
@@ -99,7 +99,7 @@ export default function Index({ applications, unreadCount }: { applications: App
                 </button>
               </div>
             </div>
-            
+
             {filteredApplications.length === 0 ? (
               <div className="text-center py-8 text-gray-500">
                 Keine Nachrichten gefunden
@@ -124,7 +124,7 @@ export default function Index({ applications, unreadCount }: { applications: App
                       <div className="min-w-0 flex-1">
                         <div className="flex justify-between text-sm">
                           <p className="font-medium text-gray-900 dark:text-white truncate">
-                            {application.offer_title}
+                            {application.title}
                           </p>
                           <p className="text-gray-500 dark:text-gray-400">
                             {formatDate(application.created_at)}

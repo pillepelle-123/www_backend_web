@@ -31,6 +31,7 @@ class Company extends Model
     protected $fillable = [
         'name',
         'domain',
+        'website_url',
         'referral_program_url',
         'logo_url',
         'description',

@@ -17,45 +17,45 @@ class OfferController extends Controller
     public function index(Request $request)
     {
         $perPage = 20; // Anzahl der Datensätze pro Seite
-        
+
         $query = Offer::query()
             ->with(['user', 'company']);
-            
+
         // Suche (case-insensitive)
         if ($request->has('title') && !empty($request->title)) {
-            $query->where('offer_title', 'ilike', '%' . $request->title . '%');
+            $query->where('title', 'ilike', '%' . $request->title . '%');
         }
-        
+
         if ($request->has('offer_company') && !empty($request->offer_company)) {
             $query->whereHas('company', function($q) use ($request) {
                 $q->where('name', 'ilike', '%' . $request->offer_company . '%');
             });
         }
-        
+
         // Filter
         if ($request->has('offered_by_type') && !empty($request->offered_by_type)) {
             $type = $request->offered_by_type === 'Werbender' ? 'referrer' : 'referred';
             $query->where('offered_by_type', $type);
         }
-        
+
         if ($request->has('status') && !empty($request->status)) {
             $query->where('status', $request->status);
         }
-        
+
         if ($request->has('average_rating_min') && $request->average_rating_min > 0) {
             $query->whereHas('user', function($q) use ($request) {
                 $q->where('average_rating', '>=', $request->average_rating_min);
             });
         }
-        
+
         if ($request->has('created_at_from') && !empty($request->created_at_from)) {
             $query->whereDate('created_at', '>=', $request->created_at_from);
         }
-        
+
         // Sortierung
         $sortField = $request->input('sort_field', 'created_at');
         $sortDirection = $request->input('sort_direction', 'desc');
-        
+
         // Mapping der Frontend-Sortierfelder zu Datenbankfeldern
         $sortFieldMap = [
             'created_at' => 'created_at',
@@ -63,27 +63,27 @@ class OfferController extends Controller
             'reward_offerer_percent' => 'reward_offerer_percent',
             'average_rating' => 'users.average_rating'
         ];
-        
+
         // Standardsortierung nach created_at, wenn kein gültiges Sortierfeld angegeben wurde
         $dbSortField = $sortFieldMap[$sortField] ?? 'created_at';
-        
+
         // Spezielle Sortierung für Felder aus verknüpften Tabellen
         if ($dbSortField === 'users.average_rating') {
             $query->join('users', 'offers.user_id', '=', 'users.id')
                   ->select('offers.*');
         }
-        
+
         $query->orderBy($dbSortField, $sortDirection);
-        
+
         // Paginierung
         $offers = $query->paginate($perPage);
-        
+
         // Transformation der Daten
         $offersData = $offers->through(function ($offer) {
             return [
                 'id' => $offer->id,
-                'title' => $offer->offer_title,
-                'description' => $offer->offer_description,
+                'title' => $offer->title,
+                'description' => $offer->description,
                 'offered_by_type' => $offer->offered_by_type == 'referrer' ? 'Werbender' : 'Beworbener',
                 'offer_user' => $offer->user->name,
                 'offer_company' => $offer->company->name,
@@ -114,8 +114,8 @@ class OfferController extends Controller
 
         $offerData = [
             'id' => $offer->id,
-            'title' => $offer->offer_title,
-            'description' => $offer->offer_description,
+            'title' => $offer->title,
+            'description' => $offer->description,
             'offered_by_type' => $offer->offered_by_type == 'referrer' ? 'Werbender' : 'Beworbener',
             'offer_user' => $offer->user->name,
             'offer_company' => $offer->company->name,
@@ -144,8 +144,8 @@ class OfferController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'offer_title' => 'required|string|max:255',
-            'offer_description' => 'required|string',
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
             'company_id' => 'required|exists:companies,id',
             'reward_total_cents' => 'required|integer|min:0|max:100000',
             'reward_offerer_percent' => 'required|numeric|min:0|max:1', // Dezimalwert, z.B. 0.5
@@ -153,8 +153,8 @@ class OfferController extends Controller
         ]);
 
         $offer = Offer::create([
-            'offer_title' => $validated['offer_title'],
-            'offer_description' => $validated['offer_description'],
+            'title' => $validated['title'],
+            'description' => $validated['description'],
             'company_id' => $validated['company_id'],
             'reward_total_cents' => $validated['reward_total_cents'],
             'reward_offerer_percent' => $validated['reward_offerer_percent'],
@@ -170,7 +170,7 @@ class OfferController extends Controller
         return redirect()->route('web.offers.index')
             ->with('success', 'Offer created successfully.');
     }
-    
+
     /**
      * API endpoint to fetch more offers for infinite scrolling
      */
@@ -178,45 +178,45 @@ class OfferController extends Controller
     {
         $perPage = 20;
         $page = $request->input('page', 1);
-        
+
         $query = Offer::query()
             ->with(['user', 'company']);
-            
+
         // Suche (case-insensitive)
         if ($request->has('title') && !empty($request->title)) {
-            $query->where('offer_title', 'ilike', '%' . $request->title . '%');
+            $query->where('title', 'ilike', '%' . $request->title . '%');
         }
-        
+
         if ($request->has('offer_company') && !empty($request->offer_company)) {
             $query->whereHas('company', function($q) use ($request) {
                 $q->where('name', 'ilike', '%' . $request->offer_company . '%');
             });
         }
-        
+
         // Filter
         if ($request->has('offered_by_type') && !empty($request->offered_by_type)) {
             $type = $request->offered_by_type === 'Werbender' ? 'referrer' : 'referred';
             $query->where('offered_by_type', $type);
         }
-        
+
         if ($request->has('status') && !empty($request->status)) {
             $query->where('status', $request->status);
         }
-        
+
         if ($request->has('average_rating_min') && $request->average_rating_min > 0) {
             $query->whereHas('user', function($q) use ($request) {
                 $q->where('average_rating', '>=', $request->average_rating_min);
             });
         }
-        
+
         if ($request->has('created_at_from') && !empty($request->created_at_from)) {
             $query->whereDate('created_at', '>=', $request->created_at_from);
         }
-        
+
         // Sortierung
         $sortField = $request->input('sort_field', 'created_at');
         $sortDirection = $request->input('sort_direction', 'desc');
-        
+
         // Mapping der Frontend-Sortierfelder zu Datenbankfeldern
         $sortFieldMap = [
             'created_at' => 'created_at',
@@ -224,27 +224,27 @@ class OfferController extends Controller
             'reward_offerer_percent' => 'reward_offerer_percent',
             'average_rating' => 'users.average_rating'
         ];
-        
+
         // Standardsortierung nach created_at, wenn kein gültiges Sortierfeld angegeben wurde
         $dbSortField = $sortFieldMap[$sortField] ?? 'created_at';
-        
+
         // Spezielle Sortierung für Felder aus verknüpften Tabellen
         if ($dbSortField === 'users.average_rating') {
             $query->join('users', 'offers.user_id', '=', 'users.id')
                   ->select('offers.*');
         }
-        
+
         $query->orderBy($dbSortField, $sortDirection);
-        
+
         // Paginierung
         $offers = $query->paginate($perPage, ['*'], 'page', $page);
-        
+
         // Transformation der Daten
         $offersData = $offers->through(function ($offer) {
             return [
                 'id' => $offer->id,
-                'title' => $offer->offer_title,
-                'description' => $offer->offer_description,
+                'title' => $offer->title,
+                'description' => $offer->description,
                 'offered_by_type' => $offer->offered_by_type == 'referrer' ? 'Werbender' : 'Beworbener',
                 'offer_user' => $offer->user->name,
                 'offer_company' => $offer->company->name,
@@ -257,7 +257,7 @@ class OfferController extends Controller
                 'industry' => $offer->company->industry,
             ];
         });
-        
+
         return response()->json([
             'offers' => $offersData->items(),
             'pagination' => [

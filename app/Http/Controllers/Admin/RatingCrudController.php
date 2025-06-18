@@ -21,7 +21,7 @@ class RatingCrudController extends CrudController
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
-     * 
+     *
      * @return void
      */
     public function setup()
@@ -36,7 +36,7 @@ class RatingCrudController extends CrudController
                 'label' => 'ID',
             ],
             [
-                'name' => 'offer.offer_title',
+                'name' => 'offer.title',
                 'label' => 'Title',
             ],
             [
@@ -55,13 +55,13 @@ class RatingCrudController extends CrudController
                 'name' => 'comment',
                 'label' => 'Kommentar',
                 'type' => 'text'
-            ],       
+            ],
         ]);
     }
 
     /**
      * Define what happens when the List operation is loaded.
-     * 
+     *
      * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
      * @return void
      */
@@ -86,7 +86,7 @@ class RatingCrudController extends CrudController
 
     /**
      * Define what happens when the Create operation is loaded.
-     * 
+     *
      * @see https://backpackforlaravel.com/docs/crud-operation-create
      * @return void
      */
@@ -104,7 +104,7 @@ class RatingCrudController extends CrudController
             'label' => 'Offer',
             'type' => 'select',
             'entity' => 'offer',
-            'attribute' => 'offer_title',
+            'attribute' => 'title',
             'data_source' => url('api/search/offers'),
             'placeholder' => 'Angebot suchen...',
             'minimum_input_length' => 2,
@@ -149,7 +149,7 @@ class RatingCrudController extends CrudController
 
     /**
      * Define what happens when the Update operation is loaded.
-     * 
+     *
      * @see https://backpackforlaravel.com/docs/crud-operation-update
      * @return void
      */
@@ -174,14 +174,14 @@ class RatingCrudController extends CrudController
                 'label' => 'Kommentar',
                 'type' => 'text',
                 'limit' => false
-            ],       
+            ],
         );
 
-        $this->crud->modifyColumn('offer.offer_title', [
+        $this->crud->modifyColumn('offer.title', [
             'limit' => false,
         ]);
 
         // $this->crud->addColumn('')
     }
-    
+
 }

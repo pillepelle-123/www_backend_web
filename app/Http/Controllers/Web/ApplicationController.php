@@ -18,7 +18,7 @@ class ApplicationController extends Controller
     public function index()
     {
         $user = Auth::user();
-        
+
         $applications = Application::where(function ($query) use ($user) {
             $query->where('applicant_id', $user->id)
                   ->orWhere('offer_owner_id', $user->id);
@@ -30,11 +30,11 @@ class ApplicationController extends Controller
             $isApplicant = $application->applicant_id === $user->id;
             $otherUser = $isApplicant ? $application->offerOwner->name : $application->applicant->name;
             $isUnread = $isApplicant ? !$application->is_read_by_applicant : !$application->is_read_by_owner;
-            
+
             return [
                 'id' => $application->id,
                 'offer_id' => $application->offer_id,
-                'offer_title' => $application->offer->offer_title,
+                'title' => $application->offer->title,
                 'company_name' => $application->offer->company->name,
                 'message' => $application->message,
                 'status' => $application->status,
@@ -45,10 +45,10 @@ class ApplicationController extends Controller
                 'other_user' => $otherUser,
             ];
         });
-        
+
         // Zähle ungelesene Nachrichten
         $unreadCount = $applications->where('is_unread', true)->count();
-        
+
         return Inertia::render('applications/index', [
             'applications' => $applications,
             'unreadCount' => $unreadCount,
@@ -63,8 +63,8 @@ class ApplicationController extends Controller
         return Inertia::render('applications/create', [
             'offer' => [
                 'id' => $offer->id,
-                'title' => $offer->offer_title,
-                'description' => $offer->offer_description,
+                'title' => $offer->title,
+                'description' => $offer->description,
                 'company' => $offer->company->name,
                 'user' => $offer->user->name,
             ],
@@ -80,18 +80,18 @@ class ApplicationController extends Controller
             'offer_id' => 'required|exists:offers,id',
             'message' => 'nullable|string|max:1000',
         ]);
-        
+
         $offer = Offer::findOrFail($validated['offer_id']);
-        
+
         // Prüfe, ob der Benutzer bereits eine Bewerbung für dieses Angebot hat
         $existingApplication = Application::where('offer_id', $offer->id)
             ->where('applicant_id', Auth::id())
             ->first();
-            
+
         if ($existingApplication) {
             return redirect()->back()->with('error', 'Sie haben sich bereits auf dieses Angebot beworben.');
         }
-        
+
         $application = Application::create([
             'offer_id' => $offer->id,
             'applicant_id' => Auth::id(),
@@ -101,7 +101,7 @@ class ApplicationController extends Controller
             'is_read_by_applicant' => true,
             'is_read_by_owner' => false,
         ]);
-        
+
         return redirect()->route('web.applications.show', $application->id)
             ->with('success', 'Bewerbung erfolgreich gesendet.');
     }
@@ -112,27 +112,27 @@ class ApplicationController extends Controller
     public function show(Application $application)
     {
         $user = Auth::user();
-        
+
         // Prüfe, ob der Benutzer berechtigt ist, diese Bewerbung zu sehen
         if ($user->id !== $application->applicant_id && $user->id !== $application->offer_owner_id) {
             abort(403, 'Unbefugter Zugriff.');
         }
-        
+
         // Markiere als gelesen
         if ($user->id === $application->applicant_id && !$application->is_read_by_applicant) {
             $application->update(['is_read_by_applicant' => true]);
         } elseif ($user->id === $application->offer_owner_id && !$application->is_read_by_owner) {
             $application->update(['is_read_by_owner' => true]);
         }
-        
+
         $application->load(['offer.company', 'applicant', 'offerOwner']);
-        
+
         return Inertia::render('applications/show', [
             'application' => [
                 'id' => $application->id,
                 'offer_id' => $application->offer_id,
-                'offer_title' => $application->offer->offer_title,
-                'offer_description' => $application->offer->offer_description,
+                'title' => $application->offer->title,
+                'description' => $application->offer->description,
                 'company_name' => $application->offer->company->name,
                 'message' => $application->message,
                 'status' => $application->status,
@@ -157,26 +157,26 @@ class ApplicationController extends Controller
     public function approve(Application $application)
     {
         $user = Auth::user();
-        
+
         // Prüfe, ob der Benutzer der Angebotseigentümer ist
         if ($user->id !== $application->offer_owner_id) {
             abort(403, 'Unbefugter Zugriff.');
         }
-        
+
         // Prüfe, ob die Bewerbung noch ausstehend ist
         if ($application->status !== 'pending') {
             return redirect()->back()->with('error', 'Diese Bewerbung wurde bereits bearbeitet.');
         }
-        
+
         // Aktualisiere den Status
         $application->update([
             'status' => 'approved',
             'responded_at' => now(),
         ]);
-        
+
         // Erstelle ein UserMatch
         $offer = $application->offer;
-        
+
         // Finde oder erstelle einen AffiliateLink
         $affiliateLink = \App\Models\AffiliateLink::firstOrCreate(
             ['company_id' => $offer->company_id],
@@ -185,7 +185,7 @@ class ApplicationController extends Controller
                 'admin_status' => 'active'
             ]
         );
-        
+
         UserMatch::create([
             'offer_id' => $offer->id,
             'user_referrer_id' => $application->offer_owner_id,
@@ -194,7 +194,7 @@ class ApplicationController extends Controller
             'status' => 'opened',
             'success_status' => 'pending',
         ]);
-        
+
         return redirect()->route('web.applications.show', $application->id)
             ->with('success', 'Bewerbung erfolgreich genehmigt.');
     }
@@ -205,23 +205,23 @@ class ApplicationController extends Controller
     public function reject(Application $application)
     {
         $user = Auth::user();
-        
+
         // Prüfe, ob der Benutzer der Angebotseigentümer ist
         if ($user->id !== $application->offer_owner_id) {
             abort(403, 'Unbefugter Zugriff.');
         }
-        
+
         // Prüfe, ob die Bewerbung noch ausstehend ist
         if ($application->status !== 'pending') {
             return redirect()->back()->with('error', 'Diese Bewerbung wurde bereits bearbeitet.');
         }
-        
+
         // Aktualisiere den Status
         $application->update([
             'status' => 'rejected',
             'responded_at' => now(),
         ]);
-        
+
         return redirect()->route('web.applications.show', $application->id)
             ->with('success', 'Bewerbung abgelehnt.');
     }

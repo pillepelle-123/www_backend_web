@@ -24,8 +24,8 @@ type Company = {
 
 export default function Create({ companies }: { companies: Company[] }) {
     const { data, setData, processing, errors } = useForm({
-        offer_title: '',
-        offer_description: '',
+        title: '',
+        description: '',
         company_id: '',
         reward_total_eur: 0,
         reward_offerer_percent: 0,
@@ -218,38 +218,38 @@ export default function Create({ companies }: { companies: Company[] }) {
                                 </div>
                                 <div>
                                     { /* ########## TITLE ########## */ }
-                                    <label htmlFor="offer_title" className="block text-sm font-medium">
+                                    <label htmlFor="title" className="block text-sm font-medium">
                                         Titel
                                     </label>
                                     <input
                                         type="text"
-                                        id="offer_title"
-                                        value={data.offer_title}
-                                        onChange={e => setData('offer_title', e.target.value)}
+                                        id="title"
+                                        value={data.title}
+                                        onChange={e => setData('title', e.target.value)}
                                         className="mt-1 block w-full rounded-md border-gray-900 shadow-sm bg-zinc-100 dark:bg-zinc-800 h-9 p-2 autofill:!bg-gray-800 dark:autofill:!bg-zinc-800"
                                         required
                                         placeholder="Unter welchem Titel soll dein Angebot angezeigt werden?"
                                     />
-                                    {errors.offer_title && (
-                                        <p className="mt-1 text-sm text-red-600">{errors.offer_title}</p>
+                                    {errors.title && (
+                                        <p className="mt-1 text-sm text-red-600">{errors.title}</p>
                                     )}
                                 </div>
                                 <div>
                                     { /* ########## DESCRIPTION ########## */ }
-                                    <label htmlFor="offer_description" className="block text-sm font-medium">
+                                    <label htmlFor="description" className="block text-sm font-medium">
                                         Beschreibung
                                     </label>
                                     <textarea
-                                        id="offer_description"
-                                        value={data.offer_description}
-                                        onChange={e => setData('offer_description', e.target.value)}
+                                        id="description"
+                                        value={data.description}
+                                        onChange={e => setData('description', e.target.value)}
                                         rows={4}
                                         className="mt-1 block w-full rounded-md shadow-sm bg-zinc-100 dark:bg-zinc-800 dark:border-gray-600 p-2"
                                         required
                                         placeholder="Beschreibe dein Angebot"
                                     />
-                                    {errors.offer_description && (
-                                        <p className="mt-1 text-sm text-red-600">{errors.offer_description}</p>
+                                    {errors.description && (
+                                        <p className="mt-1 text-sm text-red-600">{errors.description}</p>
                                     )}
                                 </div>
                                 <div>

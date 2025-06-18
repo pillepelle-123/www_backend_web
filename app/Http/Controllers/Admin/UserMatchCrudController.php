@@ -21,7 +21,7 @@ class UserMatchCrudController extends CrudController
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
-     * 
+     *
      * @return void
      */
     public function setup()
@@ -33,7 +33,7 @@ class UserMatchCrudController extends CrudController
 
     /**
      * Define what happens when the List operation is loaded.
-     * 
+     *
      * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
      * @return void
      */
@@ -43,7 +43,7 @@ class UserMatchCrudController extends CrudController
         CRUD::column('offer_id')
             ->type('relationship')
             ->label('Offer')
-            ->attribute('offer_title');
+            ->attribute('title');
         CRUD::column('user_referrer_id')
             ->type('relationship')
             ->label('Referrer')
@@ -80,7 +80,7 @@ class UserMatchCrudController extends CrudController
 
     /**
      * Define what happens when the Create operation is loaded.
-     * 
+     *
      * @see https://backpackforlaravel.com/docs/crud-operation-create
      * @return void
      */
@@ -90,7 +90,7 @@ class UserMatchCrudController extends CrudController
             ->type('relationship')
             ->label('Offer')
             ->entity('offer')
-            ->attribute('offer_title')
+            ->attribute('title')
             ->inline_create(true)
             ->ajax(true);
         CRUD::field('user_referrer_id')
@@ -139,7 +139,7 @@ class UserMatchCrudController extends CrudController
 
     /**
      * Define what happens when the Update operation is loaded.
-     * 
+     *
      * @see https://backpackforlaravel.com/docs/crud-operation-update
      * @return void
      */
@@ -150,7 +150,7 @@ class UserMatchCrudController extends CrudController
 
     /**
      * Define what happens when the Show operation is loaded.
-     * 
+     *
      * @see https://backpackforlaravel.com/docs/crud-operation-show
      * @return void
      */

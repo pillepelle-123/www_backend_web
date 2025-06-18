@@ -21,7 +21,7 @@ class OfferCrudController extends CrudController
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
-     * 
+     *
      * @return void
      */
     public function setup()
@@ -36,7 +36,7 @@ class OfferCrudController extends CrudController
                 'label' => 'ID',
             ],
             [
-                'name' => 'offer_title',
+                'name' => 'title',
                 'label' => 'Title',
             ],
             [
@@ -61,19 +61,19 @@ class OfferCrudController extends CrudController
                 'type' => 'model_function',
                 'function_name' => 'getRewardTotalinEuro',
                 'suffix' => ' Euro',
-            ],        
+            ],
             [
                 'name' => 'reward_offerer_percent',
                 'label' => 'Prämienanteil Anbietender',
                 'type' => 'model_function',
                 'function_name' => 'getRewardOffererInPercent',
                 'suffix' => ' %',
-            ], 
+            ],
             [
                 'name' => 'status',
                 'label' => 'Status',
                 'type' => 'model_function',
-                'function_name' => 'getStatusLabelAttribute',         
+                'function_name' => 'getStatusLabelAttribute',
             ],
             [
                 'name' => 'admin_status',
@@ -87,12 +87,12 @@ class OfferCrudController extends CrudController
                 ],
             ],
         ]);
-        
+
     }
 
     /**
      * Define what happens when the List operation is loaded.
-     * 
+     *
      * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
      * @return void
      */
@@ -104,14 +104,14 @@ class OfferCrudController extends CrudController
          * Columns can be defined using the fluent syntax:
          * - CRUD::column('price')->type('number');
          */
-        $this->crud->modifyColumn('offer_title', [
+        $this->crud->modifyColumn('title', [
             'limit' => 20,
         ]);
     }
 
     /**
      * Define what happens when the Create operation is loaded.
-     * 
+     *
      * @see https://backpackforlaravel.com/docs/crud-operation-create
      * @return void
      */
@@ -127,7 +127,7 @@ class OfferCrudController extends CrudController
          */
 
 
-        CRUD::field('offer_title')->type('text');
+        CRUD::field('title')->type('text');
 
         // offered_by_type
         CRUD::field('offered_by_type')
@@ -160,7 +160,7 @@ class OfferCrudController extends CrudController
             ->placeholder('Unternehmen suchen...')
             ->minimum_input_length(2);
 
-        CRUD::field('offer_description')->label('Beschreibung')->type('textarea');
+        CRUD::field('description')->label('Beschreibung')->type('textarea');
         CRUD::field('reward_total_cents')->type('number')->attributes(['step' => 1]);
 
         CRUD::field('reward_offerer_percent')
@@ -189,7 +189,7 @@ class OfferCrudController extends CrudController
             ])
             ->allows_null(false)
             ->default('draft');
-            
+
         // admin_status
         CRUD::field('admin_status')
             ->label('Admin Status')
@@ -202,12 +202,12 @@ class OfferCrudController extends CrudController
             ])
             ->allows_null(false)
             ->default('active');
-        
+
     }
 
     /**
      * Define what happens when the Update operation is loaded.
-     * 
+     *
      * @see https://backpackforlaravel.com/docs/crud-operation-update
      * @return void
      */
@@ -220,5 +220,5 @@ class OfferCrudController extends CrudController
     {
         $this->setupListOperation();
     }
-    
+
 }

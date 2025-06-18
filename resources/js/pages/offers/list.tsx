@@ -45,7 +45,7 @@ export default function Index() {
             {offers.map((offer: Offer) => (
               <tr key={offer.id}>
                 <td className="py-2 px-4 ">{offer.id}</td>
-                <td className="py-2 px-4 border-l">{offer.offer_title}</td>
+                <td className="py-2 px-4 border-l">{offer.title}</td>
                 <td className="py-2 px-4 border-l">{offer.reward_total_cents}</td>
                 <td className="py-2 px-4 border-l">{offer.reward_offerer_percent}</td>
                 <td className="py-2 px-4 border-l">{offer.status}</td>
