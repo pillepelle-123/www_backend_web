@@ -2,7 +2,7 @@ import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link } from '@inertiajs/react';
 import { useState } from 'react';
-import { CheckCircle, Clock, XCircle, Mail, MailOpen } from 'lucide-react';
+import { CheckCircle, Clock, XCircle, Mail, MailOpen, Ban } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -17,7 +17,7 @@ type Application = {
   title: string;
   company_name: string;
   message: string | null;
-  status: 'pending' | 'approved' | 'rejected';
+  status: 'pending' | 'approved' | 'rejected' | 'retracted';
   created_at: string;
   responded_at: string | null;
   is_unread: boolean;
@@ -27,11 +27,18 @@ type Application = {
 
 export default function Index({ applications, unreadCount }: { applications: Application[], unreadCount: number }) {
   const [filter, setFilter] = useState<'all' | 'sent' | 'received'>('all');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'approved' | 'rejected' | 'retracted'>('all');
 
   const filteredApplications = applications.filter(app => {
-    if (filter === 'all') return true;
-    if (filter === 'sent') return app.is_applicant;
-    if (filter === 'received') return !app.is_applicant;
+    // Filter nach Typ (gesendet/empfangen)
+    if (filter !== 'all') {
+      if (filter === 'sent' && !app.is_applicant) return false;
+      if (filter === 'received' && app.is_applicant) return false;
+    }
+    
+    // Filter nach Status
+    if (statusFilter !== 'all' && app.status !== statusFilter) return false;
+    
     return true;
   });
 
@@ -63,6 +70,12 @@ export default function Index({ applications, unreadCount }: { applications: App
             <XCircle className="w-3 h-3" /> Abgelehnt
           </span>
         );
+      case 'retracted':
+        return (
+          <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+            <XCircle className="w-3 h-3" /> Zurückgezogen
+          </span>
+        );
       default:
         return null;
     }
@@ -78,25 +91,59 @@ export default function Index({ applications, unreadCount }: { applications: App
               <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
                 Nachrichten {unreadCount > 0 && <span className="ml-2 text-sm bg-red-500 text-white px-2 py-0.5 rounded-full">{unreadCount} neu</span>}
               </h1>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setFilter('all')}
-                  className={`px-3 py-1 rounded-md text-sm ${filter === 'all' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}
-                >
-                  Alle
-                </button>
-                <button
-                  onClick={() => setFilter('sent')}
-                  className={`px-3 py-1 rounded-md text-sm ${filter === 'sent' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}
-                >
-                  Gesendet
-                </button>
-                <button
-                  onClick={() => setFilter('received')}
-                  className={`px-3 py-1 rounded-md text-sm ${filter === 'received' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}
-                >
-                  Empfangen
-                </button>
+              <div className="flex flex-col gap-2">
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setFilter('all')}
+                    className={`px-3 py-1 rounded-md text-sm ${filter === 'all' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}
+                  >
+                    Alle
+                  </button>
+                  <button
+                    onClick={() => setFilter('sent')}
+                    className={`px-3 py-1 rounded-md text-sm ${filter === 'sent' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}
+                  >
+                    Gesendet
+                  </button>
+                  <button
+                    onClick={() => setFilter('received')}
+                    className={`px-3 py-1 rounded-md text-sm ${filter === 'received' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}
+                  >
+                    Empfangen
+                  </button>
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setStatusFilter('all')}
+                    className={`px-3 py-1 rounded-md text-sm ${statusFilter === 'all' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}
+                  >
+                    Alle Status
+                  </button>
+                  <button
+                    onClick={() => setStatusFilter('pending')}
+                    className={`px-3 py-1 rounded-md text-sm ${statusFilter === 'pending' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}
+                  >
+                    Ausstehend
+                  </button>
+                  <button
+                    onClick={() => setStatusFilter('approved')}
+                    className={`px-3 py-1 rounded-md text-sm ${statusFilter === 'approved' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}
+                  >
+                    Genehmigt
+                  </button>
+                  <button
+                    onClick={() => setStatusFilter('rejected')}
+                    className={`px-3 py-1 rounded-md text-sm ${statusFilter === 'rejected' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}
+                  >
+                    Abgelehnt
+                  </button>
+                  <button
+                    onClick={() => setStatusFilter('retracted')}
+                    className={`px-3 py-1 rounded-md text-sm ${statusFilter === 'retracted' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}
+                  >
+                    Zurückgezogen
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -134,8 +181,48 @@ export default function Index({ applications, unreadCount }: { applications: App
                           <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
                             {application.is_applicant ? 'An: ' : 'Von: '}{application.other_user} • {application.company_name}
                           </p>
-                          <div>
+                          <div className="flex items-center gap-2">
                             {getStatusBadge(application.status)}
+                            
+                            {/* Aktions-Buttons für Empfänger */}
+                            {!application.is_applicant && application.status === 'pending' && (
+                              <div className="flex gap-1">
+                                <form action={route('web.applications.approve', { id: application.id })} method="POST" className="inline">
+                                  <input type="hidden" name="_token" value={document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''} />
+                                  <button
+                                    type="submit"
+                                    className="p-1 rounded-full bg-green-100 text-green-800 hover:bg-green-200"
+                                    title="Annehmen"
+                                  >
+                                    <CheckCircle className="w-4 h-4" />
+                                  </button>
+                                </form>
+                                <form action={route('web.applications.reject', { id: application.id })} method="POST" className="inline">
+                                  <input type="hidden" name="_token" value={document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''} />
+                                  <button
+                                    type="submit"
+                                    className="p-1 rounded-full bg-red-100 text-red-800 hover:bg-red-200"
+                                    title="Ablehnen"
+                                  >
+                                    <Ban className="w-4 h-4" />
+                                  </button>
+                                </form>
+                              </div>
+                            )}
+                            
+                            {/* Zurückziehen-Button für Absender */}
+                            {application.is_applicant && application.status === 'pending' && (
+                              <form action={route('web.applications.retract', { id: application.id })} method="POST" className="inline">
+                                <input type="hidden" name="_token" value={document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''} />
+                                <button
+                                  type="submit"
+                                  className="p-1 rounded-full bg-gray-100 text-gray-800 hover:bg-gray-200"
+                                  title="Zurückziehen"
+                                >
+                                  <XCircle className="w-4 h-4" />
+                                </button>
+                              </form>
+                            )}
                           </div>
                         </div>
                       </div>

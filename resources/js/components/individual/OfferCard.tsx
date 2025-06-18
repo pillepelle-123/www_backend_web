@@ -220,6 +220,15 @@ export function OfferCard({ offer }: OfferCardProps) {
                 </Link>
               </div>
             </div>
+            
+            {/* Zeige einen Badge an, wenn der Benutzer eine aktive Anfrage gestellt hat */}
+            {offer.has_application && offer.application_status !== 'retracted' && (
+              <div className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                {offer.application_status === 'pending' && 'Anfrage gesendet'}
+                {offer.application_status === 'approved' && 'Anfrage angenommen'}
+                {offer.application_status === 'rejected' && 'Anfrage abgelehnt'}
+              </div>
+            )}
           </div>
           <div className="absolute right-0 bottom-0 w-27">
             <div

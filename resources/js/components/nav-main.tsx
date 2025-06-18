@@ -23,7 +23,7 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
                                 </Link>
                             </SidebarMenuButton>
                             {item.badge && item.badge > 0 && (
-                                <span className="absolute top-0 right-0 -mt-1 -mr-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 text-xs font-medium text-white">
+                                <span className="absolute top-0 right-0 -mt-2 -mr-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 text-xs font-medium text-white">
                                     {item.badge > 99 ? '99+' : item.badge}
                                 </span>
                             )}

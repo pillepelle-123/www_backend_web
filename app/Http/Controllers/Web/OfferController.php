@@ -111,7 +111,13 @@ class OfferController extends Controller
     public function show($id)
     {
         $offer = Offer::with(['user', 'company'])->findOrFail($id);
-
+        $user = Auth::user();
+        
+        // Prüfe, ob der Benutzer bereits eine Anfrage für dieses Angebot gestellt hat
+        $application = \App\Models\Application::where('offer_id', $offer->id)
+            ->where('applicant_id', $user->id)
+            ->first();
+            
         $offerData = [
             'id' => $offer->id,
             'title' => $offer->title,
@@ -126,6 +132,10 @@ class OfferController extends Controller
             'industry' => $offer->company->industry,
             'created_at' => $offer->created_at->format('Y-m-d H:i:s'),
             'average_rating' => $offer->user->average_rating,
+            'has_application' => $application ? true : false,
+            'application_status' => $application ? $application->status : null,
+            'application_id' => $application ? $application->id : null,
+            'is_owner' => $user->id === $offer->user_id,
         ];
 
         return Inertia::render('offers/show', [

@@ -180,12 +180,46 @@ export default function Show({ offer }: { offer: Offer }) {
                     >
                       Zurück zur Übersicht
                     </Link>
-                    <Link
-                      href={route('web.offers.applications.create', { offer_id: offer.id })}
-                      className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
-                    >
-                      Anfragen
-                    </Link>
+                    
+                    {/* Zeige den Anfragen-Button, wenn der Benutzer keine aktive Anfrage hat oder die Anfrage zurückgezogen wurde */}
+                    {(!offer.has_application || offer.application_status === 'retracted') && !offer.is_owner && (
+                      <Link
+                        href={route('web.offers.applications.create', { offer_id: offer.id })}
+                        className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
+                      >
+                        Anfragen
+                      </Link>
+                    )}
+                    
+                    {/* Zeige den Zurückziehen-Button, wenn der Benutzer eine Anfrage gestellt hat */}
+                    {offer.has_application && offer.application_status === 'pending' && (
+                      <form action={route('web.applications.retract', { id: offer.application_id })} method="POST">
+                        <input type="hidden" name="_token" value={document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''} />
+                        <button
+                          type="submit"
+                          className="inline-flex items-center px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200"
+                        >
+                          Anfrage zurückziehen
+                        </button>
+                      </form>
+                    )}
+                    
+                    {/* Zeige einen Hinweis, wenn der Benutzer eine aktive Anfrage gestellt hat */}
+                    {offer.has_application && offer.application_status !== 'retracted' && (
+                      <div className="flex items-center gap-2">
+                        <div className="text-sm text-gray-600 dark:text-gray-400">
+                          {offer.application_status === 'pending' && 'Sie haben eine Anfrage für dieses Angebot gestellt. Status: Ausstehend'}
+                          {offer.application_status === 'approved' && 'Ihre Anfrage wurde angenommen!'}
+                          {offer.application_status === 'rejected' && 'Ihre Anfrage wurde abgelehnt.'}
+                        </div>
+                        <Link
+                          href={route('web.applications.show', { id: offer.application_id })}
+                          className="text-sm text-blue-600 hover:text-blue-800 underline"
+                        >
+                          Zur Anfrage
+                        </Link>
+                      </div>
+                    )}
                   </div>
 
                   {/* Typ-Badge */}

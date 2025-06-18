@@ -62,7 +62,7 @@ class ApplicationController extends Controller
     {
         // Finde das Angebot
         $offer = Offer::with(['company', 'user'])->findOrFail($offer_id);
-        
+
         return Inertia::render('offers/applications/create', [
             'offer' => [
                 'id' => $offer->id,
@@ -86,9 +86,10 @@ class ApplicationController extends Controller
 
         $offer = Offer::findOrFail($offer_id);
 
-        // Prüfe, ob der Benutzer bereits eine Bewerbung für dieses Angebot hat
+        // Prüfe, ob der Benutzer bereits eine aktive Bewerbung für dieses Angebot hat
         $existingApplication = Application::where('offer_id', $offer->id)
             ->where('applicant_id', Auth::id())
+            ->whereNotIn('status', ['retracted'])
             ->first();
 
         if ($existingApplication) {
@@ -108,6 +109,30 @@ class ApplicationController extends Controller
         return redirect()->route('web.offers.show', $offer->id)
             ->with('success', 'Bewerbung erfolgreich gesendet.');
     }
+
+    /**
+     * Retract an application
+     */
+    public function retract($id)
+    {
+        $user = Auth::user();
+        $application = Application::findOrFail($id);
+
+        // Prüfe, ob der Benutzer der Bewerber ist
+        if ($user->id !== $application->applicant_id) {
+            abort(403, 'Unbefugter Zugriff.');
+        }
+
+        // Aktualisiere den Status
+        $application->update([
+            'status' => 'retracted',
+            'responded_at' => now(),
+        ]);
+
+        return redirect()->route('web.offers.show', $application->offer_id)
+            ->with('success', 'Bewerbung zurückgezogen.');
+    }
+
 
     /**
      * Display the specified resource.

@@ -45,6 +45,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('web.offers.applications.create');
     Route::post('/offers/{offer_id}/applications', [ApplicationController::class, 'store'])
         ->name('web.offers.applications.store');
+    Route::post('/applications/{id}/retract', [ApplicationController::class, 'retract'])
+        ->name('web.applications.retract');
         
     Route::get('/applications', [ApplicationController::class, 'index'])
         ->name('web.applications.index');

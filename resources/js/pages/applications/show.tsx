@@ -130,14 +130,22 @@ export default function Show({ application }: { application: ApplicationDetails 
               )}
 
               <div className="flex justify-between pt-4">
-                <Link
-                  href={route('web.applications.index')}
-                  className="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors duration-200"
-                  preserveState={false}
-                  only={[]}
-                >
-                  Zurück zur Übersicht
-                </Link>
+                <div className="flex gap-2">
+                  <Link
+                    href={route('web.applications.index')}
+                    className="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors duration-200"
+                    preserveState={false}
+                    only={[]}
+                  >
+                    Zurück zur Übersicht
+                  </Link>
+                  <Link
+                    href={route('web.offers.show', { id: application.offer_id })}
+                    className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors duration-200"
+                  >
+                    Zum Angebot
+                  </Link>
+                </div>
 
                 {!application.is_applicant && application.status === 'pending' && (
                   <div className="flex gap-2">

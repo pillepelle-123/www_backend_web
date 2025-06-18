@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('applicant_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('offer_owner_id')->constrained('users')->cascadeOnDelete();
             $table->text('message')->nullable();
-            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
+            $table->enum('status', ['pending', 'approved', 'rejected', 'retracted'])->default('pending');
             $table->boolean('is_read_by_applicant')->default(false);
             $table->boolean('is_read_by_owner')->default(false);
             $table->timestamp('responded_at')->nullable();
