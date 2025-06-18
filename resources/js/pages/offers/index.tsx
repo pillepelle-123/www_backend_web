@@ -60,7 +60,7 @@ export default function Index({ offers: initialOffers, pagination: initialPagina
     if (observer.current) observer.current.disconnect();
     
     observer.current = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting && hasMore) {
+      if (entries && entries.length > 0 && entries[0].isIntersecting && hasMore) {
         loadMore();
       }
     }, { rootMargin: '200px' }); // Frühzeitig laden, wenn 200px vor dem Ende
@@ -191,7 +191,7 @@ export default function Index({ offers: initialOffers, pagination: initialPagina
         {/* Gefilterte & sortierte Liste */}
         <div className="container mx-auto p-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 gap-8">
-            {offers.map((offer, index) => {
+            {offers && offers.length > 0 ? offers.map((offer, index) => {
               // Letztes Element mit Ref für Infinite Scrolling
               if (offers.length === index + 1) {
                 return (
@@ -202,7 +202,7 @@ export default function Index({ offers: initialOffers, pagination: initialPagina
               } else {
                 return <LazyOfferCard key={offer.id} offer={offer} />;
               }
-            })}
+            }) : null}
           </div>
           
           {/* Lade-Indikator */}

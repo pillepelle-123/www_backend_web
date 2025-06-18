@@ -88,7 +88,7 @@ export const useOffers = () => {
 
   // Funktion zum Laden weiterer Angebote (für Infinite Scrolling)
   const loadMore = useCallback(() => {
-    if (loading || pagination.current_page >= pagination.last_page) return;
+    if (loading || !pagination || pagination.current_page >= pagination.last_page) return;
     fetchOffers(pagination.current_page + 1, false);
   }, [loading, pagination, fetchOffers]);
 
@@ -173,7 +173,7 @@ export const useOffers = () => {
     updateDelayedFilters,
     updateImmediateFilters,
     applyFilters,
-    hasMore: pagination.current_page < pagination.last_page,
+    hasMore: pagination && pagination.current_page < pagination.last_page,
     delayedFilters,
     immediateFilters,
     activeFilters
