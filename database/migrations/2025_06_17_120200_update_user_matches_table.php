@@ -141,8 +141,19 @@ return new class extends Migration
 
         // Entferne das neue affiliate_link_id Feld
         Schema::table('user_matches', function (Blueprint $table) {
-            $table->dropForeign(['affiliate_link_id']);
-            $table->dropColumn('affiliate_link_id');
+            // Prüfe, ob der Foreign Key Constraint existiert, bevor er entfernt wird
+            if (Schema::hasColumn('user_matches', 'affiliate_link_id')) {
+                // In PostgreSQL haben Foreign Keys oft einen generierten Namen
+                // Wir verwenden Schema::getConnection()->getDoctrineSchemaManager(), um die Constraints zu prüfen
+                $foreignKeys = Schema::getConnection()->getDoctrineSchemaManager()->listTableForeignKeys('user_matches');
+                foreach ($foreignKeys as $foreignKey) {
+                    if (in_array('affiliate_link_id', $foreignKey->getColumns())) {
+                        $table->dropForeign($foreignKey->getName());
+                        break;
+                    }
+                }
+                $table->dropColumn('affiliate_link_id');
+            }
         });
 
         // Entferne das success_status-Feld
