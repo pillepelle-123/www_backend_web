@@ -38,12 +38,13 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        // Erstelle Angebote mit den neuen Status-Werten
+        // Erstelle Angebote mit den neuen Status-Werten und stelle sicher, dass jedes Angebot eine gültige Company-ID hat
         $offers = [];
         for ($i = 0; $i < 30; $i++) {
+            $company = $companies->random();
             $offers[] = Offer::factory()->create([
                 'user_id' => $users->random()->id,
-                'company_id' => $companies->random()->id,
+                'company_id' => $company->id,
                 'status' => fake()->randomElement(['draft', 'live', 'hidden', 'matched', 'deleted']),
                 'admin_status' => 'active'
             ]);
@@ -53,6 +54,12 @@ class DatabaseSeeder extends Seeder
         $userMatches = [];
         $randomOffers = collect($offers)->random(20);
         foreach ($randomOffers as $offer) {
+            // Stelle sicher, dass die company_id gültig ist
+            if (!$offer->company_id || !Company::find($offer->company_id)) {
+                $company = $companies->random();
+                $offer->update(['company_id' => $company->id]);
+            }
+            
             $affiliateLink = AffiliateLink::where('company_id', $offer->company_id)->first();
 
             $userMatches[] = UserMatch::factory()->create([
@@ -69,6 +76,12 @@ class DatabaseSeeder extends Seeder
         $applications = [];
         $applicationOffers = collect($offers)->random(15);
         foreach ($applicationOffers as $offer) {
+            // Stelle sicher, dass die company_id gültig ist
+            if (!$offer->company_id || !Company::find($offer->company_id)) {
+                $company = $companies->random();
+                $offer->update(['company_id' => $company->id]);
+            }
+            
             // Wähle 1-3 zufällige Bewerber aus
             $applicantsCount = rand(1, 3);
             $applicants = $users->where('id', '!=', $offer->user_id)->random($applicantsCount);

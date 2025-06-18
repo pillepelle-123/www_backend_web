@@ -23,6 +23,7 @@
     },
     "require-dev": {
         "backpack/generators": "^4.0",
+        "erlangparasu/laravel-debugbar-vscode": "3.x-dev",
         "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.18",
         "laravel/sail": "^1.41",

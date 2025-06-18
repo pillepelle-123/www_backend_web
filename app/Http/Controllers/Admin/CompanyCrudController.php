@@ -21,7 +21,7 @@ class CompanyCrudController extends CrudController
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
-     * 
+     *
      * @return void
      */
     public function setup()
@@ -34,33 +34,38 @@ class CompanyCrudController extends CrudController
             [
                 'name' => 'id',
                 'label' => 'ID',
+                'priority' => 0,
             ],
             [
                 'name' => 'name',
                 'label' => 'Name',
+                'priority' => 1,
             ],
-            [
-                'name' => 'logo_url',
-                'label' => 'Logo URL',
-            ],
+            // [
+            //     'name' => 'logo_url',
+            //     'label' => 'Logo URL',
+            // ],
             [
                 'name' => 'website',
                 'label' => 'Webseite',
                 'type' => 'text',
+                'priority' => 3,
             ],
             [
                 'name' => 'referral_program_url',
                 'label' => 'Programm URL',
                 'type' => 'text',
+                'priority' => 2,
             ],
-            [
-                'name' => 'description',
-                'label' => 'Beschreibung',
-            ],
+            // [
+            //     'name' => 'description',
+            //     'label' => 'Beschreibung',
+            // ],
             [
                 'name' => 'is_active',
                 'label' => 'Aktiv',
                 'type' => 'boolean',
+                'priority' => 1,
             ],
             [
                 'name' => 'admin_status',
@@ -73,13 +78,14 @@ class CompanyCrudController extends CrudController
                     'review' => 'Review',
                     'archived' => 'Archived',
                 ],
+                'priority' => 1,
             ],
         ]);
     }
 
     /**
      * Define what happens when the List operation is loaded.
-     * 
+     *
      * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
      * @return void
      */
@@ -95,14 +101,14 @@ class CompanyCrudController extends CrudController
 
     /**
      * Define what happens when the Create operation is loaded.
-     * 
+     *
      * @see https://backpackforlaravel.com/docs/crud-operation-create
      * @return void
      */
     protected function setupCreateOperation()
     {
         CRUD::setValidation(CompanyRequest::class);
-        
+
         CRUD::field('name')->type('text');
         CRUD::field('domain')->type('text');
         CRUD::field('referral_program_url')->type('url');
@@ -110,7 +116,7 @@ class CompanyCrudController extends CrudController
         CRUD::field('description')->type('textarea');
         CRUD::field('is_active')->type('boolean');
         CRUD::field('industry')->type('text');
-        
+
         // admin_status
         CRUD::field('admin_status')
             ->label('Admin Status')
@@ -128,7 +134,7 @@ class CompanyCrudController extends CrudController
 
     /**
      * Define what happens when the Update operation is loaded.
-     * 
+     *
      * @see https://backpackforlaravel.com/docs/crud-operation-update
      * @return void
      */
@@ -136,10 +142,10 @@ class CompanyCrudController extends CrudController
     {
         $this->setupCreateOperation();
     }
-    
+
     /**
      * Define what happens when the Show operation is loaded.
-     * 
+     *
      * @see https://backpackforlaravel.com/docs/crud-operation-show
      * @return void
      */
