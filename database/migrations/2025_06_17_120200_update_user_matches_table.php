@@ -140,19 +140,11 @@ return new class extends Migration
         }
 
         // Entferne das neue affiliate_link_id Feld
-        Schema::table('user_matches', function (Blueprint $table) {
-            // Versuche den Foreign Key zu entfernen, fange Fehler ab wenn er nicht existiert
-            try {
-                $table->dropForeign(['affiliate_link_id']);
-            } catch (\Exception $e) {
-                // Foreign Key existiert nicht, ignorieren
-            }
-            
-            // Entferne die Spalte
-            if (Schema::hasColumn('user_matches', 'affiliate_link_id')) {
-                $table->dropColumn('affiliate_link_id');
-            }
-        });
+        if (Schema::hasColumn('user_matches', 'affiliate_link_id')) {
+            // Bei PostgreSQL direkt SQL ausführen, um die Spalte zu entfernen
+            // Dies entfernt automatisch alle Constraints
+            DB::statement('ALTER TABLE user_matches DROP COLUMN IF EXISTS affiliate_link_id CASCADE');
+        }
 
         // Entferne das success_status-Feld
         Schema::table('user_matches', function (Blueprint $table) {
