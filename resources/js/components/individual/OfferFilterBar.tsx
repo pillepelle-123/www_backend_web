@@ -119,7 +119,7 @@ export function OfferFilterBar({
                   <option value="Beworbener">Beworbener</option>
                 </select>
               </div>
-              <div>
+              {/* <div>
                 <label className="block text-xs font-medium">Status</label>
                 <select
                   value={filters.status}
@@ -132,7 +132,7 @@ export function OfferFilterBar({
                   <option value="closed">Geschlossen</option>
                   <option value="matched">Zugewiesen</option>
                 </select>
-              </div>
+              </div> */}
               <div>
                 <label className="block text-xs font-medium">Ø Bewertung (min)</label>
                 <div className="flex gap-1 items-center">

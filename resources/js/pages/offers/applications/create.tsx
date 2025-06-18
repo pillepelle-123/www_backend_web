@@ -1,36 +1,41 @@
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
-import { Offer } from './index';
 import { useState } from 'react';
+import { Offer } from '@/pages/offers';
 
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Offers',
-        href: '/offers',
-    },
-    {
-        title: 'Details',
-        href: (route) => route('web.offers.show', { id: route.params.id }),
-    },
-    {
-        title: 'Anfragen',
-        href: '#',
-    },
+const getBreadcrumbs = (offerId: number): BreadcrumbItem[] => [
+  {
+    title: 'Offers',
+    href: '/offers',
+  },
+  {
+    title: 'Details',
+    href: `/offers/${offerId}`,
+  },
+  {
+    title: 'Anfragen',
+    href: '#',
+  },
 ];
 
-export default function Apply({ offer, auth }: { offer: Offer, auth: { user: { id: number, name: string } } }) {
+export default function Create({ offer, auth }: { offer: Offer, auth?: { user: { id: number, name: string } } }) {
   const { data, setData, post, processing, errors } = useForm({
     message: '',
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    post(route('web.offers.apply', { id: offer.id }));
+    post(route('web.offers.applications.store', { offer_id: offer.id }), {
+      preserveScroll: true,
+      onSuccess: () => {
+        window.location.href = `/offers/${offer.id}`;
+      }
+    });
   };
 
   return (
-    <AppLayout breadcrumbs={breadcrumbs}>
+    <AppLayout breadcrumbs={getBreadcrumbs(offer.id)}>
       <Head title={`Anfrage für: ${offer.title}`} />
       <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
         <div className="container mx-auto p-4">
@@ -50,10 +55,12 @@ export default function Apply({ offer, auth }: { offer: Offer, auth: { user: { i
                     <span className="font-medium">Unternehmen:</span> 
                     <span>{offer.offer_company}</span>
                   </div>
-                  <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
-                    <span className="font-medium">Typ:</span> 
-                    <span>{offer.offered_by_type}</span>
-                  </div>
+                  {offer.offered_by_type && (
+                    <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
+                      <span className="font-medium">Typ:</span> 
+                      <span>{offer.offered_by_type}</span>
+                    </div>
+                  )}
                 </div>
                 
                 <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 mb-6">
@@ -83,7 +90,7 @@ export default function Apply({ offer, auth }: { offer: Offer, auth: { user: { i
                   
                   <div className="flex justify-between pt-4">
                     <a
-                      href={route('web.offers.show', { id: offer.id })}
+                      href={`/offers/${offer.id}`}
                       className="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors duration-200"
                     >
                       Zurück

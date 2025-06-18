@@ -58,18 +58,19 @@ class ApplicationController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Offer $offer)
+    public function create($offer_id)
     {
-        // Lade die Beziehungen explizit
-        $offer->load(['company', 'user']);
+        // Finde das Angebot
+        $offer = Offer::with(['company', 'user'])->findOrFail($offer_id);
         
-        return Inertia::render('applications/create', [
+        return Inertia::render('offers/applications/create', [
             'offer' => [
                 'id' => $offer->id,
                 'title' => $offer->title,
                 'description' => $offer->description,
-                'company' => $offer->company ? $offer->company->name : null,
-                'user' => $offer->user ? $offer->user->name : null,
+                'offer_company' => $offer->company ? $offer->company->name : null,
+                'offer_user' => $offer->user ? $offer->user->name : null,
+                'offered_by_type' => $offer->offered_by_type == 'referrer' ? 'Werbender' : 'Beworbener',
             ],
         ]);
     }
@@ -77,14 +78,13 @@ class ApplicationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, $offer_id)
     {
         $validated = $request->validate([
-            'offer_id' => 'required|exists:offers,id',
             'message' => 'nullable|string|max:1000',
         ]);
 
-        $offer = Offer::findOrFail($validated['offer_id']);
+        $offer = Offer::findOrFail($offer_id);
 
         // Prüfe, ob der Benutzer bereits eine Bewerbung für dieses Angebot hat
         $existingApplication = Application::where('offer_id', $offer->id)
@@ -99,22 +99,23 @@ class ApplicationController extends Controller
             'offer_id' => $offer->id,
             'applicant_id' => Auth::id(),
             'offer_owner_id' => $offer->user_id,
-            'message' => $validated['message'],
+            'message' => $validated['message'] ?? null,
             'status' => 'pending',
             'is_read_by_applicant' => true,
             'is_read_by_owner' => false,
         ]);
 
-        return redirect()->route('web.applications.show', $application->id)
+        return redirect()->route('web.offers.show', $offer->id)
             ->with('success', 'Bewerbung erfolgreich gesendet.');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Application $application)
+    public function show($id)
     {
         $user = Auth::user();
+        $application = Application::findOrFail($id);
 
         // Prüfe, ob der Benutzer berechtigt ist, diese Bewerbung zu sehen
         if ($user->id !== $application->applicant_id && $user->id !== $application->offer_owner_id) {
@@ -157,9 +158,10 @@ class ApplicationController extends Controller
     /**
      * Approve the application.
      */
-    public function approve(Application $application)
+    public function approve($id)
     {
         $user = Auth::user();
+        $application = Application::findOrFail($id);
 
         // Prüfe, ob der Benutzer der Angebotseigentümer ist
         if ($user->id !== $application->offer_owner_id) {
@@ -205,9 +207,10 @@ class ApplicationController extends Controller
     /**
      * Reject the application.
      */
-    public function reject(Application $application)
+    public function reject($id)
     {
         $user = Auth::user();
+        $application = Application::findOrFail($id);
 
         // Prüfe, ob der Benutzer der Angebotseigentümer ist
         if ($user->id !== $application->offer_owner_id) {

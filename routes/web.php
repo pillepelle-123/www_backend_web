@@ -41,10 +41,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('web.offers.fetch-more');
         
     // Application routes
-    Route::get('/offers/{id}/apply', [ApplicationController::class, 'create'])
-        ->name('web.offers.apply.create');
-    Route::post('/offers/{id}/apply', [ApplicationController::class, 'store'])
-        ->name('web.offers.apply');
+    Route::get('/offers/{offer_id}/applications/create', [ApplicationController::class, 'create'])
+        ->name('web.offers.applications.create');
+    Route::post('/offers/{offer_id}/applications', [ApplicationController::class, 'store'])
+        ->name('web.offers.applications.store');
         
     Route::get('/applications', [ApplicationController::class, 'index'])
         ->name('web.applications.index');

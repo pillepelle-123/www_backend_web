@@ -181,7 +181,7 @@ export default function Show({ offer }: { offer: Offer }) {
                       Zurück zur Übersicht
                     </Link>
                     <Link
-                      href={`/offers/${offer.id}/apply`}
+                      href={route('web.offers.applications.create', { offer_id: offer.id })}
                       className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
                     >
                       Anfragen

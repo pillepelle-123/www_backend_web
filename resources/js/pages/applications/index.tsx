@@ -109,7 +109,7 @@ export default function Index({ applications, unreadCount }: { applications: App
                 {filteredApplications.map((application) => (
                   <Link
                     key={application.id}
-                    href={route('web.applications.show', application.id)}
+                    href={`/applications/${application.id}`}
                     className={`block py-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors ${application.is_unread ? 'bg-blue-50 dark:bg-blue-900/20' : ''}`}
                     preserveState={false}
                   >
