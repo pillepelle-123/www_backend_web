@@ -24,9 +24,11 @@ class ApplicationFactory extends Factory
                     ->id;
             },
             'message' => $this->faker->paragraph(),
-            'status' => $this->faker->randomElement(['pending', 'approved', 'rejected', 'retracted']),
             'is_read_by_applicant' => $this->faker->boolean(),
             'is_read_by_owner' => $this->faker->boolean(),
+            'is_archived_by_applicant' => $this->faker->boolean(0.1),
+            'is_archived_by_owner' => $this->faker->boolean(0.2),
+            'status' => $this->faker->randomElement(['pending', 'approved', 'rejected', 'retracted']),
             'responded_at' => $this->faker->optional(0.7)->dateTimeBetween('-1 week', 'now'),
         ];
     }

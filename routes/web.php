@@ -56,6 +56,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('web.applications.approve');
     Route::post('/applications/{id}/reject', [ApplicationController::class, 'reject'])
         ->name('web.applications.reject');
+    Route::post('/applications/{id}/reapply', [ApplicationController::class, 'reapply'])
+        ->name('web.applications.reapply');
+    Route::post('/applications/{id}/mark-read', [ApplicationController::class, 'markRead'])
+        ->name('web.applications.mark-read');
+    Route::post('/applications/{id}/toggle-read', [ApplicationController::class, 'toggleRead'])
+        ->name('web.applications.toggle-read');
+    Route::post('/applications/{id}/archive', [ApplicationController::class, 'archive'])
+        ->name('web.applications.archive');
+    Route::post('/applications/{id}/unarchive', [ApplicationController::class, 'unarchive'])
+        ->name('web.applications.unarchive');
 
     // Route::get('/list-offers', function () {
     //     return Inertia::render('Offers');

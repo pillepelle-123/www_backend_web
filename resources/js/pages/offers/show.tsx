@@ -85,9 +85,9 @@ export default function Show({ offer }: { offer: Offer }) {
             <div className={`bg-white dark:bg-white/10 rounded-xl shadow-lg overflow-hidden relative ${offer.status === 'matched' ? 'opacity-75' : ''}`}>
               {offer.status === 'matched' && (
                 <>
-                  <div className="absolute inset-0 z-0">
+                  {/* <div className="absolute inset-0 z-0">
                     <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                  </div>
+                  </div> */}
                   <div className="absolute top-4 left-4 z-10">
                     <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
                       <CheckCircle className="w-4 h-4" /> Matched
@@ -193,7 +193,7 @@ export default function Show({ offer }: { offer: Offer }) {
                     >
                       Zurück zur Übersicht
                     </Link>
-                    
+
                     {/* Zeige den Anfragen-Button, wenn der Benutzer keine aktive Anfrage hat oder die Anfrage zurückgezogen wurde */}
                     {(!offer.has_application || offer.application_status === 'retracted') && !offer.is_owner && offer.status !== 'matched' && (
                       <Link
@@ -203,7 +203,21 @@ export default function Show({ offer }: { offer: Offer }) {
                         Anfragen
                       </Link>
                     )}
-                    
+
+                    {(offer.is_owner &&
+                        <span>Dies ist ihre Offer</span>
+                    )}
+
+                    {/* Zeige einen Hinweis für gematchte Angebote */}
+                    {offer.status === 'matched' && (
+                    //   <div className="mt-4 p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+                        <p className="text-sm text-purple-800 dark:text-purple-200">
+                          Dieses Angebot wurde bereits erfolgreich gematcht.
+                          {offer.has_application && offer.application_status === 'approved' && " Sie sind Teil dieses Matches!"}
+                        </p>
+                    //   </div>
+                    )}
+
                     {/* Deaktivierter Button für gematchte Angebote */}
                     {offer.status === 'matched' && !offer.is_owner && !offer.has_application && (
                       <button
@@ -213,7 +227,7 @@ export default function Show({ offer }: { offer: Offer }) {
                         Anfragen
                       </button>
                     )}
-                    
+
                     {/* Zeige den Zurückziehen-Button, wenn der Benutzer eine Anfrage gestellt hat */}
                     {offer.has_application && offer.application_status === 'pending' && (
                       <form action={route('web.applications.retract', { id: offer.application_id })} method="POST">
@@ -226,7 +240,7 @@ export default function Show({ offer }: { offer: Offer }) {
                         </button>
                       </form>
                     )}
-                    
+
                     {/* Zeige einen Hinweis, wenn der Benutzer eine aktive Anfrage gestellt hat */}
                     {offer.has_application && offer.application_status !== 'retracted' && (
                       <div className="flex items-center gap-2">
@@ -241,16 +255,6 @@ export default function Show({ offer }: { offer: Offer }) {
                         >
                           Zur Anfrage
                         </Link>
-                      </div>
-                    )}
-                    
-                    {/* Zeige einen Hinweis für gematchte Angebote */}
-                    {offer.status === 'matched' && (
-                      <div className="mt-4 p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
-                        <p className="text-sm text-purple-800 dark:text-purple-200">
-                          Dieses Angebot wurde bereits erfolgreich gematcht.
-                          {offer.has_application && offer.application_status === 'approved' && " Sie sind Teil dieses Matches!"}
-                        </p>
                       </div>
                     )}
                   </div>

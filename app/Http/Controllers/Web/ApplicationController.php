@@ -31,6 +31,9 @@ class ApplicationController extends Controller
             $otherUser = $isApplicant ? $application->offerOwner->name : $application->applicant->name;
             $isUnread = $isApplicant ? !$application->is_read_by_applicant : !$application->is_read_by_owner;
 
+            // Bestimme, ob die Bewerbung archiviert ist
+            $isArchived = $isApplicant ? $application->is_archived_by_applicant : $application->is_archived_by_owner;
+            
             return [
                 'id' => $application->id,
                 'offer_id' => $application->offer_id,
@@ -42,6 +45,7 @@ class ApplicationController extends Controller
                 'responded_at' => $application->responded_at ? $application->responded_at->format('Y-m-d H:i:s') : null,
                 'is_unread' => $isUnread,
                 'is_applicant' => $isApplicant,
+                'is_archived' => $isArchived,
                 'other_user' => $otherUser,
             ];
         });
@@ -258,5 +262,146 @@ class ApplicationController extends Controller
 
         return redirect()->route('web.applications.index')
             ->with('success', 'Bewerbung abgelehnt.');
+    }
+    
+    /**
+     * Mark the application as read.
+     */
+    public function markRead($id)
+    {
+        $user = Auth::user();
+        $application = Application::findOrFail($id);
+
+        // Prüfe, ob der Benutzer berechtigt ist
+        if ($user->id !== $application->applicant_id && $user->id !== $application->offer_owner_id) {
+            abort(403, 'Unbefugter Zugriff.');
+        }
+
+        // Markiere als gelesen basierend auf der Benutzerrolle
+        if ($user->id === $application->applicant_id) {
+            $application->update(['is_read_by_applicant' => true]);
+        } else {
+            $application->update(['is_read_by_owner' => true]);
+        }
+
+        return response()->json(['success' => true]);
+    }
+    
+    /**
+     * Toggle the read status of the application.
+     */
+    public function toggleRead($id)
+    {
+        $user = Auth::user();
+        $application = Application::findOrFail($id);
+
+        // Prüfe, ob der Benutzer berechtigt ist
+        if ($user->id !== $application->applicant_id && $user->id !== $application->offer_owner_id) {
+            abort(403, 'Unbefugter Zugriff.');
+        }
+
+        // Toggle den Lesestatus basierend auf der Benutzerrolle
+        if ($user->id === $application->applicant_id) {
+            $application->update(['is_read_by_applicant' => !$application->is_read_by_applicant]);
+        } else {
+            $application->update(['is_read_by_owner' => !$application->is_read_by_owner]);
+        }
+
+        return response()->json(['success' => true]);
+    }
+    
+    /**
+     * Reapply the application.
+     */
+    public function reapply($id)
+    {
+        $user = Auth::user();
+        $application = Application::findOrFail($id);
+
+        // Prüfe, ob der Benutzer der Bewerber ist
+        if ($user->id !== $application->applicant_id) {
+            abort(403, 'Unbefugter Zugriff.');
+        }
+
+        // Prüfe, ob die Bewerbung zurückgezogen wurde
+        if ($application->status !== 'retracted') {
+            return redirect()->back()->with('error', 'Diese Bewerbung kann nicht erneut gestellt werden.');
+        }
+
+        // Aktualisiere den Status auf "pending"
+        $application->update([
+            'status' => 'pending',
+            'responded_at' => null,
+            'is_read_by_owner' => false,
+        ]);
+
+        return redirect()->route('web.applications.index')
+            ->with('success', 'Bewerbung erneut gestellt.');
+    }
+    
+    /**
+     * Archive the application.
+     */
+    public function archive($id)
+    {
+        $user = Auth::user();
+        $application = Application::findOrFail($id);
+
+        // Prüfe, ob der Benutzer berechtigt ist
+        if ($user->id !== $application->applicant_id && $user->id !== $application->offer_owner_id) {
+            abort(403, 'Unbefugter Zugriff.');
+        }
+
+        // Archiviere die Bewerbung basierend auf der Benutzerrolle
+        if ($user->id === $application->applicant_id) {
+            // Wenn der Status "pending" ist, setze ihn auf "retracted"
+            if ($application->status === 'pending') {
+                $application->update([
+                    'status' => 'retracted',
+                    'responded_at' => now(),
+                    'is_archived_by_applicant' => true,
+                ]);
+            } else {
+                $application->update(['is_archived_by_applicant' => true]);
+            }
+        } else {
+            // Wenn der Status "pending" ist, setze ihn auf "rejected"
+            if ($application->status === 'pending') {
+                $application->update([
+                    'status' => 'rejected',
+                    'responded_at' => now(),
+                    'is_archived_by_owner' => true,
+                ]);
+            } else {
+                $application->update(['is_archived_by_owner' => true]);
+            }
+        }
+
+        return redirect()->route('web.applications.index')
+            ->with('success', 'Bewerbung archiviert.');
+    }
+    
+    /**
+     * Unarchive the application.
+     */
+    public function unarchive($id)
+    {
+        $user = Auth::user();
+        $application = Application::findOrFail($id);
+
+        // Prüfe, ob der Benutzer berechtigt ist
+        if ($user->id !== $application->applicant_id && $user->id !== $application->offer_owner_id) {
+            abort(403, 'Unbefugter Zugriff.');
+        }
+
+        // Dearchiviere die Bewerbung basierend auf der Benutzerrolle
+        if ($user->id === $application->applicant_id) {
+            $application->update(['is_archived_by_applicant' => false]);
+        } else {
+            $application->update(['is_archived_by_owner' => false]);
+        }
+
+        return redirect()->route('web.applications.index')
+            ->with('success', 'Bewerbung wiederhergestellt.');
     }
 }

@@ -23,12 +23,9 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
                                 </Link>
                             </SidebarMenuButton>
                             {item.badge !== undefined && item.badge > 0 && (
-                                <div>
-                                    {/* {length(item.badge)} */}
                                 <span className="absolute -top-2 -left-0 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 text-xs font-medium text-white">
                                     {item.badge}
                                 </span>
-                                </div>
                             )}
                         </div>
                     </SidebarMenuItem>

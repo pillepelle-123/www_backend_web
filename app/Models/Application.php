@@ -25,6 +25,8 @@ class Application extends Model
         'status',
         'is_read_by_applicant',
         'is_read_by_owner',
+        'is_archived_by_applicant',
+        'is_archived_by_owner',
         'responded_at',
     ];
 
@@ -36,6 +38,8 @@ class Application extends Model
     protected $casts = [
         'is_read_by_applicant' => 'boolean',
         'is_read_by_owner' => 'boolean',
+        'is_archived_by_applicant' => 'boolean',
+        'is_archived_by_owner' => 'boolean',
         'responded_at' => 'datetime',
     ];
 

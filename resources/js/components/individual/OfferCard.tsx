@@ -199,12 +199,11 @@ export function OfferCard({ offer }: OfferCardProps) {
             </div>
             </div>
           </div>
-          {offer.description && (
+          {/* {offer.description && (
             <div className="text-gray-600 dark:text-gray-300 min-h-22">
-              {/* <p className="font-medium mb-1">Beschreibung:</p> */}
               <p className="text-sm">{truncateDescription(offer.description)}</p>
             </div>
-          )}
+          )} */}
           {/* Reward */}
           <div className="flex gap-2 items-start justify-between pt-4 min-h-14 w-full" >
               <div className="flex flex-col grow text-gray-600 dark:text-gray-300">

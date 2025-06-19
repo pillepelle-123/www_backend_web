@@ -19,7 +19,8 @@ return new class extends Migration
             $table->text('message')->nullable();
             $table->boolean('is_read_by_applicant')->default(false);
             $table->boolean('is_read_by_owner')->default(false);
-            $table->boolean('is_archived')->default(false);
+            $table->boolean('is_archived_by_applicant')->default(false);
+            $table->boolean('is_archived_by_owner')->default(false);
             $table->enum('status', ['pending', 'approved', 'rejected', 'retracted'])->default('pending');
             $table->timestamp('responded_at')->nullable();
             $table->timestamps();
