@@ -71,12 +71,14 @@ export default function Index({ applications, unreadCount }: { applications: App
   // Hilfsfunktion für Bulk-Aktionen
   const handleBulkAction = (action: string) => {
     if (selectedApplications.length === 0) return;
-    
-    // Zeige Bestätigungsdialog
-    if (!confirm(`Möchten Sie die Aktion "${action}" für ${selectedApplications.length} ausgewählte Nachrichten durchführen?`)) {
-      return;
+
+    if(action == 'approve' || action == 'archive' || action == 'unarchive') {
+        // Zeige Bestätigungsdialog
+        if (!confirm(`Möchten Sie die Aktion "${action}" für ${selectedApplications.length} ausgewählte Nachrichten durchführen?`)) {
+        return;
+        }
     }
-    
+
     // Führe die entsprechende Aktion für jede ausgewählte Anwendung aus
     const promises = selectedApplications.map(id => {
       switch (action) {
@@ -88,7 +90,7 @@ export default function Index({ applications, unreadCount }: { applications: App
               'Content-Type': 'application/json',
             }
           });
-        
+
         case 'markAsUnread':
           // Wir verwenden toggle-read mit is_unread=false, um als ungelesen zu markieren
           return fetch(route('web.applications.toggle-read', { id }), {
@@ -99,7 +101,7 @@ export default function Index({ applications, unreadCount }: { applications: App
             },
             body: JSON.stringify({ is_unread: false })
           });
-        
+
         case 'approve':
           return fetch(route('web.applications.approve', { id }), {
             method: 'POST',
@@ -108,7 +110,7 @@ export default function Index({ applications, unreadCount }: { applications: App
               'Content-Type': 'application/json',
             }
           });
-        
+
         case 'archive':
           return fetch(route('web.applications.archive', { id }), {
             method: 'POST',
@@ -117,7 +119,7 @@ export default function Index({ applications, unreadCount }: { applications: App
               'Content-Type': 'application/json',
             }
           });
-        
+
         case 'unarchive':
           return fetch(route('web.applications.unarchive', { id }), {
             method: 'POST',
@@ -126,12 +128,12 @@ export default function Index({ applications, unreadCount }: { applications: App
               'Content-Type': 'application/json',
             }
           });
-        
+
         default:
           return Promise.resolve();
       }
     });
-    
+
     // Warte auf alle Anfragen und aktualisiere dann die Seite
     Promise.all(promises)
       .then(() => {
@@ -208,8 +210,8 @@ export default function Index({ applications, unreadCount }: { applications: App
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Nachrichten" />
-      <div className="container mx-auto p-4">
-        <div className="bg-white dark:bg-white/10 rounded-xl shadow-lg overflow-hidden">
+      {/* <div className="container mx-auto p-4"> */}
+        {/* <div className="bg-white dark:bg-white/10 rounded-xl shadow-lg overflow-hidden"> */}
           {/* Tabs */}
           <div className="flex border-b border-gray-200 dark:border-gray-700">
             <button
@@ -243,8 +245,69 @@ export default function Index({ applications, unreadCount }: { applications: App
                 }
               </h1>
 
+
+              {/* Filters - nur im Anträge-Tab */}
+              <div className="flex flex-col gap-2 w-full md:w-auto">
+                <div className="flex gap-2 flex-wrap p-2 border rounded-lg">
+
+                  <button
+                    onClick={() => setFilter('all')}
+                    className={`px-3 py-1 rounded-md text-sm ${filter === 'all' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}
+                  >
+                    Alle
+                  </button>
+                  <button
+                    onClick={() => setFilter('sent')}
+                    className={`px-3 py-1 rounded-md text-sm ${filter === 'sent' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}
+                  >
+                    Gesendet
+                  </button>
+                  <button
+                    onClick={() => setFilter('received')}
+                    className={`px-3 py-1 rounded-md text-sm ${filter === 'received' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}
+                  >
+                    Empfangen
+                  </button>
+                </div>
+
+                {/* Status-Filter nur im Anträge-Tab anzeigen */}
+                {activeTab === 'applications' && (
+                  <div className="flex gap-2 flex-wrap p-2 border rounded-lg">
+                    <button
+                      onClick={() => setStatusFilter('all')}
+                      className={`px-3 py-1 rounded-md text-sm ${statusFilter === 'all' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}
+                    >
+                      Alle Status
+                    </button>
+                    <button
+                      onClick={() => setStatusFilter('pending')}
+                      className={`px-3 py-1 rounded-md text-sm ${statusFilter === 'pending' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}
+                    >
+                      Ausstehend
+                    </button>
+                    <button
+                      onClick={() => setStatusFilter('approved')}
+                      className={`px-3 py-1 rounded-md text-sm ${statusFilter === 'approved' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}
+                    >
+                      Genehmigt
+                    </button>
+                    <button
+                      onClick={() => setStatusFilter('rejected')}
+                      className={`px-3 py-1 rounded-md text-sm ${statusFilter === 'rejected' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}
+                    >
+                      Abgelehnt
+                    </button>
+                    <button
+                      onClick={() => setStatusFilter('retracted')}
+                      className={`px-3 py-1 rounded-md text-sm ${statusFilter === 'retracted' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}
+                    >
+                      Zurückgezogen
+                    </button>
+                  </div>
+                )}
+
               {/* Bulk Actions */}
-              <div className="flex gap-2 flex-wrap">
+              <div className="flex gap-2 flex-wrap p-2 border rounded-lg">
                 {activeTab === 'applications' && (
                   <>
                     <button
@@ -307,65 +370,6 @@ export default function Index({ applications, unreadCount }: { applications: App
                   </button>
                 )}
               </div>
-
-              {/* Filters - nur im Anträge-Tab */}
-              <div className="flex flex-col gap-2 w-full md:w-auto">
-                <div className="flex gap-2 flex-wrap">
-                  <button
-                    onClick={() => setFilter('all')}
-                    className={`px-3 py-1 rounded-md text-sm ${filter === 'all' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}
-                  >
-                    Alle
-                  </button>
-                  <button
-                    onClick={() => setFilter('sent')}
-                    className={`px-3 py-1 rounded-md text-sm ${filter === 'sent' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}
-                  >
-                    Gesendet
-                  </button>
-                  <button
-                    onClick={() => setFilter('received')}
-                    className={`px-3 py-1 rounded-md text-sm ${filter === 'received' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}
-                  >
-                    Empfangen
-                  </button>
-                </div>
-
-                {/* Status-Filter nur im Anträge-Tab anzeigen */}
-                {activeTab === 'applications' && (
-                  <div className="flex gap-2 flex-wrap">
-                    <button
-                      onClick={() => setStatusFilter('all')}
-                      className={`px-3 py-1 rounded-md text-sm ${statusFilter === 'all' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}
-                    >
-                      Alle Status
-                    </button>
-                    <button
-                      onClick={() => setStatusFilter('pending')}
-                      className={`px-3 py-1 rounded-md text-sm ${statusFilter === 'pending' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}
-                    >
-                      Ausstehend
-                    </button>
-                    <button
-                      onClick={() => setStatusFilter('approved')}
-                      className={`px-3 py-1 rounded-md text-sm ${statusFilter === 'approved' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}
-                    >
-                      Genehmigt
-                    </button>
-                    <button
-                      onClick={() => setStatusFilter('rejected')}
-                      className={`px-3 py-1 rounded-md text-sm ${statusFilter === 'rejected' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}
-                    >
-                      Abgelehnt
-                    </button>
-                    <button
-                      onClick={() => setStatusFilter('retracted')}
-                      className={`px-3 py-1 rounded-md text-sm ${statusFilter === 'retracted' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}
-                    >
-                      Zurückgezogen
-                    </button>
-                  </div>
-                )}
               </div>
             </div>
 
@@ -585,8 +589,8 @@ export default function Index({ applications, unreadCount }: { applications: App
               </div>
             )}
           </div>
-        </div>
-      </div>
+        {/* </div> */}
+      {/* </div> */}
     </AppLayout>
   );
 }

@@ -67,11 +67,11 @@ export function OfferCard({ offer }: OfferCardProps) {
     return text.substring(0, 37) + '...';
   };
 
-  const truncateDescription = (text: string | undefined | null) => {
-    if (!text) return '';
-    if (text.length <= 200) return text;
-    return text.substring(0, 197) + '...';
-  };
+//   const truncateDescription = (text: string | undefined | null) => {
+//     if (!text) return '';
+//     if (text.length <= 200) return text;
+//     return text.substring(0, 197) + '...';
+//   };
 
   // ### Star Icons ###
   function getStarIcons(averageRating: number) {
