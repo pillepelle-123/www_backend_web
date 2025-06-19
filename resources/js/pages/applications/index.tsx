@@ -2,7 +2,24 @@ import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link } from '@inertiajs/react';
 import { useState } from 'react';
-import { CheckCircle, Clock, XCircle, Mail, MailOpen, Ban, Archive, RotateCcw, RefreshCw, Eye, EyeOff, Square, CheckSquare } from 'lucide-react';
+import { CheckCircle, Clock, XCircle, Mail, MailOpen, Ban, Archive, RotateCcw, RefreshCw, Eye, EyeOff, Square, CheckSquare, Filter, MoreHorizontal } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+//   AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -32,6 +49,7 @@ export default function Index({ applications, unreadCount }: { applications: App
   const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'approved' | 'rejected' | 'retracted'>('all');
   const [selectedApplications, setSelectedApplications] = useState<number[]>([]);
   const [selectAll, setSelectAll] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
 
   const filteredApplications = applications.filter(app => {
     // Filter nach Tab (Anträge/Archiv)
@@ -68,17 +86,26 @@ export default function Index({ applications, unreadCount }: { applications: App
     setSelectAll(!selectAll);
   };
 
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [pendingAction, setPendingAction] = useState<string | null>(null);
+
   // Hilfsfunktion für Bulk-Aktionen
   const handleBulkAction = (action: string) => {
     if (selectedApplications.length === 0) return;
 
-    if(action == 'approve' || action == 'archive' || action == 'unarchive') {
-        // Zeige Bestätigungsdialog
-        if (!confirm(`Möchten Sie die Aktion "${action}" für ${selectedApplications.length} ausgewählte Nachrichten durchführen?`)) {
-        return;
-        }
+    if(action === 'approve' || action === 'archive' || action === 'unarchive') {
+      // Speichere die Aktion und öffne den Dialog
+      setPendingAction(action);
+      setConfirmDialogOpen(true);
+      return;
     }
 
+    // Führe die Aktion direkt aus, wenn keine Bestätigung erforderlich ist
+    executeBulkAction(action);
+  };
+
+  // Führt die Bulk-Aktion nach Bestätigung aus
+  const executeBulkAction = (action: string) => {
     // Führe die entsprechende Aktion für jede ausgewählte Anwendung aus
     const promises = selectedApplications.map(id => {
       switch (action) {
@@ -102,14 +129,14 @@ export default function Index({ applications, unreadCount }: { applications: App
             body: JSON.stringify({ is_unread: false })
           });
 
-        case 'approve':
-          return fetch(route('web.applications.approve', { id }), {
-            method: 'POST',
-            headers: {
-              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
-              'Content-Type': 'application/json',
-            }
-          });
+        // case 'approve':
+        //   return fetch(route('web.applications.approve', { id }), {
+        //     method: 'POST',
+        //     headers: {
+        //       'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+        //       'Content-Type': 'application/json',
+        //     }
+        //   });
 
         case 'archive':
           return fetch(route('web.applications.archive', { id }), {
@@ -207,9 +234,93 @@ export default function Index({ applications, unreadCount }: { applications: App
     }
   };
 
+  // Komponente für den Bestätigungsdialog
+  const ConfirmationDialog = () => (
+    <AlertDialog open={confirmDialogOpen} onOpenChange={setConfirmDialogOpen}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>
+            { pendingAction == 'archive' && (
+                <span>Archivieren</span>
+            )
+            }
+            { pendingAction == 'unarchive' && (
+                <span>Wiederherstellen</span>
+            )
+            }
+          </AlertDialogTitle>
+          <AlertDialogDescription>
+            { pendingAction == 'archive' && (
+                <span>Möchten sie {selectedApplications.length} ausgewählte Nachrichten archivieren?</span>
+            )
+            }
+            { pendingAction == 'unarchive' && (
+                <span>Möchten sie {selectedApplications.length} ausgewählte Nachrichten wiederherstellen?</span>
+            )
+            }
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Abbrechen</AlertDialogCancel>
+          <AlertDialogAction onClick={() => {
+            if (pendingAction) {
+              executeBulkAction(pendingAction);
+              setPendingAction(null);
+            }
+          }}>
+            Bestätigen
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+
+  // Komponente für das Aktionen-Dropdown
+//   const ActionsDropdown = () => (
+//     <DropdownMenu>
+//       <DropdownMenuTrigger asChild>
+//         <button
+//           disabled={selectedApplications.length === 0}
+//           className={`px-3 py-1 rounded-md text-sm flex items-center gap-1 ${
+//             selectedApplications.length === 0
+//               ? 'text-gray-400 dark:text-gray-300'
+//               : 'text-gray-700 dark:text-gray-300 cursor-pointer'
+//           }`}
+//         >
+//           Aktionen <MoreHorizontal className="w-4 h-4"/>
+//         </button>
+//       </DropdownMenuTrigger>
+//       {selectedApplications.length > 0 && (
+
+//       <DropdownMenuContent>
+//         {activeTab === 'applications' && (
+//           <>
+//             <DropdownMenuItem onClick={() => handleBulkAction('markAsRead')}>
+//               <MailOpen className="w-4 h-4 mr-2 cursor-pointer" /> Als gelesen markieren
+//             </DropdownMenuItem>
+//             <DropdownMenuItem onClick={() => handleBulkAction('markAsUnread')}>
+//               <Mail className="w-4 h-4 mr-2 cursor-pointer" /> Als ungelesen markieren
+//             </DropdownMenuItem>
+//             <DropdownMenuItem onClick={() => handleBulkAction('archive')}>
+//               <Archive className="w-4 h-4 mr-2 cursor-pointer" /> Archivieren
+//             </DropdownMenuItem>
+//           </>
+//         )}
+//         {activeTab === 'archive' && (
+//           <DropdownMenuItem onClick={() => handleBulkAction('unarchive')}>
+//             <RotateCcw className="w-4 h-4 mr-2 cursor-pointer" /> Wiederherstellen
+//           </DropdownMenuItem>
+//         )}
+//       </DropdownMenuContent>
+//       )}
+//     </DropdownMenu>
+//   );
+
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Nachrichten" />
+      <ConfirmationDialog />
+
       {/* <div className="container mx-auto p-4"> */}
         {/* <div className="bg-white dark:bg-white/10 rounded-xl shadow-lg overflow-hidden"> */}
           {/* Tabs */}
@@ -237,101 +348,97 @@ export default function Index({ applications, unreadCount }: { applications: App
           </div>
 
           <div className="p-6">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+            <div className="flex justify-between items-center mb-6">
               <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
                 {activeTab === 'applications' ? 'Nachrichten' : 'Archiv'}
                 {unreadCount > 0 && activeTab === 'applications' &&
                   <span className="ml-2 text-sm bg-red-500 text-white px-2 py-0.5 rounded-full">{unreadCount} neu</span>
                 }
               </h1>
+              <button
+                className="flex items-center gap-2 px-4 py-2 bg-zinc-100 dark:bg-zinc-800 rounded hover:bg-zinc-200 dark:hover:bg-zinc-700 transition"
+                onClick={() => setShowFilters(!showFilters)}
+                aria-label="Filter öffnen"
+                type="button"
+              >
+                <Filter className="w-5 h-5" />
+              </button>
+            </div>
 
-
-              {/* Filters - nur im Anträge-Tab */}
-              <div className="flex flex-col gap-2 w-full md:w-auto">
-                <div className="flex gap-2 flex-wrap p-2 border rounded-lg">
-
-                  <button
-                    onClick={() => setFilter('all')}
-                    className={`px-3 py-1 rounded-md text-sm ${filter === 'all' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}
-                  >
-                    Alle
-                  </button>
-                  <button
-                    onClick={() => setFilter('sent')}
-                    className={`px-3 py-1 rounded-md text-sm ${filter === 'sent' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}
-                  >
-                    Gesendet
-                  </button>
-                  <button
-                    onClick={() => setFilter('received')}
-                    className={`px-3 py-1 rounded-md text-sm ${filter === 'received' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}
-                  >
-                    Empfangen
-                  </button>
+            {/* Filter-Bereich */}
+            <div className={`transition-all duration-300 overflow-hidden mb-6 ${showFilters ? 'max-h-96' : 'max-h-0'}`}>
+              <div className="flex flex-col md:flex-row gap-4 p-4 border rounded-lg">
+                {/* Sender/Empfänger Filter */}
+                <div className="flex flex-col gap-2">
+                  <h3 className="font-medium text-sm">Sender/Empfänger</h3>
+                  <div className="flex gap-2 flex-wrap">
+                    <button
+                      onClick={() => setFilter('all')}
+                      className={`px-3 py-1 rounded-md text-sm ${filter === 'all' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}
+                    >
+                      Alle
+                    </button>
+                    <button
+                      onClick={() => setFilter('sent')}
+                      className={`px-3 py-1 rounded-md text-sm ${filter === 'sent' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}
+                    >
+                      Gesendet
+                    </button>
+                    <button
+                      onClick={() => setFilter('received')}
+                      className={`px-3 py-1 rounded-md text-sm ${filter === 'received' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}
+                    >
+                      Empfangen
+                    </button>
+                  </div>
                 </div>
 
                 {/* Status-Filter nur im Anträge-Tab anzeigen */}
                 {activeTab === 'applications' && (
-                  <div className="flex gap-2 flex-wrap p-2 border rounded-lg">
-                    <button
-                      onClick={() => setStatusFilter('all')}
-                      className={`px-3 py-1 rounded-md text-sm ${statusFilter === 'all' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}
-                    >
-                      Alle Status
-                    </button>
-                    <button
-                      onClick={() => setStatusFilter('pending')}
-                      className={`px-3 py-1 rounded-md text-sm ${statusFilter === 'pending' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}
-                    >
-                      Ausstehend
-                    </button>
-                    <button
-                      onClick={() => setStatusFilter('approved')}
-                      className={`px-3 py-1 rounded-md text-sm ${statusFilter === 'approved' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}
-                    >
-                      Genehmigt
-                    </button>
-                    <button
-                      onClick={() => setStatusFilter('rejected')}
-                      className={`px-3 py-1 rounded-md text-sm ${statusFilter === 'rejected' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}
-                    >
-                      Abgelehnt
-                    </button>
-                    <button
-                      onClick={() => setStatusFilter('retracted')}
-                      className={`px-3 py-1 rounded-md text-sm ${statusFilter === 'retracted' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}
-                    >
-                      Zurückgezogen
-                    </button>
+                  <div className="flex flex-col gap-2">
+                    <h3 className="font-medium text-sm">Status</h3>
+                    <div className="flex gap-2 flex-wrap">
+                      <button
+                        onClick={() => setStatusFilter('all')}
+                        className={`px-3 py-1 rounded-md text-sm ${statusFilter === 'all' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}
+                      >
+                        Alle Status
+                      </button>
+                      <button
+                        onClick={() => setStatusFilter('pending')}
+                        className={`px-3 py-1 rounded-md text-sm ${statusFilter === 'pending' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}
+                      >
+                        Ausstehend
+                      </button>
+                      <button
+                        onClick={() => setStatusFilter('approved')}
+                        className={`px-3 py-1 rounded-md text-sm ${statusFilter === 'approved' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}
+                      >
+                        Genehmigt
+                      </button>
+                      <button
+                        onClick={() => setStatusFilter('rejected')}
+                        className={`px-3 py-1 rounded-md text-sm ${statusFilter === 'rejected' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}
+                      >
+                        Abgelehnt
+                      </button>
+                      <button
+                        onClick={() => setStatusFilter('retracted')}
+                        className={`px-3 py-1 rounded-md text-sm ${statusFilter === 'retracted' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}
+                      >
+                        Zurückgezogen
+                      </button>
+                    </div>
                   </div>
                 )}
 
               {/* Bulk Actions */}
-              <div className="flex gap-2 flex-wrap p-2 border rounded-lg">
-                {activeTab === 'applications' && (
+              {/* <div className="flex gap-2 flex-wrap mb-4"> */}
+                {/* Actions Dropdown */}
+
+
+                {/* {activeTab === 'applications' && (
                   <>
-                    <button
-                      onClick={() => handleBulkAction('markAsRead')}
-                      disabled={selectedApplications.length === 0}
-                      className={`px-3 py-1 rounded-md text-sm flex items-center gap-1 ${
-                        selectedApplications.length === 0
-                          ? 'bg-gray-100 text-gray-400 dark:bg-gray-800 dark:text-gray-500 cursor-not-allowed'
-                          : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'
-                      }`}
-                    >
-                      <EyeOff className="w-4 h-4" /> Als gelesen
-                    </button>
-                    <button
-                      onClick={() => handleBulkAction('markAsUnread')}
-                      disabled={selectedApplications.length === 0}
-                      className={`px-3 py-1 rounded-md text-sm flex items-center gap-1 ${
-                        selectedApplications.length === 0
-                          ? 'bg-gray-100 text-gray-400 dark:bg-gray-800 dark:text-gray-500 cursor-not-allowed'
-                          : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'
-                      }`}
-                    >
-                      <Eye className="w-4 h-4" /> Als ungelesen
-                    </button>
                     <button
                       onClick={() => handleBulkAction('approve')}
                       disabled={selectedApplications.length === 0}
@@ -343,33 +450,9 @@ export default function Index({ applications, unreadCount }: { applications: App
                     >
                       <CheckCircle className="w-4 h-4" /> Genehmigen
                     </button>
-                    <button
-                      onClick={() => handleBulkAction('archive')}
-                      disabled={selectedApplications.length === 0}
-                      className={`px-3 py-1 rounded-md text-sm flex items-center gap-1 ${
-                        selectedApplications.length === 0
-                          ? 'bg-gray-100 text-gray-400 dark:bg-gray-800 dark:text-gray-500 cursor-not-allowed'
-                          : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'
-                      }`}
-                    >
-                      <Archive className="w-4 h-4" /> Archivieren
-                    </button>
                   </>
-                )}
-                {activeTab === 'archive' && (
-                  <button
-                    onClick={() => handleBulkAction('unarchive')}
-                    disabled={selectedApplications.length === 0}
-                    className={`px-3 py-1 rounded-md text-sm flex items-center gap-1 ${
-                      selectedApplications.length === 0
-                        ? 'bg-gray-100 text-gray-400 dark:bg-gray-800 dark:text-gray-500 cursor-not-allowed'
-                        : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'
-                    }`}
-                  >
-                    <RotateCcw className="w-4 h-4" /> Wiederherstellen
-                  </button>
-                )}
-              </div>
+                )} */}
+              {/* </div> */}
               </div>
             </div>
 
@@ -380,7 +463,8 @@ export default function Index({ applications, unreadCount }: { applications: App
             ) : (
               <div className="divide-y divide-gray-200 dark:divide-gray-700">
                 {/* Select All Checkbox */}
-                <div className="py-2 flex items-center">
+                <div className="py-2 flex items-center gap-3">
+                  <div className="flex gap-2 flex-wrap mb-4">
                   <button
                     onClick={toggleSelectAll}
                     className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300"
@@ -392,6 +476,59 @@ export default function Index({ applications, unreadCount }: { applications: App
                     )}
                     Alle auswählen
                   </button>
+                  </div>
+                  <div className="flex ml-4 gap-3 flex-wrap mb-4">
+
+                  {selectedApplications.length > 0 && (
+                    <div className="flex flex-row gap-2">
+                    {activeTab === 'applications' && (
+                        <div className="flex flex-row gap-2">
+                          <button
+                            onClick={() => handleBulkAction('markAsRead')}
+                            className="focus:outline-none cursor-pointer"
+                            title="Als gelesen markieren"
+                            >
+                            <MailOpen className="w-4 h-4 mr-2 cursor-pointer" />
+                          </button>
+                          <button
+                            onClick={() => handleBulkAction('markAsUnread')}
+                            className="focus:outline-none cursor-pointer"
+                            title="Als ungelesen markieren"
+                            >
+                            <Mail className="w-4 h-4 mr-2 cursor-pointer" />
+                          </button>
+                          <button
+                            onClick={() => handleBulkAction('archive')}
+                            className="focus:outline-none cursor-pointer"
+                            title="Archivieren"
+                            >
+                            <Archive className="w-4 h-4 mr-2 cursor-pointer" />
+                          </button>
+{/*
+                            <MailOpen className="w-4 h-4 mr-2 cursor-pointer" onClick={() => handleBulkAction('markAsRead')} />
+                            <Mail className="w-4 h-4 mr-2 cursor-pointer" onClick={() => handleBulkAction('markAsUnread')} />
+                            <Archive className="w-4 h-4 mr-2 cursor-pointer" onClick={() => handleBulkAction('archive')} /> */}
+                        </div>
+                        )
+                    }
+                     {activeTab === 'archive' && (
+                        <div className="flex flex-row gap-2">
+                          <button
+                            onClick={() => handleBulkAction('unarchive')}
+                            className="focus:outline-none cursor-pointer"
+                            title="Wiederherstellen"
+                            >
+                            <RotateCcw className="w-4 h-4 mr-2 cursor-pointer" />
+                          </button>
+                        </div>
+                        )
+                    }
+
+                    </div>
+                  )}
+
+                  {/* <ActionsDropdown /> */}
+                  </div>
                 </div>
 
                 {filteredApplications.map((application) => (
@@ -458,7 +595,7 @@ export default function Index({ applications, unreadCount }: { applications: App
                                   href={route('web.applications.approve', { id: application.id })}
                                   method="post"
                                   as="button"
-                                  className="p-1 rounded-full bg-green-100 text-green-800 hover:bg-green-200"
+                                  className="p-1 rounded-full bg-green-100 text-green-800 hover:bg-green-200 cursor-pointer"
                                   title="Annehmen"
                                   preserveState={false}
                                   onClick={() => application.is_unread && markAsRead(application.id)}
@@ -469,7 +606,7 @@ export default function Index({ applications, unreadCount }: { applications: App
                                   href={route('web.applications.reject', { id: application.id })}
                                   method="post"
                                   as="button"
-                                  className="p-1 rounded-full bg-red-100 text-red-800 hover:bg-red-200"
+                                  className="p-1 rounded-full bg-red-100 text-red-800 hover:bg-red-200 cursor-pointer"
                                   title="Ablehnen"
                                   preserveState={false}
                                   onClick={() => application.is_unread && markAsRead(application.id)}
@@ -486,7 +623,7 @@ export default function Index({ applications, unreadCount }: { applications: App
                                   href={route('web.applications.reject', { id: application.id })}
                                   method="post"
                                   as="button"
-                                  className="p-1 rounded-full bg-red-100 text-red-800 hover:bg-red-200"
+                                  className="p-1 rounded-full bg-red-100 text-red-800 hover:bg-red-200 cursor-pointer"
                                   title="Ablehnen"
                                   preserveState={false}
                                   onClick={() => application.is_unread && markAsRead(application.id)}
@@ -503,7 +640,7 @@ export default function Index({ applications, unreadCount }: { applications: App
                                   href={route('web.applications.approve', { id: application.id })}
                                   method="post"
                                   as="button"
-                                  className="p-1 rounded-full bg-green-100 text-green-800 hover:bg-green-200"
+                                  className="p-1 rounded-full bg-green-100 text-green-800 hover:bg-green-200 cursor-pointer"
                                   title="Annehmen"
                                   preserveState={false}
                                   onClick={() => application.is_unread && markAsRead(application.id)}
@@ -520,7 +657,7 @@ export default function Index({ applications, unreadCount }: { applications: App
                                   href={route('web.applications.retract', { id: application.id })}
                                   method="post"
                                   as="button"
-                                  className="p-1 rounded-full bg-gray-100 text-gray-800 hover:bg-gray-200"
+                                  className="p-1 rounded-full bg-gray-100 text-gray-800 hover:bg-gray-200 cursor-pointer"
                                   title="Zurückziehen"
                                   preserveState={false}
                                   onClick={() => application.is_unread && markAsRead(application.id)}
@@ -537,7 +674,7 @@ export default function Index({ applications, unreadCount }: { applications: App
                                   href={route('web.applications.reapply', { id: application.id })}
                                   method="post"
                                   as="button"
-                                  className="p-1 rounded-full bg-blue-100 text-blue-800 hover:bg-blue-200"
+                                  className="p-1 rounded-full bg-blue-100 text-blue-800 hover:bg-blue-200 cursor-pointer"
                                   title="Antrag erneut stellen"
                                   preserveState={false}
                                   onClick={() => application.is_unread && markAsRead(application.id)}
@@ -556,7 +693,7 @@ export default function Index({ applications, unreadCount }: { applications: App
                                   href={route('web.applications.archive', { id: application.id })}
                                   method="post"
                                   as="button"
-                                  className="p-1 rounded-full bg-gray-100 text-gray-800 hover:bg-gray-200"
+                                  className="p-1 rounded-full bg-gray-100 text-gray-800 hover:bg-gray-200 cursor-pointer"
                                   title="Archivieren"
                                   preserveState={false}
                                   onClick={() => application.is_unread && markAsRead(application.id)}
@@ -571,7 +708,7 @@ export default function Index({ applications, unreadCount }: { applications: App
                                   href={route('web.applications.unarchive', { id: application.id })}
                                   method="post"
                                   as="button"
-                                  className="p-1 rounded-full bg-gray-100 text-gray-800 hover:bg-gray-200"
+                                  className="p-1 rounded-full bg-gray-100 text-gray-800 hover:bg-gray-200 cursor-pointer"
                                   title="Wiederherstellen"
                                   preserveState={false}
                                   onClick={() => application.is_unread && markAsRead(application.id)}
