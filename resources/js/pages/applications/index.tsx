@@ -348,7 +348,7 @@ export default function Index({ applications, unreadCount }: { applications: App
           </div>
 
           <div className="p-6">
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex justify-between items-center mb-3">
               <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
                 {activeTab === 'applications' ? 'Nachrichten' : 'Archiv'}
                 {unreadCount > 0 && activeTab === 'applications' &&
@@ -366,7 +366,7 @@ export default function Index({ applications, unreadCount }: { applications: App
             </div>
 
             {/* Filter-Bereich */}
-            <div className={`transition-all duration-300 overflow-hidden mb-6 ${showFilters ? 'max-h-96' : 'max-h-0'}`}>
+            <div className={`transition-all duration-300 overflow-hidden mb-3 ${showFilters ? 'max-h-96' : 'max-h-0'}`}>
               <div className="flex flex-col md:flex-row gap-4 p-4 border rounded-lg">
                 {/* Sender/Empfänger Filter */}
                 <div className="flex flex-col gap-2">

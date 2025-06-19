@@ -33,7 +33,7 @@ class ApplicationController extends Controller
 
             // Bestimme, ob die Bewerbung archiviert ist
             $isArchived = $isApplicant ? $application->is_archived_by_applicant : $application->is_archived_by_owner;
-            
+
             return [
                 'id' => $application->id,
                 'offer_id' => $application->offer_id,
@@ -197,9 +197,9 @@ class ApplicationController extends Controller
             abort(403, 'Unbefugter Zugriff.');
         }
 
-        // Prüfe, ob die Bewerbung noch ausstehend ist
-        if ($application->status !== 'pending') {
-            return redirect()->back()->with('error', 'Diese Bewerbung wurde bereits bearbeitet.');
+        // Prüfe, ob die Bewerbung ausstehend oder abgelehnt ist
+        if ($application->status !== 'pending' && $application->status !== 'rejected') {
+            return redirect()->back()->with('error', 'Diese Bewerbung kann nicht genehmigt werden.');
         }
 
         // Aktualisiere den Status
@@ -207,12 +207,12 @@ class ApplicationController extends Controller
             'status' => 'approved',
             'responded_at' => now(),
         ]);
-        
-        // Setze den Offer-Status auf 'matched'
-        $offer->update(['status' => 'matched']);
 
         // Erstelle ein UserMatch
         $offer = $application->offer;
+
+        // Setze den Offer-Status auf 'matched'
+        $offer->update(['status' => 'matched']);
 
         // Finde oder erstelle einen AffiliateLink
         $affiliateLink = \App\Models\AffiliateLink::firstOrCreate(
@@ -250,7 +250,7 @@ class ApplicationController extends Controller
         }
 
         // Prüfe, ob die Bewerbung noch ausstehend ist
-        if ($application->status !== 'pending') {
+        if ($application->status !== 'pending' && $application->status !== 'approved') {
             return redirect()->back()->with('error', 'Diese Bewerbung wurde bereits bearbeitet.');
         }
 
@@ -263,7 +263,7 @@ class ApplicationController extends Controller
         return redirect()->route('web.applications.index')
             ->with('success', 'Bewerbung abgelehnt.');
     }
-    
+
     /**
      * Mark the application as read.
      */
@@ -286,7 +286,7 @@ class ApplicationController extends Controller
 
         return response()->json(['success' => true]);
     }
-    
+
     /**
      * Toggle the read status of the application.
      */
@@ -309,7 +309,7 @@ class ApplicationController extends Controller
 
         return response()->json(['success' => true]);
     }
-    
+
     /**
      * Reapply the application.
      */
@@ -338,7 +338,7 @@ class ApplicationController extends Controller
         return redirect()->route('web.applications.index')
             ->with('success', 'Bewerbung erneut gestellt.');
     }
-    
+
     /**
      * Archive the application.
      */
@@ -380,7 +380,7 @@ class ApplicationController extends Controller
         return redirect()->route('web.applications.index')
             ->with('success', 'Bewerbung archiviert.');
     }
-    
+
     /**
      * Unarchive the application.
      */
