@@ -5,6 +5,7 @@ import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, Sid
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { /*BookOpen, Folder,*/ LayoutGrid, ListTodo, CirclePlus, Mail } from 'lucide-react';
+
 import AppLogo from './app-logo';
 // import { cn } from '@/lib/utils';
 // import { route } from '@/lib/ziggy';
@@ -48,7 +49,7 @@ const footerNavItems: NavItem[] = [
 export function AppSidebar() {
     const { props } = usePage();
     const unreadCount = props.unreadApplicationsCount || 0;
-    
+
     // Füge Badge zum Nachrichten-Menüpunkt hinzu
     const navItemsWithBadges = mainNavItems.map(item => {
         if (item.title === 'Nachrichten') {
@@ -59,7 +60,7 @@ export function AppSidebar() {
         }
         return item;
     });
-    
+
     return (
         <Sidebar collapsible="icon" variant="sidebar">
             <SidebarHeader>

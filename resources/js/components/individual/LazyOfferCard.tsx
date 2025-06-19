@@ -1,6 +1,6 @@
 import { useInView } from 'react-intersection-observer';
 import { OfferCard } from './OfferCard';
-import { Offer } from '@/pages/offers';
+import { Offer } from '@/pages/offers/index';
 
 interface LazyOfferCardProps {
   offer: Offer;

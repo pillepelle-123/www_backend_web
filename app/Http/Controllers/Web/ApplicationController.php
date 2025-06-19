@@ -129,7 +129,7 @@ class ApplicationController extends Controller
             'responded_at' => now(),
         ]);
 
-        return redirect()->route('web.offers.show', $application->offer_id)
+        return redirect()->route('web.applications.index')
             ->with('success', 'Bewerbung zurückgezogen.');
     }
 
@@ -203,6 +203,9 @@ class ApplicationController extends Controller
             'status' => 'approved',
             'responded_at' => now(),
         ]);
+        
+        // Setze den Offer-Status auf 'matched'
+        $offer->update(['status' => 'matched']);
 
         // Erstelle ein UserMatch
         $offer = $application->offer;
@@ -225,7 +228,7 @@ class ApplicationController extends Controller
             'success_status' => 'pending',
         ]);
 
-        return redirect()->route('web.applications.show', $application->id)
+        return redirect()->route('web.applications.index')
             ->with('success', 'Bewerbung erfolgreich genehmigt.');
     }
 
@@ -253,7 +256,7 @@ class ApplicationController extends Controller
             'responded_at' => now(),
         ]);
 
-        return redirect()->route('web.applications.show', $application->id)
+        return redirect()->route('web.applications.index')
             ->with('success', 'Bewerbung abgelehnt.');
     }
 }

@@ -3,7 +3,8 @@ import { type BreadcrumbItem } from '@/types';
 import { Head, Link } from '@inertiajs/react';
 import { Offer } from './index';
 import { useState } from 'react';
-import { Building2, Star, StarHalf, UserRound, UsersRound } from 'lucide-react';
+import { Building2, Star, StarHalf, UserRound, UsersRound, CheckCircle } from 'lucide-react';
+import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import { createPortal } from 'react-dom';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -81,7 +82,19 @@ export default function Show({ offer }: { offer: Offer }) {
       <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
         <div className="container mx-auto p-4">
           <div className="max-w-4xl mx-auto">
-            <div className="bg-white dark:bg-white/10 rounded-xl shadow-lg overflow-hidden relative">
+            <div className={`bg-white dark:bg-white/10 rounded-xl shadow-lg overflow-hidden relative ${offer.status === 'matched' ? 'opacity-75' : ''}`}>
+              {offer.status === 'matched' && (
+                <>
+                  <div className="absolute inset-0 z-0">
+                    <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
+                  </div>
+                  <div className="absolute top-4 left-4 z-10">
+                    <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
+                      <CheckCircle className="w-4 h-4" /> Matched
+                    </span>
+                  </div>
+                </>
+              )}
               {offer.logo_path && (
                 <div className="absolute right-0 top-0 w-[50%] pointer-events-none">
                   <div className="relative w-full h-full">
@@ -182,13 +195,23 @@ export default function Show({ offer }: { offer: Offer }) {
                     </Link>
                     
                     {/* Zeige den Anfragen-Button, wenn der Benutzer keine aktive Anfrage hat oder die Anfrage zurückgezogen wurde */}
-                    {(!offer.has_application || offer.application_status === 'retracted') && !offer.is_owner && (
+                    {(!offer.has_application || offer.application_status === 'retracted') && !offer.is_owner && offer.status !== 'matched' && (
                       <Link
                         href={route('web.offers.applications.create', { offer_id: offer.id })}
                         className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
                       >
                         Anfragen
                       </Link>
+                    )}
+                    
+                    {/* Deaktivierter Button für gematchte Angebote */}
+                    {offer.status === 'matched' && !offer.is_owner && !offer.has_application && (
+                      <button
+                        disabled
+                        className="inline-flex items-center px-6 py-3 bg-gray-400 text-white rounded-lg cursor-not-allowed opacity-70"
+                      >
+                        Anfragen
+                      </button>
                     )}
                     
                     {/* Zeige den Zurückziehen-Button, wenn der Benutzer eine Anfrage gestellt hat */}
@@ -218,6 +241,16 @@ export default function Show({ offer }: { offer: Offer }) {
                         >
                           Zur Anfrage
                         </Link>
+                      </div>
+                    )}
+                    
+                    {/* Zeige einen Hinweis für gematchte Angebote */}
+                    {offer.status === 'matched' && (
+                      <div className="mt-4 p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+                        <p className="text-sm text-purple-800 dark:text-purple-200">
+                          Dieses Angebot wurde bereits erfolgreich gematcht.
+                          {offer.has_application && offer.application_status === 'approved' && " Sie sind Teil dieses Matches!"}
+                        </p>
                       </div>
                     )}
                   </div>

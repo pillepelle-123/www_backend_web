@@ -27,7 +27,12 @@ export type Offer = {
   reward_offerer_percent: number;
   created_at: string;
   average_rating: number;
-  status: "active" | "inactive" | "closed" | 'matched';
+  status: "draft" | "live" | "hidden" | "matched" | "deleted";
+  has_application?: boolean;
+  application_status?: string;
+  application_id?: number;
+  is_owner?: boolean;
+  in_match?: boolean;
 };
 
 export default function Index({ offers: initialOffers, pagination: initialPagination }) {

@@ -154,11 +154,9 @@ export default function Index({ applications, unreadCount }: { applications: App
             ) : (
               <div className="divide-y divide-gray-200 dark:divide-gray-700">
                 {filteredApplications.map((application) => (
-                  <Link
+                  <div 
                     key={application.id}
-                    href={`/applications/${application.id}`}
                     className={`block py-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors ${application.is_unread ? 'bg-blue-50 dark:bg-blue-900/20' : ''}`}
-                    preserveState={false}
                   >
                     <div className="flex items-center gap-3">
                       <div className="flex-shrink-0">
@@ -170,9 +168,13 @@ export default function Index({ applications, unreadCount }: { applications: App
                       </div>
                       <div className="min-w-0 flex-1">
                         <div className="flex justify-between text-sm">
-                          <p className="font-medium text-gray-900 dark:text-white truncate">
+                          <Link
+                            href={`/applications/${application.id}`}
+                            className="font-medium text-gray-900 dark:text-white truncate hover:underline"
+                            preserveState={false}
+                          >
                             {application.title}
-                          </p>
+                          </Link>
                           <p className="text-gray-500 dark:text-gray-400">
                             {formatDate(application.created_at)}
                           </p>
@@ -186,48 +188,50 @@ export default function Index({ applications, unreadCount }: { applications: App
                             
                             {/* Aktions-Buttons für Empfänger */}
                             {!application.is_applicant && application.status === 'pending' && (
-                              <div className="flex gap-1">
-                                <form action={route('web.applications.approve', { id: application.id })} method="POST" className="inline">
-                                  <input type="hidden" name="_token" value={document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''} />
-                                  <button
-                                    type="submit"
-                                    className="p-1 rounded-full bg-green-100 text-green-800 hover:bg-green-200"
-                                    title="Annehmen"
-                                  >
-                                    <CheckCircle className="w-4 h-4" />
-                                  </button>
-                                </form>
-                                <form action={route('web.applications.reject', { id: application.id })} method="POST" className="inline">
-                                  <input type="hidden" name="_token" value={document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''} />
-                                  <button
-                                    type="submit"
-                                    className="p-1 rounded-full bg-red-100 text-red-800 hover:bg-red-200"
-                                    title="Ablehnen"
-                                  >
-                                    <Ban className="w-4 h-4" />
-                                  </button>
-                                </form>
+                              <div className="flex gap-1 z-10 relative">
+                                <Link
+                                  href={route('web.applications.approve', { id: application.id })}
+                                  method="post"
+                                  as="button"
+                                  className="p-1 rounded-full bg-green-100 text-green-800 hover:bg-green-200"
+                                  title="Annehmen"
+                                  preserveState={false}
+                                >
+                                  <CheckCircle className="w-4 h-4" />
+                                </Link>
+                                <Link
+                                  href={route('web.applications.reject', { id: application.id })}
+                                  method="post"
+                                  as="button"
+                                  className="p-1 rounded-full bg-red-100 text-red-800 hover:bg-red-200"
+                                  title="Ablehnen"
+                                  preserveState={false}
+                                >
+                                  <Ban className="w-4 h-4" />
+                                </Link>
                               </div>
                             )}
                             
                             {/* Zurückziehen-Button für Absender */}
                             {application.is_applicant && application.status === 'pending' && (
-                              <form action={route('web.applications.retract', { id: application.id })} method="POST" className="inline">
-                                <input type="hidden" name="_token" value={document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''} />
-                                <button
-                                  type="submit"
+                              <div className="z-10 relative">
+                                <Link
+                                  href={route('web.applications.retract', { id: application.id })}
+                                  method="post"
+                                  as="button"
                                   className="p-1 rounded-full bg-gray-100 text-gray-800 hover:bg-gray-200"
                                   title="Zurückziehen"
+                                  preserveState={false}
                                 >
                                   <XCircle className="w-4 h-4" />
-                                </button>
-                              </form>
+                                </Link>
+                              </div>
                             )}
                           </div>
                         </div>
                       </div>
                     </div>
-                  </Link>
+                  </div>
                 ))}
               </div>
             )}

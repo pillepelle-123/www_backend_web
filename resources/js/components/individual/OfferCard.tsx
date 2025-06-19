@@ -1,6 +1,7 @@
 import { Link } from '@inertiajs/react';
 import { Offer } from '@/pages/offers';
-import { UserRound, UsersRound, Building2, Star, StarHalf } from 'lucide-react';
+import { UserRound, UsersRound, Building2, Star, StarHalf, CheckCircle } from 'lucide-react';
+import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 
@@ -99,7 +100,19 @@ export function OfferCard({ offer }: OfferCardProps) {
   }
 
   return (
-    <div className="bg-white dark:bg-white/10 rounded-xl shadow-lg hover:shadow-lg transition-shadow duration-300 relative overflow-visible">
+    <div className={`bg-white dark:bg-white/10 rounded-xl shadow-lg hover:shadow-lg transition-shadow duration-300 relative overflow-visible ${offer.status === 'matched' ? 'opacity-75' : ''}`}>
+      {offer.status === 'matched' && (
+        <div className="absolute inset-0 z-0">
+          <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
+        </div>
+      )}
+      {offer.status === 'matched' && (
+        <div className="absolute -top-2 -left-2 z-10">
+          <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+            <CheckCircle className="w-3 h-3" /> Matched
+          </span>
+        </div>
+      )}
       {offer.logo_path && (
         <div className="absolute right-0 top-0 w-[50%] pointer-events-none">
           <div className="relative w-full h-full">
@@ -220,7 +233,7 @@ export function OfferCard({ offer }: OfferCardProps) {
                 </Link>
               </div>
             </div>
-            
+
             {/* Zeige einen Badge an, wenn der Benutzer eine aktive Anfrage gestellt hat */}
             {offer.has_application && offer.application_status !== 'retracted' && (
               <div className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">

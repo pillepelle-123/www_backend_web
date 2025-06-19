@@ -169,7 +169,7 @@ class OfferController extends Controller
             'reward_total_cents' => $validated['reward_total_cents'],
             'reward_offerer_percent' => $validated['reward_offerer_percent'],
             'user_id' => Auth::id(),
-            'status' => 'active',
+            'status' => 'live',
             'offered_by_type' => $validated['offered_by_type'],
         ]);
 
