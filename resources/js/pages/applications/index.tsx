@@ -35,10 +35,10 @@ export default function Index({ applications, unreadCount }: { applications: App
       if (filter === 'sent' && !app.is_applicant) return false;
       if (filter === 'received' && app.is_applicant) return false;
     }
-    
+
     // Filter nach Status
     if (statusFilter !== 'all' && app.status !== statusFilter) return false;
-    
+
     return true;
   });
 
@@ -154,7 +154,7 @@ export default function Index({ applications, unreadCount }: { applications: App
             ) : (
               <div className="divide-y divide-gray-200 dark:divide-gray-700">
                 {filteredApplications.map((application) => (
-                  <div 
+                  <div
                     key={application.id}
                     className={`block py-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors ${application.is_unread ? 'bg-blue-50 dark:bg-blue-900/20' : ''}`}
                   >
@@ -185,7 +185,7 @@ export default function Index({ applications, unreadCount }: { applications: App
                           </p>
                           <div className="flex items-center gap-2">
                             {getStatusBadge(application.status)}
-                            
+
                             {/* Aktions-Buttons für Empfänger */}
                             {!application.is_applicant && application.status === 'pending' && (
                               <div className="flex gap-1 z-10 relative">
@@ -211,7 +211,7 @@ export default function Index({ applications, unreadCount }: { applications: App
                                 </Link>
                               </div>
                             )}
-                            
+
                             {/* Zurückziehen-Button für Absender */}
                             {application.is_applicant && application.status === 'pending' && (
                               <div className="z-10 relative">

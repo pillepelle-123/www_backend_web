@@ -1,7 +1,6 @@
 import { Link } from '@inertiajs/react';
 import { Offer } from '@/pages/offers';
 import { UserRound, UsersRound, Building2, Star, StarHalf, CheckCircle } from 'lucide-react';
-import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 
@@ -100,12 +99,8 @@ export function OfferCard({ offer }: OfferCardProps) {
   }
 
   return (
-    <div className={`bg-white dark:bg-white/10 rounded-xl shadow-lg hover:shadow-lg transition-shadow duration-300 relative overflow-visible ${offer.status === 'matched' ? 'opacity-75' : ''}`}>
-      {offer.status === 'matched' && (
-        <div className="absolute inset-0 z-0">
-          <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-        </div>
-      )}
+    <div className={`bg-white dark:bg-white/10 rounded-xl shadow-lg hover:shadow-lg transition-shadow duration-300 relative overflow-visible`}>
+
       {offer.status === 'matched' && (
         <div className="absolute -top-2 -left-2 z-10">
           <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
@@ -127,7 +122,11 @@ export function OfferCard({ offer }: OfferCardProps) {
           </div>
         </div>
       )}
-      <div className="p-6 relative">
+      <div className={`p-6 relative ${offer.status === 'matched' ? 'opacity-60' : ''}`}>
+
+
+
+
       <div className="w-[75%] items-start text-xs mb-4">{offer?.created_at ? formatDateTime(offer.created_at) : ''}
         </div>
         <div className="flex justify-between w-[75%] items-start  min-h-26">
