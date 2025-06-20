@@ -45,30 +45,30 @@ export default function Create({ offer, auth }: { offer: Offer, auth?: { user: {
                 <h1 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
                   Anfrage für: {offer.title}
                 </h1>
-                
+
                 <div className="mb-6">
                   <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300 mb-2">
-                    <span className="font-medium">Angebot von:</span> 
+                    <span className="font-medium">Angebot von:</span>
                     <span>{offer.offer_user}</span>
                   </div>
                   <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300 mb-2">
-                    <span className="font-medium">Unternehmen:</span> 
+                    <span className="font-medium">Unternehmen:</span>
                     <span>{offer.offer_company}</span>
                   </div>
-                  {offer.offered_by_type && (
+                  {offer.offerer_type && (
                     <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
-                      <span className="font-medium">Typ:</span> 
-                      <span>{offer.offered_by_type}</span>
+                      <span className="font-medium">Typ:</span>
+                      <span>{offer.offerer_type}</span>
                     </div>
                   )}
                 </div>
-                
+
                 <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 mb-6">
                   <p className="text-gray-600 dark:text-gray-300 text-sm">
                     Sie sind dabei, eine Anfrage für dieses Angebot zu stellen. Der Anbieter wird benachrichtigt und kann Ihre Anfrage annehmen oder ablehnen.
                   </p>
                 </div>
-                
+
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div>
                     <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -87,7 +87,7 @@ export default function Create({ offer, auth }: { offer: Offer, auth?: { user: {
                       <p className="mt-1 text-sm text-red-600">{errors.message}</p>
                     )}
                   </div>
-                  
+
                   <div className="flex justify-between pt-4">
                     <a
                       href={`/offers/${offer.id}`}

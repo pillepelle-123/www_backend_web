@@ -2,7 +2,7 @@ export type Offer = {
   id: number;
   title: string;
   description: string;
-  offered_by_type: string;
+  offerer_type: string;
   offer_user: string;
   offer_company: string;
   logo_path: string;

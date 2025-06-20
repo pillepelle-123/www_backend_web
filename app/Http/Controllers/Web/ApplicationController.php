@@ -19,21 +19,31 @@ class ApplicationController extends Controller
     {
         $user = Auth::user();
 
-        $applications = Application::where(function ($query) use ($user) {
-            $query->where('applicant_id', $user->id)
-                  ->orWhere('offer_owner_id', $user->id);
-        })
-        ->with(['offer', 'applicant', 'offerOwner'])
-        ->latest()
-        ->get()
-        ->map(function ($application) use ($user) {
-            $isApplicant = $application->applicant_id === $user->id;
-            $otherUser = $isApplicant ? $application->offerOwner->name : $application->applicant->name;
-            $isUnread = $isApplicant ? !$application->is_read_by_applicant : !$application->is_read_by_owner;
+        $applications = Application::join('offers', 'applications.offer_id', '=', 'offers.id')
+            ->where(function ($query) use ($user) {
+                $query->where('applications.applicant_id', $user->id)
+                      ->orWhere('offers.offerer_id', $user->id);
+            })
+            ->with(['offer.offerer', 'offer.company', 'applicant'])
+            ->select('applications.*')
+            ->latest('applications.created_at')
+            ->get()
+            ->map(function ($application) use ($user) {
+                $isApplicant = $application->applicant_id === $user->id;
+                $otherUser = $isApplicant ? $application->offer->offerer->name : $application->applicant->name;
+                $isUnread = $isApplicant ? !$application->is_read_by_applicant : !$application->is_read_by_owner;
 
-            // Bestimme, ob die Bewerbung archiviert ist
-            $isArchived = $isApplicant ? $application->is_archived_by_applicant : $application->is_archived_by_owner;
+                // Bestimme, ob die Bewerbung archiviert ist
+                $isArchived = $isApplicant ? $application->is_archived_by_applicant : $application->is_archived_by_owner;
 
+                // Bestimme Referrer/Referred basierend auf offerer_type
+                $userRole = null;
+                if ($application->offer->offerer_type === 'referrer') {
+                    $userRole = $isApplicant ? 'referred' : 'referrer';
+                } else {
+                    $userRole = $isApplicant ? 'referrer' : 'referred';
+                }
+            
             return [
                 'id' => $application->id,
                 'offer_id' => $application->offer_id,
@@ -47,6 +57,7 @@ class ApplicationController extends Controller
                 'is_applicant' => $isApplicant,
                 'is_archived' => $isArchived,
                 'other_user' => $otherUser,
+                'user_role' => $userRole,
             ];
         });
 
@@ -65,7 +76,7 @@ class ApplicationController extends Controller
     public function create($offer_id)
     {
         // Finde das Angebot
-        $offer = Offer::with(['company', 'user'])->findOrFail($offer_id);
+        $offer = Offer::with(['company', 'offerer'])->findOrFail($offer_id);
 
         return Inertia::render('offers/applications/create', [
             'offer' => [
@@ -73,8 +84,8 @@ class ApplicationController extends Controller
                 'title' => $offer->title,
                 'description' => $offer->description,
                 'offer_company' => $offer->company ? $offer->company->name : null,
-                'offer_user' => $offer->user ? $offer->user->name : null,
-                'offered_by_type' => $offer->offered_by_type == 'referrer' ? 'Werbender' : 'Beworbener',
+                'offer_user' => $offer->offerer ? $offer->offerer->name : null,
+                'offerer_type' => $offer->offerer_type == 'referrer' ? 'Werbender' : 'Beworbener',
             ],
         ]);
     }
@@ -103,7 +114,6 @@ class ApplicationController extends Controller
         $application = Application::create([
             'offer_id' => $offer->id,
             'applicant_id' => Auth::id(),
-            'offer_owner_id' => $offer->user_id,
             'message' => $validated['message'] ?? null,
             'status' => 'pending',
             'is_read_by_applicant' => true,
@@ -133,6 +143,15 @@ class ApplicationController extends Controller
             'responded_at' => now(),
         ]);
 
+        // Aktualisiere UserMatch falls vorhanden
+        $userMatch = UserMatch::where('application_id', $application->id)->first();
+        if ($userMatch) {
+            $userMatch->update([
+                'status' => 'closed',
+                'success_status' => 'unsuccessful',
+            ]);
+        }
+
         return redirect()->route('web.applications.index')
             ->with('success', 'Bewerbung zurückgezogen.');
     }
@@ -147,19 +166,28 @@ class ApplicationController extends Controller
         $application = Application::findOrFail($id);
 
         // Prüfe, ob der Benutzer berechtigt ist, diese Bewerbung zu sehen
-        if ($user->id !== $application->applicant_id && $user->id !== $application->offer_owner_id) {
+        if ($user->id !== $application->applicant_id && $user->id !== $application->offer->offerer_id) {
             abort(403, 'Unbefugter Zugriff.');
         }
 
         // Markiere als gelesen
         if ($user->id === $application->applicant_id && !$application->is_read_by_applicant) {
             $application->update(['is_read_by_applicant' => true]);
-        } elseif ($user->id === $application->offer_owner_id && !$application->is_read_by_owner) {
+        } elseif ($user->id === $application->offer->offerer_id && !$application->is_read_by_owner) {
             $application->update(['is_read_by_owner' => true]);
         }
 
-        $application->load(['offer.company', 'applicant', 'offerOwner']);
+        $application->load(['offer.company', 'offer.offerer', 'applicant']);
 
+        // Bestimme Referrer/Referred basierend auf offerer_type
+        $isApplicant = $user->id === $application->applicant_id;
+        $userRole = null;
+        if ($application->offer->offerer_type === 'referrer') {
+            $userRole = $isApplicant ? 'referred' : 'referrer';
+        } else {
+            $userRole = $isApplicant ? 'referrer' : 'referred';
+        }
+        
         return Inertia::render('applications/show', [
             'application' => [
                 'id' => $application->id,
@@ -171,14 +199,15 @@ class ApplicationController extends Controller
                 'status' => $application->status,
                 'created_at' => $application->created_at->format('Y-m-d H:i:s'),
                 'responded_at' => $application->responded_at ? $application->responded_at->format('Y-m-d H:i:s') : null,
-                'is_applicant' => $user->id === $application->applicant_id,
+                'is_applicant' => $isApplicant,
+                'user_role' => $userRole,
                 'applicant' => [
                     'id' => $application->applicant->id,
                     'name' => $application->applicant->name,
                 ],
                 'offer_owner' => [
-                    'id' => $application->offerOwner->id,
-                    'name' => $application->offerOwner->name,
+                    'id' => $application->offer->offerer->id,
+                    'name' => $application->offer->offerer->name,
                 ],
             ],
         ]);
@@ -193,7 +222,7 @@ class ApplicationController extends Controller
         $application = Application::findOrFail($id);
 
         // Prüfe, ob der Benutzer der Angebotseigentümer ist
-        if ($user->id !== $application->offer_owner_id) {
+        if ($user->id !== $application->offer->offerer_id) {
             abort(403, 'Unbefugter Zugriff.');
         }
 
@@ -208,29 +237,38 @@ class ApplicationController extends Controller
             'responded_at' => now(),
         ]);
 
-        // Erstelle ein UserMatch
-        $offer = $application->offer;
+        // Prüfe ob bereits ein UserMatch existiert
+        $userMatch = UserMatch::where('application_id', $application->id)->first();
+        
+        if ($userMatch) {
+            // Reaktiviere existierenden UserMatch
+            $userMatch->update([
+                'status' => 'opened',
+                'success_status' => 'pending',
+            ]);
+        } else {
+            // Erstelle neuen UserMatch
+            $offer = $application->offer;
 
-        // Setze den Offer-Status auf 'matched'
-        $offer->update(['status' => 'matched']);
+            // Setze den Offer-Status auf 'matched'
+            $offer->update(['status' => 'matched']);
 
-        // Finde oder erstelle einen AffiliateLink
-        $affiliateLink = \App\Models\AffiliateLink::firstOrCreate(
-            ['company_id' => $offer->company_id],
-            [
-                'url' => $offer->company->referral_program_url ?? null,
-                'admin_status' => 'active'
-            ]
-        );
+            // Finde oder erstelle einen AffiliateLink
+            $affiliateLink = \App\Models\AffiliateLink::firstOrCreate(
+                ['company_id' => $offer->company_id],
+                [
+                    'url' => $offer->company->referral_program_url ?? null,
+                    'admin_status' => 'active'
+                ]
+            );
 
-        UserMatch::create([
-            'offer_id' => $offer->id,
-            'user_referrer_id' => $application->offer_owner_id,
-            'user_referred_id' => $application->applicant_id,
-            'affiliate_link_id' => $affiliateLink->id,
-            'status' => 'opened',
-            'success_status' => 'pending',
-        ]);
+            UserMatch::create([
+                'application_id' => $application->id,
+                'affiliate_link_id' => $affiliateLink->id,
+                'status' => 'opened',
+                'success_status' => 'pending',
+            ]);
+        }
 
         return redirect()->route('web.applications.index')
             ->with('success', 'Bewerbung erfolgreich genehmigt.');
@@ -245,7 +283,7 @@ class ApplicationController extends Controller
         $application = Application::findOrFail($id);
 
         // Prüfe, ob der Benutzer der Angebotseigentümer ist
-        if ($user->id !== $application->offer_owner_id) {
+        if ($user->id !== $application->offer->offerer_id) {
             abort(403, 'Unbefugter Zugriff.');
         }
 
@@ -260,6 +298,15 @@ class ApplicationController extends Controller
             'responded_at' => now(),
         ]);
 
+        // Aktualisiere UserMatch falls vorhanden
+        $userMatch = UserMatch::where('application_id', $application->id)->first();
+        if ($userMatch) {
+            $userMatch->update([
+                'status' => 'closed',
+                'success_status' => 'unsuccessful',
+            ]);
+        }
+
         return redirect()->route('web.applications.index')
             ->with('success', 'Bewerbung abgelehnt.');
     }
@@ -273,7 +320,7 @@ class ApplicationController extends Controller
         $application = Application::findOrFail($id);
 
         // Prüfe, ob der Benutzer berechtigt ist
-        if ($user->id !== $application->applicant_id && $user->id !== $application->offer_owner_id) {
+        if ($user->id !== $application->applicant_id && $user->id !== $application->offer->offerer_id) {
             abort(403, 'Unbefugter Zugriff.');
         }
 
@@ -296,7 +343,7 @@ class ApplicationController extends Controller
         $application = Application::findOrFail($id);
 
         // Prüfe, ob der Benutzer berechtigt ist
-        if ($user->id !== $application->applicant_id && $user->id !== $application->offer_owner_id) {
+        if ($user->id !== $application->applicant_id && $user->id !== $application->offer->offerer_id) {
             abort(403, 'Unbefugter Zugriff.');
         }
 
@@ -348,7 +395,7 @@ class ApplicationController extends Controller
         $application = Application::findOrFail($id);
 
         // Prüfe, ob der Benutzer berechtigt ist
-        if ($user->id !== $application->applicant_id && $user->id !== $application->offer_owner_id) {
+        if ($user->id !== $application->applicant_id && $user->id !== $application->offer->offerer_id) {
             abort(403, 'Unbefugter Zugriff.');
         }
 
@@ -361,6 +408,15 @@ class ApplicationController extends Controller
                     'responded_at' => now(),
                     'is_archived_by_applicant' => true,
                 ]);
+                
+                // Aktualisiere UserMatch falls vorhanden
+                $userMatch = UserMatch::where('application_id', $application->id)->first();
+                if ($userMatch) {
+                    $userMatch->update([
+                        'status' => 'closed',
+                        'success_status' => 'unsuccessful',
+                    ]);
+                }
             } else {
                 $application->update(['is_archived_by_applicant' => true]);
             }
@@ -372,6 +428,15 @@ class ApplicationController extends Controller
                     'responded_at' => now(),
                     'is_archived_by_owner' => true,
                 ]);
+                
+                // Aktualisiere UserMatch falls vorhanden
+                $userMatch = UserMatch::where('application_id', $application->id)->first();
+                if ($userMatch) {
+                    $userMatch->update([
+                        'status' => 'closed',
+                        'success_status' => 'unsuccessful',
+                    ]);
+                }
             } else {
                 $application->update(['is_archived_by_owner' => true]);
             }
@@ -390,7 +455,7 @@ class ApplicationController extends Controller
         $application = Application::findOrFail($id);
 
         // Prüfe, ob der Benutzer berechtigt ist
-        if ($user->id !== $application->applicant_id && $user->id !== $application->offer_owner_id) {
+        if ($user->id !== $application->applicant_id && $user->id !== $application->offer->offerer_id) {
             abort(403, 'Unbefugter Zugriff.');
         }
 

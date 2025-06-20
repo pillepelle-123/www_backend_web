@@ -90,8 +90,8 @@ export function DataTable<TData, TValue>({
           />
             {table.getColumn("status") && (
                 <DataTableFacetedFilter
-                    column={table.getColumn("offered_by_type")}
-                    title="Filter Offered by"
+                    column={table.getColumn("offerer_type")}
+                    title="Filter Offerer Type"
                     options={[
                         { label: 'Referrer', value: 'referrer' },
                         { label: 'Referred', value: 'referred' }

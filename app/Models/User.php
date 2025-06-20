@@ -65,7 +65,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function offers()
     {
-        return $this->hasMany(Offer::class, 'user_id');
+        return $this->hasMany(Offer::class, 'offerer_id');
     }
 
     public function isAdmin(): bool

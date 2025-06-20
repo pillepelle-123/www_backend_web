@@ -27,11 +27,11 @@ class OfferRequest extends FormRequest
     {
         return [
             'id' => 'sometimes|integer|exists:offers,id',
-            'offered_by_type' => [
+            'offerer_type' => [
                 'required',
                 Rule::in(['referrer', 'referred'])
             ],
-            'user_id' => 'required|exists:users,id',
+            'offerer_id' => 'required|exists:users,id',
             'company_id' => 'required|exists:companies,id',
             'title' => 'required|string|max:255',
             'description' => 'required|string|max:5000',
@@ -57,8 +57,8 @@ class OfferRequest extends FormRequest
     {
         return [
             'id' => 'Angebot ID',
-            'user_id' => 'Benutzer ID',
-            'offered_by_type' => 'Angebot von',
+            'offerer_id' => 'Benutzer ID',
+            'offerer_type' => 'Angebot von',
             'company_id' => 'Unternehmen',
             'title' => 'Angebotstitel',
             'description' => 'Angebotsbeschreibung',
@@ -80,11 +80,11 @@ class OfferRequest extends FormRequest
             'id.required' => 'Bitte geben Sie eine ID an',
             'id.exists' => 'Die angegebene ID existiert nicht.',
 
-            'user_id.required' => 'Bitte eine Benutzer-ID angeben.',
-            'user_id.exists' => 'Die angegebene Benutzer-ID existiert nicht.',
+            'offerer_id.required' => 'Bitte eine Benutzer-ID angeben.',
+            'offerer_id.exists' => 'Die angegebene Benutzer-ID existiert nicht.',
 
-            'offered_by_type.required' => 'Bitte angeben, von wem das Angebot kommt.',
-            'offered_by_type.in' => 'Ungültige Auswahl. Muss "Referrer" oder "Referred" sein.',
+            'offerer_type.required' => 'Bitte angeben, von wem das Angebot kommt.',
+            'offerer_type.in' => 'Ungültige Auswahl. Muss "Referrer" oder "Referred" sein.',
 
             'company_id.required' => 'Bitte ein Unternehmen auswählen.',
             'company_id.exists' => 'Das ausgewählte Unternehmen existiert nicht.',

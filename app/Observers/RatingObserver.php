@@ -38,13 +38,19 @@ class RatingObserver
      */
     private function updateUserAverageRating(int $userMatchId): void
     {
+
+        $applicantId = UserMatch::find($userMatchId)->application->applicant_id;
+        $offererId = UserMatch::find($userMatchId)->application->offer->offerer_id;
+
         // Hole den UserMatch
-        $userMatch = UserMatch::find($userMatchId);
-        if (!$userMatch) return;
+        // $userMatch = UserMatch::find($userMatchId);
+        // if (!$userMatch) return;
+
+
 
         // Berechne den Durchschnitt für beide User
-        $this->updateAverageForUser($userMatch->user_referrer_id);
-        $this->updateAverageForUser($userMatch->user_referred_id);
+        $this->updateAverageForUser($applicantId);
+        $this->updateAverageForUser($offererId);
     }
 
     /**
@@ -54,14 +60,16 @@ class RatingObserver
     {
         $averageRating = DB::table('ratings')
             ->join('user_matches', 'ratings.user_match_id', '=', 'user_matches.id')
+            ->join('applications', 'user_matches.application_id', '=', 'applications.id')
+            ->join('offers', 'applications.offer_id', '=', 'offers.id')
             ->where(function ($query) use ($userId) {
                 $query->where(function ($q) use ($userId) {
-                    // Wenn der User der Referrer ist
-                    $q->where('user_matches.user_referrer_id', $userId)
+                    // Wenn der User der Offerer ist
+                    $q->where('offers.offerer_id', $userId)
                       ->where('ratings.direction', 'referred_to_referrer');
                 })->orWhere(function ($q) use ($userId) {
-                    // Wenn der User der Referred ist
-                    $q->where('user_matches.user_referred_id', $userId)
+                    // Wenn der User der Applicant ist
+                    $q->where('applications.applicant_id', $userId)
                       ->where('ratings.direction', 'referrer_to_referred');
                 });
             })

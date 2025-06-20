@@ -43,13 +43,14 @@ class AppServiceProvider extends ServiceProvider
                     }
                     
                     // Zähle ungelesene Nachrichten für den Benutzer
-                    return Application::where(function ($query) use ($user) {
-                        $query->where('applicant_id', $user->id)
-                              ->where('is_read_by_applicant', false);
-                    })->orWhere(function ($query) use ($user) {
-                        $query->where('offer_owner_id', $user->id)
-                              ->where('is_read_by_owner', false);
-                    })->count();
+                    return Application::join('offers', 'applications.offer_id', '=', 'offers.id')
+                        ->where(function ($query) use ($user) {
+                            $query->where('applications.applicant_id', $user->id)
+                                  ->where('applications.is_read_by_applicant', false);
+                        })->orWhere(function ($query) use ($user) {
+                            $query->where('offers.offerer_id', $user->id)
+                                  ->where('applications.is_read_by_owner', false);
+                        })->count();
                 } catch (\Exception $e) {
                     return 0;
                 }

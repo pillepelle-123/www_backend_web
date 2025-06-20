@@ -20,7 +20,6 @@ class Application extends Model
     protected $fillable = [
         'offer_id',
         'applicant_id',
-        'offer_owner_id',
         'message',
         'status',
         'is_read_by_applicant',
@@ -60,11 +59,11 @@ class Application extends Model
     }
 
     /**
-     * Get the offer owner user.
+     * Get the offer owner user through the offer relationship.
      */
     public function offerOwner(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'offer_owner_id');
+        return $this->offer()->getRelated()->offerer();
     }
 
     /**

@@ -40,20 +40,11 @@ class UserMatchCrudController extends CrudController
     protected function setupListOperation()
     {
         CRUD::column('id');
-        CRUD::column('offer_id')
+        CRUD::column('application_id')
             ->type('relationship')
-            ->label('Offer')
-            ->attribute('title');
-        CRUD::column('user_referrer_id')
-            ->type('relationship')
-            ->label('Referrer')
-            ->entity('referrer')
-            ->attribute('name');
-        CRUD::column('user_referred_id')
-            ->type('relationship')
-            ->label('Referred')
-            ->entity('referred')
-            ->attribute('name');
+            ->label('Application')
+            ->entity('application')
+            ->attribute('id');
         CRUD::column('affiliate_link_id')
             ->type('relationship')
             ->label('Affiliate Link')
@@ -74,6 +65,12 @@ class UserMatchCrudController extends CrudController
                 'successful' => 'Successful',
                 'unsuccessful' => 'Unsuccessful',
             ]);
+        CRUD::column('reason_unsuccessful_referrer')
+            ->type('text')
+            ->limit(50);
+        CRUD::column('reason_unsuccessful_referred')
+            ->type('text')
+            ->limit(50);
         CRUD::column('created_at');
         CRUD::column('updated_at');
     }
@@ -86,25 +83,11 @@ class UserMatchCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
-        CRUD::field('offer_id')
+        CRUD::field('application_id')
             ->type('relationship')
-            ->label('Offer')
-            ->entity('offer')
-            ->attribute('title')
-            ->inline_create(true)
-            ->ajax(true);
-        CRUD::field('user_referrer_id')
-            ->type('relationship')
-            ->label('Referrer')
-            ->entity('referrer')
-            ->attribute('name')
-            ->inline_create(true)
-            ->ajax(true);
-        CRUD::field('user_referred_id')
-            ->type('relationship')
-            ->label('Referred')
-            ->entity('referred')
-            ->attribute('name')
+            ->label('Application')
+            ->entity('application')
+            ->attribute('id')
             ->inline_create(true)
             ->ajax(true);
         CRUD::field('affiliate_link_id')
@@ -115,7 +98,8 @@ class UserMatchCrudController extends CrudController
             ->inline_create(true)
             ->ajax(true);
         CRUD::field('link_clicked')
-            ->type('boolean');
+            ->type('boolean')
+            ->default(false);
         CRUD::field('status')
             ->type('enum')
             ->options([
@@ -132,9 +116,11 @@ class UserMatchCrudController extends CrudController
             ])
             ->default('pending');
         CRUD::field('reason_unsuccessful_referrer')
-            ->type('textarea');
+            ->type('textarea')
+            ->allows_null(true);
         CRUD::field('reason_unsuccessful_referred')
-            ->type('textarea');
+            ->type('textarea')
+            ->allows_null(true);
     }
 
     /**

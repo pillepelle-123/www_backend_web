@@ -19,7 +19,7 @@ export type Offer = {
   id: number;
   title: string;
   description: string;
-  offered_by_type: string;
+  offerer_type: string;
   offer_user: string;
   offer_company: string;
   logo_path: string;
@@ -39,7 +39,7 @@ export default function Index({ offers: initialOffers, pagination: initialPagina
   const [showFilters, setShowFilters] = useState(false);
   const [search, setSearch] = useState({ title: "", offer_company: "" });
   const [filters, setFilters] = useState({
-    offered_by_type: "",
+    offerer_type: "",
     status: "",
     average_rating_min: 0,
     created_at_from: "",
@@ -85,13 +85,13 @@ export default function Index({ offers: initialOffers, pagination: initialPagina
   // Sofortige Filter-Änderungen speichern und anwenden
   useEffect(() => {
     updateImmediateFilters({
-      offered_by_type: filters.offered_by_type,
+      offerer_type: filters.offerer_type,
       status: filters.status,
       average_rating_min: filters.average_rating_min,
       sort_field: sort.field,
       sort_direction: sort.direction
     });
-  }, [filters.offered_by_type, filters.status, filters.average_rating_min, sort, updateImmediateFilters]);
+  }, [filters.offerer_type, filters.status, filters.average_rating_min, sort, updateImmediateFilters]);
 
   // Funktion zum Anwenden der Filter
   const handleApplyFilters = () => {

@@ -50,17 +50,16 @@ class ApplicationCrudController extends CrudController
             ->label('Applicant')
             ->entity('applicant')
             ->attribute('name');
-        CRUD::column('offer_owner_id')
-            ->type('relationship')
-            ->label('Offer Owner')
-            ->entity('offerOwner')
-            ->attribute('name');
+        CRUD::column('message')
+            ->type('text')
+            ->limit(50);
         CRUD::column('status')
             ->type('enum')
             ->options([
                 'pending' => 'Pending',
                 'approved' => 'Approved',
                 'rejected' => 'Rejected',
+                'retracted' => 'Retracted',
             ]);
         CRUD::column('is_read_by_applicant')
             ->type('boolean')
@@ -68,6 +67,12 @@ class ApplicationCrudController extends CrudController
         CRUD::column('is_read_by_owner')
             ->type('boolean')
             ->label('Read by Owner');
+        CRUD::column('is_archived_by_applicant')
+            ->type('boolean')
+            ->label('Archived by Applicant');
+        CRUD::column('is_archived_by_owner')
+            ->type('boolean')
+            ->label('Archived by Owner');
         CRUD::column('responded_at')
             ->type('datetime');
         CRUD::column('created_at');
@@ -98,27 +103,28 @@ class ApplicationCrudController extends CrudController
             ->attribute('name')
             ->inline_create(true)
             ->ajax(true);
-        CRUD::field('offer_owner_id')
-            ->type('relationship')
-            ->label('Offer Owner')
-            ->entity('offerOwner')
-            ->attribute('name')
-            ->inline_create(true)
-            ->ajax(true);
         CRUD::field('message')
-            ->type('textarea');
+            ->type('textarea')
+            ->allows_null(true);
         CRUD::field('status')
             ->type('enum')
             ->options([
                 'pending' => 'Pending',
                 'approved' => 'Approved',
                 'rejected' => 'Rejected',
+                'retracted' => 'Retracted',
             ])
             ->default('pending');
         CRUD::field('is_read_by_applicant')
             ->type('boolean')
             ->default(false);
         CRUD::field('is_read_by_owner')
+            ->type('boolean')
+            ->default(false);
+        CRUD::field('is_archived_by_applicant')
+            ->type('boolean')
+            ->default(false);
+        CRUD::field('is_archived_by_owner')
             ->type('boolean')
             ->default(false);
         CRUD::field('responded_at')

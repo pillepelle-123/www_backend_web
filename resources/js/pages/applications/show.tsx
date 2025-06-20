@@ -25,6 +25,7 @@ type ApplicationDetails = {
   created_at: string;
   responded_at: string | null;
   is_applicant: boolean;
+  user_role: 'referrer' | 'referred';
   applicant: {
     id: number;
     name: string;
@@ -104,6 +105,10 @@ export default function Show({ application }: { application: ApplicationDetails 
                 <div>
                   <p className="text-sm text-gray-500 dark:text-gray-400">Anbieter</p>
                   <p className="font-medium">{application.offer_owner.name}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Ihre Rolle</p>
+                  <p className="font-medium">{application.user_role === 'referrer' ? 'Werbender' : 'Beworbener'}</p>
                 </div>
                 {application.responded_at && (
                   <div>

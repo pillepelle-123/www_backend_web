@@ -29,7 +29,7 @@ export default function Create({ companies }: { companies: Company[] }) {
         company_id: '',
         reward_total_eur: 0,
         reward_offerer_percent: 0,
-        offered_by_type: 'referrer',
+        offerer_type: 'referrer',
     });
 
     const [selectedCompany, setSelectedCompany] = useState<{ value: string; label: string } | null>(null);
@@ -52,7 +52,7 @@ export default function Create({ companies }: { companies: Company[] }) {
             ...data,
             reward_total_cents: Math.round((data.reward_total_eur || 0) * 100),
             reward_offerer_percent: (data.reward_offerer_percent || 0) / 100,
-            offered_by_type: data.offered_by_type,
+            offerer_type: data.offerer_type,
         });
     };
 
@@ -153,20 +153,20 @@ export default function Create({ companies }: { companies: Company[] }) {
                                     <div className="space-y-2">
                                         <div
                                             className={`relative flex cursor-pointer rounded-lg border bg-white dark:bg-zinc-800 px-5 py-4 shadow-sm focus:outline-none ${
-                                                data.offered_by_type === 'referrer'
+                                                data.offerer_type === 'referrer'
                                                     ? 'border-[var(--accent)] ring-2 ring-[var(--accent)]'
                                                     : 'border-zinc-800 hover:border-gray-300 transition-all duration-300'
                                             }`}
-                                            onClick={() => setData('offered_by_type', 'referrer')}
+                                            onClick={() => setData('offerer_type', 'referrer')}
                                             tabIndex={0}
-                                            onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') setData('offered_by_type', 'referrer') }}
+                                            onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') setData('offerer_type', 'referrer') }}
                                             role="radio"
-                                            aria-checked={data.offered_by_type === 'referrer'}
+                                            aria-checked={data.offerer_type === 'referrer'}
                                         >
                                             <span className="flex h-5 items-center">
                                                 <span
                                                     className={`inline-block h-4 w-4 rounded-full border-2 ${
-                                                        data.offered_by_type === 'referrer'
+                                                        data.offerer_type === 'referrer'
                                                             ? 'border-[var(--accent)] bg-[var(--accent)]'
                                                             : 'border-gray-300 bg-white'
                                                     }`}
@@ -183,20 +183,20 @@ export default function Create({ companies }: { companies: Company[] }) {
                                         </div>
                                         <div
                                             className={`relative flex cursor-pointer rounded-lg border bg-white dark:bg-zinc-800 px-5 py-4 shadow-sm focus:outline-none ${
-                                                data.offered_by_type === 'referred'
+                                                data.offerer_type === 'referred'
                                                     ? 'border-[var(--accent)] ring-2 ring-[var(--accent)]'
                                                     : 'border-zinc-800 hover:border-gray-300 transition-all duration-300'
                                             }`}
-                                            onClick={() => setData('offered_by_type', 'referred')}
+                                            onClick={() => setData('offerer_type', 'referred')}
                                             tabIndex={0}
-                                            onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') setData('offered_by_type', 'referred') }}
+                                            onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') setData('offerer_type', 'referred') }}
                                             role="radio"
-                                            aria-checked={data.offered_by_type === 'referred'}
+                                            aria-checked={data.offerer_type === 'referred'}
                                         >
                                             <span className="flex h-5 items-center">
                                                 <span
                                                     className={`inline-block h-4 w-4 rounded-full border-2 ${
-                                                        data.offered_by_type === 'referred'
+                                                        data.offerer_type === 'referred'
                                                             ? 'border-[var(--accent)] bg-[var(--accent)]'
                                                             : 'border-gray-300 bg-white'
                                                     }`}
@@ -212,8 +212,8 @@ export default function Create({ companies }: { companies: Company[] }) {
                                             </span>
                                         </div>
                                     </div>
-                                    {errors.offered_by_type && (
-                                        <p className="mt-1 text-sm text-red-600">{errors.offered_by_type}</p>
+                                    {errors.offerer_type && (
+                                        <p className="mt-1 text-sm text-red-600">{errors.offerer_type}</p>
                                     )}
                                 </div>
                                 <div>

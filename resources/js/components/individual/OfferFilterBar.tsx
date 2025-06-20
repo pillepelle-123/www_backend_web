@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Star, StarOff } from "lucide-react";
 
 interface OfferFilterBarFilters {
-  offered_by_type: string;
+  offerer_type: string;
   status: string;
   average_rating_min: number;
   created_at_from: string;
@@ -110,8 +110,8 @@ export function OfferFilterBar({
               <div>
                 <label className="block text-xs font-medium">Typ</label>
                 <select
-                  value={filters.offered_by_type}
-                  onChange={e => handleImmediateFilterChange({ offered_by_type: e.target.value })}
+                  value={filters.offerer_type}
+                  onChange={e => handleImmediateFilterChange({ offerer_type: e.target.value })}
                   className="rounded border px-2 py-1 text-sm w-32"
                 >
                   <option value="">Alle</option>
@@ -206,7 +206,7 @@ export function OfferFilterBar({
               onClick={() => {
                 setSearch({ title: "", offer_company: "" });
                 setFilters({
-                  offered_by_type: "",
+                  offerer_type: "",
                   status: "",
                   average_rating_min: 0,
                   created_at_from: "",

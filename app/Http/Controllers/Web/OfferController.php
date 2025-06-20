@@ -19,7 +19,7 @@ class OfferController extends Controller
         $perPage = 20; // Anzahl der Datensätze pro Seite
 
         $query = Offer::query()
-            ->with(['user', 'company']);
+            ->with(['offerer', 'company']);
 
         // Suche (case-insensitive)
         if ($request->has('title') && !empty($request->title)) {
@@ -33,9 +33,9 @@ class OfferController extends Controller
         }
 
         // Filter
-        if ($request->has('offered_by_type') && !empty($request->offered_by_type)) {
-            $type = $request->offered_by_type === 'Werbender' ? 'referrer' : 'referred';
-            $query->where('offered_by_type', $type);
+        if ($request->has('offerer_type') && !empty($request->offerer_type)) {
+            $type = $request->offerer_type === 'Werbender' ? 'referrer' : 'referred';
+            $query->where('offerer_type', $type);
         }
 
         if ($request->has('status') && !empty($request->status)) {
@@ -43,7 +43,7 @@ class OfferController extends Controller
         }
 
         if ($request->has('average_rating_min') && $request->average_rating_min > 0) {
-            $query->whereHas('user', function($q) use ($request) {
+            $query->whereHas('offerer', function($q) use ($request) {
                 $q->where('average_rating', '>=', $request->average_rating_min);
             });
         }
@@ -84,7 +84,7 @@ class OfferController extends Controller
                 'id' => $offer->id,
                 'title' => $offer->title,
                 'description' => $offer->description,
-                'offered_by_type' => $offer->offered_by_type == 'referrer' ? 'Werbender' : 'Beworbener',
+                'offerer_type' => $offer->offerer_type == 'referrer' ? 'Werbender' : 'Beworbener',
                 'offer_user' => $offer->user->name,
                 'offer_company' => $offer->company->name,
                 'logo_path' => $offer->company->logo_path,
@@ -110,20 +110,20 @@ class OfferController extends Controller
 
     public function show($id)
     {
-        $offer = Offer::with(['user', 'company'])->findOrFail($id);
+        $offer = Offer::with(['offerer', 'company'])->findOrFail($id);
         $user = Auth::user();
-        
+
         // Prüfe, ob der Benutzer bereits eine Anfrage für dieses Angebot gestellt hat
         $application = \App\Models\Application::where('offer_id', $offer->id)
             ->where('applicant_id', $user->id)
             ->first();
-            
+
         $offerData = [
             'id' => $offer->id,
             'title' => $offer->title,
             'description' => $offer->description,
-            'offered_by_type' => $offer->offered_by_type == 'referrer' ? 'Werbender' : 'Beworbener',
-            'offer_user' => $offer->user->name,
+            'offerer_type' => $offer->offerer_type == 'referrer' ? 'Werbender' : 'Beworbener',
+            'offer_user' => $offer->offerer->name,
             'offer_company' => $offer->company->name,
             'logo_path' => $offer->company->logo_path,
             'reward_total_cents' => $offer->reward_total_cents,
@@ -131,11 +131,11 @@ class OfferController extends Controller
             'status' => $offer->status,
             'industry' => $offer->company->industry,
             'created_at' => $offer->created_at->format('Y-m-d H:i:s'),
-            'average_rating' => $offer->user->average_rating,
+            'average_rating' => $offer->offerer->average_rating,
             'has_application' => $application ? true : false,
             'application_status' => $application ? $application->status : null,
             'application_id' => $application ? $application->id : null,
-            'is_owner' => $user->id === $offer->user_id,
+            'is_owner' => $user->id === $offer->offerer_id,
         ];
 
         return Inertia::render('offers/show', [
@@ -159,7 +159,7 @@ class OfferController extends Controller
             'company_id' => 'required|exists:companies,id',
             'reward_total_cents' => 'required|integer|min:0|max:100000',
             'reward_offerer_percent' => 'required|numeric|min:0|max:1', // Dezimalwert, z.B. 0.5
-            'offered_by_type' => 'required|in:referrer,referred',
+            'offerer_type' => 'required|in:referrer,referred',
         ]);
 
         $offer = Offer::create([
@@ -168,9 +168,9 @@ class OfferController extends Controller
             'company_id' => $validated['company_id'],
             'reward_total_cents' => $validated['reward_total_cents'],
             'reward_offerer_percent' => $validated['reward_offerer_percent'],
-            'user_id' => Auth::id(),
+            'offerer_id' => Auth::id(),
             'status' => 'live',
-            'offered_by_type' => $validated['offered_by_type'],
+            'offerer_type' => $validated['offerer_type'],
         ]);
 
         if ($request->wantsJson()) {
@@ -190,7 +190,7 @@ class OfferController extends Controller
         $page = $request->input('page', 1);
 
         $query = Offer::query()
-            ->with(['user', 'company']);
+            ->with(['offerer', 'company']);
 
         // Suche (case-insensitive)
         if ($request->has('title') && !empty($request->title)) {
@@ -204,9 +204,9 @@ class OfferController extends Controller
         }
 
         // Filter
-        if ($request->has('offered_by_type') && !empty($request->offered_by_type)) {
-            $type = $request->offered_by_type === 'Werbender' ? 'referrer' : 'referred';
-            $query->where('offered_by_type', $type);
+        if ($request->has('offerer_type') && !empty($request->offerer_type)) {
+            $type = $request->offerer_type === 'Werbender' ? 'referrer' : 'referred';
+            $query->where('offerer_type', $type);
         }
 
         if ($request->has('status') && !empty($request->status)) {
@@ -214,7 +214,7 @@ class OfferController extends Controller
         }
 
         if ($request->has('average_rating_min') && $request->average_rating_min > 0) {
-            $query->whereHas('user', function($q) use ($request) {
+            $query->whereHas('offerer', function($q) use ($request) {
                 $q->where('average_rating', '>=', $request->average_rating_min);
             });
         }
@@ -240,7 +240,7 @@ class OfferController extends Controller
 
         // Spezielle Sortierung für Felder aus verknüpften Tabellen
         if ($dbSortField === 'users.average_rating') {
-            $query->join('users', 'offers.user_id', '=', 'users.id')
+            $query->join('users', 'offers.offerer_id', '=', 'users.id')
                   ->select('offers.*');
         }
 
@@ -255,15 +255,15 @@ class OfferController extends Controller
                 'id' => $offer->id,
                 'title' => $offer->title,
                 'description' => $offer->description,
-                'offered_by_type' => $offer->offered_by_type == 'referrer' ? 'Werbender' : 'Beworbener',
-                'offer_user' => $offer->user->name,
+                'offerer_type' => $offer->offerer_type == 'referrer' ? 'Werbender' : 'Beworbener',
+                'offer_user' => $offer->offerer->name,
                 'offer_company' => $offer->company->name,
                 'logo_path' => $offer->company->logo_path,
                 'reward_total_cents' => $offer->reward_total_cents,
                 'reward_offerer_percent' => $offer->reward_offerer_percent,
                 'status' => $offer->status,
                 'created_at' => $offer->created_at->format('Y-m-d H:i:s'),
-                'average_rating' => $offer->user->average_rating,
+                'average_rating' => $offer->offerer->average_rating,
                 'industry' => $offer->company->industry,
             ];
         });

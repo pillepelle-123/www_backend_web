@@ -17,12 +17,12 @@ class ApplicationFactory extends Factory
         return [
             'offer_id' => Offer::factory(),
             'applicant_id' => User::factory(),
-            'offer_owner_id' => function (array $attributes) {
-                return User::where('id', '!=', $attributes['applicant_id'])
-                    ->inRandomOrder()
-                    ->first()
-                    ->id;
-            },
+            // 'offer_owner_id' => function (array $attributes) {
+            //     return User::where('id', '!=', $attributes['applicant_id'])
+            //         ->inRandomOrder()
+            //         ->first()
+            //         ->id;
+            // },
             'message' => $this->faker->paragraph(),
             'is_read_by_applicant' => $this->faker->boolean(),
             'is_read_by_owner' => $this->faker->boolean(),

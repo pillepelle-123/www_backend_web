@@ -18,7 +18,7 @@ import {
 export type Offer = {
   id: number;
   title: string;
-  offered_by_type: string;
+  offerer_type: string;
   offer_user: string;
   reward_total_cents: number;
   status: "active" | "inactive" | "closed" | 'matched';
@@ -40,7 +40,7 @@ export const columns: ColumnDef<Offer>[] = [
     },
   },
   {
-    accessorKey: "offered_by_type",
+    accessorKey: "offerer_type",
       header: ({ column }) => {
       return (
         <Button

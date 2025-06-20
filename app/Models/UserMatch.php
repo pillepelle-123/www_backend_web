@@ -19,9 +19,7 @@ class UserMatch extends Model
      * @var array
      */
     protected $fillable = [
-        'offer_id',
-        'user_referrer_id',
-        'user_referred_id',
+        'application_id',
         'affiliate_link_id',
         'link_clicked',
         'status',
@@ -34,24 +32,14 @@ class UserMatch extends Model
         'link_clicked' => 'boolean',
     ];
 
-    public function offer(): BelongsTo
+    public function application(): BelongsTo
     {
-        return $this->belongsTo(Offer::class);
+        return $this->belongsTo(Application::class);
     }
     
     public function affiliateLink(): BelongsTo
     {
         return $this->belongsTo(AffiliateLink::class);
-    }
-
-    public function referrer(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'user_referrer_id');
-    }
-
-    public function referred(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'user_referred_id');
     }
 
     public function ratings(): HasMany

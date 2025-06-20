@@ -5,7 +5,7 @@ import { Offer } from '@/types/offer';
 interface OfferFilters {
   title?: string;
   offer_company?: string;
-  offered_by_type?: string;
+  offerer_type?: string;
   status?: string;
   average_rating_min?: number;
   created_at_from?: string;
@@ -39,7 +39,7 @@ export const useOffers = () => {
   });
   
   const [immediateFilters, setImmediateFilters] = useState<OfferFilters>({
-    offered_by_type: '',
+    offerer_type: '',
     status: '',
     average_rating_min: 0,
     sort_field: 'created_at',
@@ -110,7 +110,7 @@ export const useOffers = () => {
     setImmediateFilters(prev => {
       // Nur die sofortigen Filter aktualisieren
       const filteredUpdates: Partial<OfferFilters> = {};
-      if ('offered_by_type' in newFilters) filteredUpdates.offered_by_type = newFilters.offered_by_type;
+      if ('offerer_type' in newFilters) filteredUpdates.offerer_type = newFilters.offerer_type;
       if ('status' in newFilters) filteredUpdates.status = newFilters.status;
       if ('average_rating_min' in newFilters) filteredUpdates.average_rating_min = newFilters.average_rating_min;
       if ('sort_field' in newFilters) filteredUpdates.sort_field = newFilters.sort_field;
@@ -135,7 +135,7 @@ export const useOffers = () => {
     
     // Sofortige Filter
     const immediateUpdates: Partial<OfferFilters> = {};
-    if ('offered_by_type' in newFilters) immediateUpdates.offered_by_type = newFilters.offered_by_type;
+    if ('offerer_type' in newFilters) immediateUpdates.offerer_type = newFilters.offerer_type;
     if ('status' in newFilters) immediateUpdates.status = newFilters.status;
     if ('average_rating_min' in newFilters) immediateUpdates.average_rating_min = newFilters.average_rating_min;
     if ('sort_field' in newFilters) immediateUpdates.sort_field = newFilters.sort_field;

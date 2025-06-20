@@ -41,6 +41,7 @@ type Application = {
   is_applicant: boolean;
   is_archived: boolean;
   other_user: string;
+  user_role: 'referrer' | 'referred';
 };
 
 export default function Index({ applications, unreadCount }: { applications: Application[], unreadCount: number }) {
@@ -192,7 +193,13 @@ export default function Index({ applications, unreadCount }: { applications: App
 
   // Hilfsfunktion zum Markieren einer Nachricht als gelesen (für andere Buttons)
   const markAsRead = (applicationId: number) => {
-    toggleReadStatus(applicationId, true);
+    fetch(route('web.applications.mark-read', { id: applicationId }), {
+      method: 'POST',
+      headers: {
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+        'Content-Type': 'application/json',
+      }
+    });
   };
 
   const formatDate = (dateString: string) => {
@@ -583,7 +590,7 @@ export default function Index({ applications, unreadCount }: { applications: App
                         </div>
                         <div className="flex justify-between mt-1">
                           <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
-                            {application.is_applicant ? 'An: ' : 'Von: '}{application.other_user} • {application.company_name}
+                            {application.is_applicant ? 'An: ' : 'Von: '}{application.other_user} • {application.company_name} • Sie sind: {application.user_role === 'referrer' ? 'Werbender' : 'Beworbener'}
                           </p>
                           <div className="flex items-center gap-2">
                             {getStatusBadge(application.status)}
@@ -598,7 +605,7 @@ export default function Index({ applications, unreadCount }: { applications: App
                                   className="p-1 rounded-full bg-green-100 text-green-800 hover:bg-green-200 cursor-pointer"
                                   title="Annehmen"
                                   preserveState={false}
-                                  onClick={() => application.is_unread && markAsRead(application.id)}
+                                  onClick={() => markAsRead(application.id)}
                                 >
                                   <CheckCircle className="w-4 h-4" />
                                 </Link>
@@ -609,7 +616,7 @@ export default function Index({ applications, unreadCount }: { applications: App
                                   className="p-1 rounded-full bg-red-100 text-red-800 hover:bg-red-200 cursor-pointer"
                                   title="Ablehnen"
                                   preserveState={false}
-                                  onClick={() => application.is_unread && markAsRead(application.id)}
+                                  onClick={() => markAsRead(application.id)}
                                 >
                                   <Ban className="w-4 h-4" />
                                 </Link>
@@ -626,7 +633,7 @@ export default function Index({ applications, unreadCount }: { applications: App
                                   className="p-1 rounded-full bg-red-100 text-red-800 hover:bg-red-200 cursor-pointer"
                                   title="Ablehnen"
                                   preserveState={false}
-                                  onClick={() => application.is_unread && markAsRead(application.id)}
+                                  onClick={() => markAsRead(application.id)}
                                 >
                                   <Ban className="w-4 h-4" />
                                 </Link>
@@ -643,7 +650,7 @@ export default function Index({ applications, unreadCount }: { applications: App
                                   className="p-1 rounded-full bg-green-100 text-green-800 hover:bg-green-200 cursor-pointer"
                                   title="Annehmen"
                                   preserveState={false}
-                                  onClick={() => application.is_unread && markAsRead(application.id)}
+                                  onClick={() => markAsRead(application.id)}
                                 >
                                   <CheckCircle className="w-4 h-4" />
                                 </Link>
@@ -660,7 +667,7 @@ export default function Index({ applications, unreadCount }: { applications: App
                                   className="p-1 rounded-full bg-gray-100 text-gray-800 hover:bg-gray-200 cursor-pointer"
                                   title="Zurückziehen"
                                   preserveState={false}
-                                  onClick={() => application.is_unread && markAsRead(application.id)}
+                                  onClick={() => markAsRead(application.id)}
                                 >
                                   <XCircle className="w-4 h-4" />
                                 </Link>
@@ -677,7 +684,7 @@ export default function Index({ applications, unreadCount }: { applications: App
                                   className="p-1 rounded-full bg-blue-100 text-blue-800 hover:bg-blue-200 cursor-pointer"
                                   title="Antrag erneut stellen"
                                   preserveState={false}
-                                  onClick={() => application.is_unread && markAsRead(application.id)}
+                                  onClick={() => markAsRead(application.id)}
                                 >
                                   <RefreshCw className="w-4 h-4" />
                                 </Link>
@@ -685,9 +692,9 @@ export default function Index({ applications, unreadCount }: { applications: App
                             )}
 
                             {/* Archivieren/Wiederherstellen-Button */}
-                            {/* Archivieren-Button nur anzeigen, wenn Status pending, rejected oder retracted ist */}
+                            {/* Archivieren-Button: nur bei rejected/retracted für beide Rollen */}
                             {activeTab === 'applications' &&
-                             (application.status === 'pending' || application.status === 'rejected' || application.status === 'retracted') && (
+                             (application.status === 'rejected' || application.status === 'retracted') && (
                               <div className="z-10 relative">
                                 <Link
                                   href={route('web.applications.archive', { id: application.id })}
@@ -696,7 +703,7 @@ export default function Index({ applications, unreadCount }: { applications: App
                                   className="p-1 rounded-full bg-gray-100 text-gray-800 hover:bg-gray-200 cursor-pointer"
                                   title="Archivieren"
                                   preserveState={false}
-                                  onClick={() => application.is_unread && markAsRead(application.id)}
+                                  onClick={() => markAsRead(application.id)}
                                 >
                                   <Archive className="w-4 h-4" />
                                 </Link>
@@ -711,7 +718,7 @@ export default function Index({ applications, unreadCount }: { applications: App
                                   className="p-1 rounded-full bg-gray-100 text-gray-800 hover:bg-gray-200 cursor-pointer"
                                   title="Wiederherstellen"
                                   preserveState={false}
-                                  onClick={() => application.is_unread && markAsRead(application.id)}
+                                  onClick={() => markAsRead(application.id)}
                                 >
                                   <RotateCcw className="w-4 h-4" />
                                 </Link>

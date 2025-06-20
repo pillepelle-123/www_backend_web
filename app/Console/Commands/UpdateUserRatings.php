@@ -21,14 +21,16 @@ class UpdateUserRatings extends Command
         foreach ($users as $user) {
             $averageRating = DB::table('ratings')
                 ->join('user_matches', 'ratings.user_match_id', '=', 'user_matches.id')
+                ->join('applications', 'user_matches.application_id', '=', 'applications.id')
+                ->join('offers', 'applications.offer_id', '=', 'offers.id')
                 ->where(function ($query) use ($user) {
                     $query->where(function ($q) use ($user) {
-                        // User ist Referrer und bekommt Bewertung von Referred
-                        $q->where('user_matches.user_referrer_id', $user->id)
+                        // User ist Offerer und bekommt Bewertung vom Applicant
+                        $q->where('offers.offerer_id', $user->id)
                           ->where('ratings.direction', 'referred_to_referrer');
                     })->orWhere(function ($q) use ($user) {
-                        // User ist Referred und bekommt Bewertung vom Referrer
-                        $q->where('user_matches.user_referred_id', $user->id)
+                        // User ist Applicant und bekommt Bewertung vom Offerer
+                        $q->where('applications.applicant_id', $user->id)
                           ->where('ratings.direction', 'referrer_to_referred');
                     });
                 })

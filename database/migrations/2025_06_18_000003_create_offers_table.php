@@ -10,9 +10,9 @@ return new class extends Migration
     {
         Schema::create('offers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('offerer_id')->constrained('users')->cascadeOnDelete();
+            $table->enum('offerer_type', ['referrer', 'referred'])->default('referrer');
             $table->foreignId('company_id')->constrained('companies')->cascadeOnDelete();
-            $table->enum('offered_by_type', ['referrer', 'referred'])->default('referrer');
             $table->string('title');
             $table->text('description')->nullable();
             $table->integer('reward_total_cents');

@@ -40,13 +40,13 @@ class OfferCrudController extends CrudController
                 'label' => 'Title',
             ],
             [
-                'name' => 'offered_by_type',
+                'name' => 'offerer_type',
                 'label' => 'Anbieter Rolle',
                 'type' => 'model_function',
-                'function_name' => 'getOfferedByTypeLabelAttribute',
+                'function_name' => 'getOffererTypeLabelAttribute',
             ],
             [
-                'name' => 'user.name',
+                'name' => 'offerer.name',
                 'label' => 'User',
                 'type' => 'text',
             ],
@@ -129,8 +129,8 @@ class OfferCrudController extends CrudController
 
         CRUD::field('title')->type('text');
 
-        // offered_by_type
-        CRUD::field('offered_by_type')
+        // offerer_type
+        CRUD::field('offerer_type')
             ->label('Angebot von')
             ->type('select_from_array')
             ->options([
@@ -140,11 +140,11 @@ class OfferCrudController extends CrudController
             ->allows_null(false)
             ->default('referrer');
 
-        // user_id
-        CRUD::field('user_id')
+        // offerer_id
+        CRUD::field('offerer_id')
             ->label('Benutzer')
             ->type('select')
-            ->entity('user')
+            ->entity('offerer')
             ->attribute('name')
             ->data_source(url('api/search/users'))
             ->placeholder('Benutzer suchen...')

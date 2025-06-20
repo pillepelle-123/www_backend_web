@@ -28,14 +28,15 @@ class ApplicationRequest extends FormRequest
         return [
             'offer_id' => 'required|exists:offers,id',
             'applicant_id' => 'required|exists:users,id',
-            'offer_owner_id' => 'required|exists:users,id',
             'message' => 'nullable|string|max:1000',
             'status' => [
                 'required',
-                Rule::in(['pending', 'approved', 'rejected']),
+                Rule::in(['pending', 'approved', 'rejected', 'retracted']),
             ],
             'is_read_by_applicant' => 'boolean',
             'is_read_by_owner' => 'boolean',
+            'is_archived_by_applicant' => 'boolean',
+            'is_archived_by_owner' => 'boolean',
             'responded_at' => 'nullable|date',
         ];
     }
@@ -50,11 +51,12 @@ class ApplicationRequest extends FormRequest
         return [
             'offer_id' => 'Offer',
             'applicant_id' => 'Applicant',
-            'offer_owner_id' => 'Offer Owner',
             'message' => 'Message',
             'status' => 'Status',
             'is_read_by_applicant' => 'Read by Applicant',
             'is_read_by_owner' => 'Read by Owner',
+            'is_archived_by_applicant' => 'Archived by Applicant',
+            'is_archived_by_owner' => 'Archived by Owner',
             'responded_at' => 'Responded At',
         ];
     }
@@ -71,8 +73,6 @@ class ApplicationRequest extends FormRequest
             'offer_id.exists' => 'The selected offer does not exist.',
             'applicant_id.required' => 'Please select an applicant.',
             'applicant_id.exists' => 'The selected applicant does not exist.',
-            'offer_owner_id.required' => 'Please select an offer owner.',
-            'offer_owner_id.exists' => 'The selected offer owner does not exist.',
             'message.max' => 'The message may not be greater than :max characters.',
             'status.required' => 'Please select a status.',
             'status.in' => 'The selected status is invalid.',

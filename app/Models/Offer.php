@@ -25,8 +25,8 @@ class Offer extends Model
      * @var array
      */
     protected $fillable = [
-        'offered_by_type',
-        'user_id',
+        'offerer_type',
+        'offerer_id',
         'company_id',
         'title',
         'description',
@@ -42,7 +42,7 @@ class Offer extends Model
      * @var array
      */
     protected $casts = [
-        'offered_by_type' => 'string',
+        'offerer_type' => 'string',
         'reward_total_cents' => 'integer',
         'reward_offerer_percent' => 'decimal:2',
         'status' => 'string',
@@ -73,7 +73,12 @@ class Offer extends Model
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'offerer_id');
+    }
+    
+    public function offerer(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'offerer_id');
     }
 
     /**
@@ -98,14 +103,14 @@ class Offer extends Model
     */
 
     /**
-     * Get human-readable offered_by_type
+     * Get human-readable offerer_type
      */
-    public function getOfferedByTypeLabelAttribute(): string
+    public function getOffererTypeLabelAttribute(): string
     {
         return [
             'referrer' => 'Werbender',
             'referred' => 'Interessent',
-        ][$this->offered_by_type] ?? $this->offered_by_type;
+        ][$this->offerer_type] ?? $this->offerer_type;
     }
     /**
      * Accessor for reward in euros
@@ -176,7 +181,7 @@ class Offer extends Model
      */
     public function scopeByReferrer($query)
     {
-        return $query->where('offered_by_type', 'referrer');
+        return $query->where('offerer_type', 'referrer');
     }
 
 
@@ -189,9 +194,9 @@ class Offer extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            // Automatically set the user_id if not provided
-            if (empty($model->user_id) && Auth::check()) {
-                $model->user_id = Auth::id();
+            // Automatically set the offerer_id if not provided
+            if (empty($model->offerer_id) && Auth::check()) {
+                $model->offerer_id = Auth::id();
             }
         });
     }

@@ -25,9 +25,7 @@ class UserMatchRequest extends FormRequest
     public function rules()
     {
         return [
-            'offer_id' => 'required|exists:offers,id',
-            'user_referrer_id' => 'required|exists:users,id',
-            'user_referred_id' => 'required|exists:users,id',
+            'application_id' => 'required|exists:applications,id',
             'affiliate_link_id' => 'nullable|exists:affiliate_links,id',
             'link_clicked' => 'boolean',
             'status' => 'required|in:opened,closed',

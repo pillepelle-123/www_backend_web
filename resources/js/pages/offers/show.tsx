@@ -271,7 +271,7 @@ export default function Show({ offer }: { offer: Offer }) {
                       onMouseLeave={() => setShowTypeTooltip(false)}
                     >
                       <UsersRound className="text-white w-5 h-5 mr-2" />
-                      <span className="block w-full">{offer.offered_by_type}</span>
+                      <span className="block w-full">{offer.offerer_type}</span>
                     </div>
                     {showTypeTooltip && tooltipPos && createPortal(
                       <span
@@ -279,7 +279,7 @@ export default function Show({ offer }: { offer: Offer }) {
                         style={{ left: tooltipPos.x - 110, top: tooltipPos.y }}
                       >
                         <span className="block w-fit bg-neutral-800 bg-opacity-95 text-white text-sm rounded-lg text-left whitespace-pre-line p-1">
-                          <b>{offer.offered_by_type}:</b> {getTooltipText(offer.offered_by_type)}
+                          <b>{offer.offerer_type}:</b> {getTooltipText(offer.offerer_type)}
                         </span>
                       </span>,
                       document.body

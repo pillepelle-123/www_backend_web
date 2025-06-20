@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('offer_id')->constrained('offers')->cascadeOnDelete();
             $table->foreignId('applicant_id')->constrained('users')->cascadeOnDelete();
-            $table->foreignId('offer_owner_id')->constrained('users')->cascadeOnDelete();
+            // $table->foreignId('offer_owner_id')->constrained('users')->cascadeOnDelete();
             $table->text('message')->nullable();
             $table->boolean('is_read_by_applicant')->default(false);
             $table->boolean('is_read_by_owner')->default(false);
