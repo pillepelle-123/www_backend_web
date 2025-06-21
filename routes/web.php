@@ -1,98 +1,72 @@
 <?php
 
-use App\Http\Controllers\Web\OfferController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Web\ApplicationController;
+use App\Http\Controllers\Web\DashboardController;
+use App\Http\Controllers\Web\OfferController;
+use App\Http\Controllers\Web\UserMatchController;
+use App\Http\Controllers\Api\V1\OfferController as ApiOfferController;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
-
 
 Route::get('/', function () {
-    return Inertia::render('welcome');
-})->name('home');
+    return Inertia::render('welcome', [
+        'canLogin' => Route::has('login'),
+        'canRegister' => Route::has('register'),
+        'laravelVersion' => Application::VERSION,
+        'phpVersion' => PHP_VERSION,
+    ]);
+});
 
-// Route::get('/dashboard', function () {
-//     return Inertia::render('Dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
+Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-// Route::get('/list-offers', function () {
-//     return Inertia::render('ListOffers');
-// })->middleware(['auth', 'verified'])->name('list-offers');
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', function () {
-        return Inertia::render('dashboard');
-    })->name('dashboard');
+    // Offers
+    Route::prefix('offers')->name('web.offers.')->group(function () {
+        Route::get('/', [OfferController::class, 'index'])->name('index');
+        Route::get('/create', [OfferController::class, 'create'])->name('create');
+        Route::post('/', [OfferController::class, 'store'])->name('store');
+        Route::get('/{id}', [OfferController::class, 'show'])->name('show');
+        Route::get('/{id}/edit', [OfferController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [OfferController::class, 'update'])->name('update');
+        Route::delete('/{id}', [OfferController::class, 'destroy'])->name('destroy');
 
-    Route::get('/offers', [OfferController::class, 'index'])
-        ->name('web.offers.index');
-
-    Route::get('/offers/create', [OfferController::class, 'create'])
-        ->name('web.offers.create');
-
-    Route::post('/offers', [OfferController::class, 'store'])
-        ->name('web.offers.store');
-
-    Route::get('/offers/{id}', [OfferController::class, 'show'])
-        ->name('web.offers.show');
-
-    Route::get('/offers-fetch-more', [OfferController::class, 'fetchMore'])
-        ->name('web.offers.fetch-more');
-        
-    // Application routes
-    Route::get('/offers/{offer_id}/applications/create', [ApplicationController::class, 'create'])
-        ->name('web.offers.applications.create');
-    Route::post('/offers/{offer_id}/applications', [ApplicationController::class, 'store'])
-        ->name('web.offers.applications.store');
-    Route::post('/applications/{id}/retract', [ApplicationController::class, 'retract'])
-        ->name('web.applications.retract');
-        
-    Route::get('/applications', [ApplicationController::class, 'index'])
-        ->name('web.applications.index');
-    Route::get('/applications/{id}', [ApplicationController::class, 'show'])
-        ->name('web.applications.show');
-    Route::post('/applications/{id}/approve', [ApplicationController::class, 'approve'])
-        ->name('web.applications.approve');
-    Route::post('/applications/{id}/reject', [ApplicationController::class, 'reject'])
-        ->name('web.applications.reject');
-    Route::post('/applications/{id}/reapply', [ApplicationController::class, 'reapply'])
-        ->name('web.applications.reapply');
-    Route::post('/applications/{id}/mark-read', [ApplicationController::class, 'markRead'])
-        ->name('web.applications.mark-read');
-    Route::post('/applications/{id}/toggle-read', [ApplicationController::class, 'toggleRead'])
-        ->name('web.applications.toggle-read');
-    Route::post('/applications/{id}/archive', [ApplicationController::class, 'archive'])
-        ->name('web.applications.archive');
-    Route::post('/applications/{id}/unarchive', [ApplicationController::class, 'unarchive'])
-        ->name('web.applications.unarchive');
-
-    // Route::get('/list-offers', function () {
-    //     return Inertia::render('Offers');
-    // })->name('list-offers');
-
-    Route::group([
-        'middleware' => ['admin'],
-        'prefix' => 'admin', //config('backpack.base.route_prefix', 'admin'),
-        'namespace' => 'App\Http\Controllers\Admin',
-    ], function () {
-        // Route::get('/admin/login', function () {
-        //     return Inertia::render('dashboard');
-        // })->name('dashboard');
-        // Route::get('login', 'Auth\\LoginController@showLoginForm')->name('backpack.auth.login');
-        // Route::post('login', 'Auth\\LoginController@login');
-        // Route::get('logout', [AuthenticatedSessionController::class, 'destroy'])
-        // ->name('logout');
-
-    // Route::post('logout', 'Auth\\LoginController@logout');
-    Route::get('dashboard', function () {
-            return view('vendor.backpack.ui.dashboard');
-        })->name('backpack.dashboard');
-    Route::get('/', function () {
-        return view('vendor.backpack.ui.dashboard');
-    })->name('backpack');
+        // Applications for offers
+        Route::post('/{id}/apply', [OfferController::class, 'apply'])->name('apply');
     });
 
+    // Applications
+    Route::prefix('applications')->name('web.applications.')->group(function () {
+        Route::get('/', [ApplicationController::class, 'index'])->name('index');
+        Route::get('/create/{offer_id}', [ApplicationController::class, 'create'])->name('create');
+        Route::post('/store/{offer_id}', [ApplicationController::class, 'store'])->name('store');
+        Route::get('/{id}', [ApplicationController::class, 'show'])->name('show');
+        Route::post('/{id}/approve', [ApplicationController::class, 'approve'])->name('approve');
+        Route::post('/{id}/reject', [ApplicationController::class, 'reject'])->name('reject');
+        Route::post('/{id}/retract', [ApplicationController::class, 'retract'])->name('retract');
+        Route::post('/{id}/reapply', [ApplicationController::class, 'reapply'])->name('reapply');
+        Route::post('/{id}/archive', [ApplicationController::class, 'archive'])->name('archive');
+        Route::post('/{id}/unarchive', [ApplicationController::class, 'unarchive'])->name('unarchive');
+        Route::post('/{id}/mark-read', [ApplicationController::class, 'markAsRead'])->name('mark-read');
+        Route::post('/{id}/toggle-read', [ApplicationController::class, 'toggleReadStatus'])->name('toggle-read');
+    });
+
+    // User Matches
+    Route::prefix('user-matches')->name('web.user-matches.')->group(function () {
+        Route::get('/', [UserMatchController::class, 'index'])->name('index');
+        Route::get('/{id}', [UserMatchController::class, 'show'])->name('show');
+        Route::post('/{id}/mark-successful', [UserMatchController::class, 'markSuccessful'])->name('mark-successful');
+        Route::post('/{id}/dissolve', [UserMatchController::class, 'dissolve'])->name('dissolve');
+        Route::post('/{id}/report', [UserMatchController::class, 'report'])->name('report');
+    });
+
+    // API Routes
+    Route::get('/offers-fetch-more', [ApiOfferController::class, 'fetchMore'])->name('api.v1.offers.fetch-more');
 });
 
 require __DIR__.'/settings.php';

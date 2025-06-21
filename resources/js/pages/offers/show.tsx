@@ -175,12 +175,12 @@ export default function Show({ offer }: { offer: Offer }) {
                   <div className="flex gap-2 items-start justify-between pt-4 min-h-14 w-full">
                     <div className="flex flex-col grow text-gray-600 dark:text-gray-300">
                       <span className="font-medium">Gesamte Prämie:<br/></span>
-                      <span className="ml-2 text-xl">{formatCurrency(offer.reward_total_cents)}</span>
+                      <span className="ml-2 text-xl">{formatCurrency(offer.reward_total_cents / 100)}</span>
                     </div>
                     <div className="flex flex-col grow text-gray-600 dark:text-gray-300">
                       <span className="font-medium">Anteil für dich:<br/></span>
                       <span className="ml-2 text-xl text-green-500 font-bold">
-                        {formatCurrency((1-offer.reward_offerer_percent) * offer.reward_total_cents)}
+                        {formatCurrency((1-offer.reward_offerer_percent) * offer.reward_total_cents / 100)}
                       </span>
                     </div>
                   </div>
@@ -197,7 +197,7 @@ export default function Show({ offer }: { offer: Offer }) {
                     {/* Zeige den Anfragen-Button, wenn der Benutzer keine aktive Anfrage hat oder die Anfrage zurückgezogen wurde */}
                     {(!offer.has_application || offer.application_status === 'retracted') && !offer.is_owner && offer.status !== 'matched' && (
                       <Link
-                        href={route('web.offers.applications.create', { offer_id: offer.id })}
+                        href={route('web.applications.create', { offer_id: offer.id })}
                         className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
                       >
                         Anfragen

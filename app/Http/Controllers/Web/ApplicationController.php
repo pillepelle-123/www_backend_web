@@ -152,7 +152,7 @@ class ApplicationController extends Controller
             ]);
         }
 
-        return redirect()->route('web.applications.index')
+        return redirect()->route('web.offers.show', $application->offer_id)
             ->with('success', 'Bewerbung zurückgezogen.');
     }
 

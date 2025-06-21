@@ -4,7 +4,7 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { /*BookOpen, Folder,*/ LayoutGrid, ListTodo, CirclePlus, Mail } from 'lucide-react';
+import { /*BookOpen, Folder,*/ LayoutGrid, ListTodo, CirclePlus, Mail, Handshake } from 'lucide-react';
 
 import AppLogo from './app-logo';
 // import { cn } from '@/lib/utils';
@@ -30,6 +30,11 @@ const mainNavItems: NavItem[] = [
         title: 'Nachrichten',
         href: '/applications',
         icon: Mail,
+    },
+    {
+        title: 'Matches',
+        href: '/user-matches',
+        icon: Handshake,
     },
 ];
 

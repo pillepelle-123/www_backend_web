@@ -19,18 +19,16 @@ const getBreadcrumbs = (offerId: number): BreadcrumbItem[] => [
   },
 ];
 
-export default function Create({ offer, auth }: { offer: Offer, auth?: { user: { id: number, name: string } } }) {
+export default function Create({ offer, /* auth */ }: { offer: Offer, auth?: { user: { id: number, name: string } } }) {
   const { data, setData, post, processing, errors } = useForm({
     message: '',
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    post(route('web.offers.applications.store', { offer_id: offer.id }), {
+    post(route('web.applications.store', { offer_id: offer.id }), {
       preserveScroll: true,
-      onSuccess: () => {
-        window.location.href = `/offers/${offer.id}`;
-      }
+
     });
   };
 

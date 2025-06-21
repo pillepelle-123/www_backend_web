@@ -200,12 +200,12 @@ export default function Index({ offers: initialOffers, pagination: initialPagina
               // Letztes Element mit Ref für Infinite Scrolling
               if (offers.length === index + 1) {
                 return (
-                  <div ref={lastOfferElementRef} key={offer.id}>
+                  <div ref={lastOfferElementRef} key={`offer-${offer.id}`}>
                     <LazyOfferCard offer={offer} />
                   </div>
                 );
               } else {
-                return <LazyOfferCard key={offer.id} offer={offer} />;
+                return <LazyOfferCard key={`offer-${offer.id}`} offer={offer} />;
               }
             }) : null}
           </div>
